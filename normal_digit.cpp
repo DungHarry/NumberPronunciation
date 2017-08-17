@@ -8,16 +8,24 @@
 
 #include "normal_digit.h"
 
-NormalDigit::NormalDigit(char cValue, int16_t iPosition) :
-	Digit(cValue, iPosition)
+NormalDigit::NormalDigit() :
+	Digit()
 {
 
 }
 
-NormalDigit::~NormalDigit() {
+NormalDigit::NormalDigit(AttributeType eType, char cValue, int16_t iPosition) :
+	Digit(eType != ATTRIBUTE_TYPE_NORMAL_DIGIT && eType != ATTRIBUTE_TYPE_SPECIAL_DIGIT ? ATTRIBUTE_TYPE_NORMAL_DIGIT : eType, cValue, iPosition)
+{
 
 }
 
-bool NormalDigit::isValid() {
-	return false;
+NormalDigit::NormalDigit(const NormalDigit &digit) {
+	this->m_eType = digit.m_eType;
+	this->m_cValue = digit.m_cValue;
+	this->m_iPosition = digit.m_iPosition;
+}
+
+NormalDigit::~NormalDigit() {
+
 }

@@ -34,3 +34,11 @@ void Object::setType(const ObjectType eType) {
 
 	this->m_eType = eType;
 }
+
+bool Object::isValid() {
+
+}
+
+bool Object::compare(const Base &b) {
+	return false;
+}

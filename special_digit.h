@@ -13,10 +13,10 @@
 
 class SpecialDigit : public Digit {
 public:
-	SpecialDigit(char cValue = DIGIT_VALUE_INVALID_VALUE, int16_t iPosition = DIGIT_POSITION_INVALID_VALUE);
+	SpecialDigit();
+	SpecialDigit(char cValue, int16_t iPosition);
+	SpecialDigit(const SpecialDigit &digit);
 	virtual ~SpecialDigit();
-
-	virtual bool isValid();
 };
 
 #endif

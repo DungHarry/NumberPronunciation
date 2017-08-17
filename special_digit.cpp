@@ -8,16 +8,24 @@
 
 #include "special_digit.h"
 
-SpecialDigit::SpecialDigit(char cValue, int16_t iPosition) :
-	Digit(cValue, iPosition)
+SpecialDigit::SpecialDigit() :
+	Digit()
 {
+	this->m_eType = OBJECT_TYPE_SPECIAL_DIGIT;
+}
 
+SpecialDigit::SpecialDigit(char cValue, int16_t iPosition) :
+	Digit(OBJECT_TYPE_SPECIAL_DIGIT, cValue, iPosition)
+{
+	this->m_eType = OBJECT_TYPE_SPECIAL_DIGIT;
+}
+
+SpecialDigit::SpecialDigit(const SpecialDigit &digit) {
+	this->m_eType = digit.m_eType;
+	this->m_iPosition = digit.m_iPosition;
+	this->m_cValue = digit.m_cValue;
 }
 
 SpecialDigit::~SpecialDigit() {
 
-}
-
-bool SpecialDigit::isValid() {
-	return false;
 }

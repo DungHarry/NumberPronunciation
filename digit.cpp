@@ -8,8 +8,16 @@
 
 #include "digit.h"
 
-Digit::Digit(char cValue, int16_t iPosition) : 
+Digit::Digit() :
 	Object(OBJECT_TYPE_NORMAL_DIGIT),
+	m_cValue(DIGIT_VALUE_INVALID_VALUE),
+	m_iPosition(DIGIT_POSITION_INVALID_VALUE)
+{
+
+}
+
+Digit::Digit(ObjectType eType, char cValue, int16_t iPosition) :
+	Object(eType != OBJECT_TYPE_NORMAL_DIGIT && eType != OBJECT_TYPE_SPECIAL_DIGIT ? OBJECT_TYPE_NORMAL_DIGIT : eType),
 	m_cValue(cValue),
 	m_iPosition(iPosition)
 {
@@ -24,7 +32,7 @@ char Digit::getValue() {
 	return this->m_cValue;
 }
 
-void Digit::setValue(char cValue) {
+void Digit::setValue(const char cValue) {
 	this->m_cValue = cValue;
 }
 
@@ -32,7 +40,7 @@ int16_t Digit::getPosition() {
 	return this->m_iPosition;
 }
 
-void Digit::setPosition(int16_t iPosition) {
+void Digit::setPosition(const int16_t iPosition) {
 	this->m_iPosition;
 }
 

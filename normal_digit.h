@@ -13,10 +13,10 @@
 
 class NormalDigit : public Digit {
 public:
-	NormalDigit(char cValue = DIGIT_VALUE_INVALID_VALUE, int16_t iPosition = DIGIT_POSITION_INVALID_VALUE);
+	NormalDigit();
+	NormalDigit(AttributeType eType, char cValue, int16_t iPosition);
+	NormalDigit(const NormalDigit &digit);
 	virtual ~NormalDigit();
-
-	virtual bool isValid();
 };
 
 #endif

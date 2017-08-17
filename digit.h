@@ -16,17 +16,18 @@
 
 class Digit : public Object {
 public:
-	Digit(char cValue = DIGIT_VALUE_INVALID_VALUE, int16_t iPosition = DIGIT_POSITION_INVALID_VALUE);
+	Digit();
+	Digit(ObjectType eType, char cValue, int16_t iPosition);
 	virtual ~Digit();
 
-	char getValue();
-	void setValue(char cValue);
+	virtual char getValue();
+	virtual void setValue(const char cValue);
 
-	int16_t getPosition();
-	void setPosition(int16_t iPosition);
+	virtual int16_t getPosition();
+	virtual void setPosition(const int16_t iPosition);
 
 	virtual bool isValid();
-private:
+protected:
 	int16_t m_iPosition;
 	char m_cValue;
 };
