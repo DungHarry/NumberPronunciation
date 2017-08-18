@@ -9,24 +9,26 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_CONTAINER_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_CONTAINER_H_
 
+#include "comparable.h"
 #include <memory>
 
 using namespace std;
 
-template <class B>
-class Container : {
+class Container {
 public:
 	Container();
-	Container(shared_ptr<B> &data);
+	Container(shared_ptr<Comparable> &data);
+	Container(const Container &con);
 	virtual ~Container();
 
-	bool operator< (const Container<B> &c);
+	bool operator< (const Container &c);
+	bool operator== (const Container &c);
 
-	shared_ptr<B>& getData();
+	shared_ptr<Comparable> getData() const;
 
-	void setData(shared_ptr<B> &data);
+	void setData(shared_ptr<Comparable> &data);
 private:
-	shared_ptr<B> m_spData;
+	shared_ptr<Comparable> m_spData;
 };
 
 #endif

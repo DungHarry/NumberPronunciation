@@ -8,36 +8,46 @@
 
 #include "container.h"
 
-template <class B>
-Container<B>::Container() :
+Container::Container() :
 	m_spData(NULL)
 {
 
 }
 
-template <class B>
-Container<B>::Container(shared_ptr<B> &data) :
+Container::Container(shared_ptr<Comparable> &data) :
 	m_spData(data)
 {
 
 }
 
-template <class B>
-Container<B>::~Container() {
+Container::Container(const Container &con) :
+	m_spData(con.m_spData)
+{
+
+}
+
+Container::~Container() {
 	this->m_spData.reset();
 }
 
-template <class B>
-bool Container<B>::operator< (const Container<B> &c) {
-	return *(this->m_spData) < *(c.m_spData);
+bool Container::operator< (const Container &c) {
+	if (this->m_spData.get() == NULL || c.m_spData.get() == NULL)
+		return false;
+
+	return this->m_spData->less(*(c.m_spData));
 }
 
-template <class B>
-shared_ptr<B>& Container<B>::getData() {
-	return this->m_spData;
+bool Container::operator== (const Container &c) {
+	if (this->m_spData.get() == NULL || c.m_spData.get() == NULL)
+		return false;
+
+	return this->m_spData->equal(*(c.m_spData));
 }
 
-template <class B>
-void Container<B>::setData(shared_ptr<B> &data) {
+shared_ptr<Comparable> Container::getData() const{
+	return m_spData;
+}
+
+void Container::setData(shared_ptr<Comparable> &data) {
 	this->m_spData = data;
 }

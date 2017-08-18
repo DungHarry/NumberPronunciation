@@ -11,11 +11,12 @@
 
 #include "global.h"
 #include "base.h"
+#include "comparable.h"
 #include <memory>
 
 #define ATTRIBUTE_ID_INVALID_VALUE (static_cast<int16_t>(-1))
 
-class Attribute : public Base {
+class Attribute : public Base, public Comparable {
 public:
 	Attribute();
 	Attribute(int16_t iId, AttributeType eType);
@@ -27,7 +28,8 @@ public:
 	virtual int16_t getId();
 	virtual void setId(const int16_t iId);
 
-	bool operator< (const Attribute &b);
+	virtual bool less(const Comparable &attr);
+	virtual bool equal(const Comparable &attr);
 protected:
 	AttributeType m_eType;
 	int16_t m_iId;

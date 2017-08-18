@@ -10,15 +10,19 @@
 #define _COC_COC_NUMBER_PRONUNCIATION_MANAGER_H_
 
 #include "container.h"
-#include "attribute.h"
-#include "object.h"
 #include <set>
+#include <memory>
 
 class Manager {
 public:
+	Manager();
+	virtual ~Manager();
 
+	Comparable* get(const Container &con);
+
+	void cleanUp();
 private:
-	set<Container<Attribute>> *pSpecialDigitAttribute;
+	auto_ptr<set<Container>> m_apObjects;
 };
 
 #endif
