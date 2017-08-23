@@ -33,3 +33,11 @@ void Manager::cleanUp() {
 		this->m_apObjects.reset();
 	}
 }
+
+Manager::iterator Manager::begin() {
+    return this->m_apObjects->begin();
+}
+
+Manager::iterator Manager::end() {
+    return this->m_apObjects->end();
+}

@@ -24,9 +24,6 @@ public:
 	virtual bool isValid();
 protected:
 	ObjectType m_eType;
-
-private:
-	virtual bool compare(const Base &b);
 };
 
 #endif

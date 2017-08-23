@@ -14,7 +14,7 @@ NormalDigitAttribute::NormalDigitAttribute() :
 
 }
 
-NormalDigitAttribute::NormalDigitAttribute(int16_t iId, char cDigit, const char *cpcPronunciation) :
+NormalDigitAttribute::NormalDigitAttribute(int16_t iId, char cDigit, const wchar_t *cpcPronunciation) :
 	DigitAttribute(ATTRIBUTE_TYPE_NORMAL_DIGIT, iId, cDigit, cpcPronunciation)
 {
 

@@ -9,14 +9,21 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_HANDLER_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_HANDLER_H_
 
+#include "global.h"
 #include "base.h"
 
 class Handler : public Base {
 public:
 	Handler();
+    Handler(HandlerType eType);
 	virtual ~Handler();
 
-	virtual void execute() = 0;
+    virtual bool execute() = 0;
+
+    HandlerType getType();
+    void setType(HandlerType eType);
+protected:
+    HandlerType m_eType;
 };
 
 #endif

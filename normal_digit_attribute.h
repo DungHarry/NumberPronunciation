@@ -14,7 +14,7 @@
 class NormalDigitAttribute : public DigitAttribute {
 public:
 	NormalDigitAttribute();
-	NormalDigitAttribute(int16_t iId, char cDigit, const char *cpcPronunciation);
+    NormalDigitAttribute(int16_t iId, char cDigit, const wchar_t *cpcPronunciation);
 	NormalDigitAttribute(const NormalDigitAttribute &digitAttribute);
 	virtual ~NormalDigitAttribute();
 };

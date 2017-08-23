@@ -15,7 +15,7 @@ ConditionDigitAttribute::ConditionDigitAttribute() :
 	this->m_eType = ATTRIBUTE_TYPE_CONDITION_DIGIT; 
 }
 
-ConditionDigitAttribute::ConditionDigitAttribute(int16_t iPosition, int16_t iId, char cDigit, const char *cpcPronunciation) :
+ConditionDigitAttribute::ConditionDigitAttribute(int16_t iPosition, int16_t iId, char cDigit, const wchar_t *cpcPronunciation) :
 	DigitAttribute(ATTRIBUTE_TYPE_CONDITION_DIGIT, iId, cDigit, cpcPronunciation),
 	m_iPosition(iPosition)
 {

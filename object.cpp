@@ -36,9 +36,5 @@ void Object::setType(const ObjectType eType) {
 }
 
 bool Object::isValid() {
-
-}
-
-bool Object::compare(const Base &b) {
-	return false;
+    return false;
 }

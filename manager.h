@@ -15,12 +15,18 @@
 
 class Manager {
 public:
+    typedef set<Container>::iterator iterator;
+    typedef set<Container>::reverse_iterator reverse_iterator;
+
 	Manager();
 	virtual ~Manager();
 
 	Comparable* get(const Container &con);
 
 	void cleanUp();
+
+    iterator begin();
+    iterator end();
 private:
 	auto_ptr<set<Container>> m_apObjects;
 };

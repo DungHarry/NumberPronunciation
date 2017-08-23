@@ -19,19 +19,16 @@
 class DigitAttribute : public Attribute {
 public:
 	DigitAttribute();
-	DigitAttribute(AttributeType eType, int16_t iId, char cDigit, const char *cpcPronunciation);
+    DigitAttribute(AttributeType eType, int16_t iId, char cDigit, const wchar_t *cpcPronunciation);
 	virtual ~DigitAttribute();
-
-	virtual int16_t getId();
-	virtual void setId(const int16_t iId); 
 
 	virtual char getDigit();
 	virtual void setDigit(const char cDigit);
 
-	virtual const char* getPronunciation();
-	virtual void setPronunciation(const char *cpcPronunciation);
+    virtual const wchar_t* getPronunciation();
+    virtual void setPronunciation(const wchar_t *cpcPronunciation);
 protected:
-	auto_ptr<pair<char, auto_ptr<string>>> m_apCouple;
+    auto_ptr<pair<char, auto_ptr<wstring>>> m_apCouple;
 };
 
 #endif

@@ -9,12 +9,13 @@
 #include "language.h"
 
 Language::Language() :
-	m_apsName(NULL)
+    m_apsName(NULL),
+    m_apsLocaleName (new string(LANGUAGE_LOCALE_NAME_DEFAULT_VALUE))
 {
 
 }
 
-Language::Language(const char *cpcName) :
+Language::Language(const char *cpcName, const char *cpcLocaleName) :
 	m_apsName(cpcName == NULL ? NULL : new string(cpcName))
 {
 
@@ -22,6 +23,7 @@ Language::Language(const char *cpcName) :
 
 Language::~Language() {
 	this->m_apsName.reset();
+    this->m_apsLocaleName.reset();
 }
 
 const char* Language::getName() {
@@ -30,6 +32,14 @@ const char* Language::getName() {
 
 void Language::setName(const char *cpcName) {
 	this->m_apsName.reset(cpcName == NULL ? NULL : new string(cpcName));
+}
+
+const char* Language::getLocaleName() {
+    return (this->m_apsLocaleName.get() == NULL) ? NULL : this->m_apsLocaleName->c_str();
+}
+
+void Language::setLocaleName(const char *cpcLocaleName) {
+    this->m_apsLocaleName.reset(cpcLocaleName == NULL ? NULL : new string(cpcLocaleName));
 }
 
 bool Language::less(const Comparable &lang) {

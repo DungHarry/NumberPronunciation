@@ -16,7 +16,7 @@
 class ConditionDigitAttribute : public DigitAttribute {
 public:
 	ConditionDigitAttribute();
-	ConditionDigitAttribute(int16_t iPosition, int16_t iId, char cDigit, const char *cpcPronunciation);
+    ConditionDigitAttribute(int16_t iPosition, int16_t iId, char cDigit, const wchar_t *cpcPronunciation);
 	virtual ~ConditionDigitAttribute();
 
 	virtual int16_t getPosition();

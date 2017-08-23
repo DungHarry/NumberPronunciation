@@ -18,20 +18,25 @@
 
 #define LANGUAGE_TYPE_INVALID_VALUE (LANGUAGE_TYPE_NONE)
 #define LANGUAGE_ID_INVALID_VALUE (static_cast<int32_t>(-1))
+#define LANGUAGE_LOCALE_NAME_DEFAULT_VALUE ("C")
 
 class Language : public Base, public Comparable {
 public:
 	Language();
-	Language(const char *cpcName);
+    Language(const char *cpcName, const char *cpcLocaleName);
 	virtual ~Language();
 	
 	const char* getName();
 	void setName(const char *cpcName);
 
+    const char* getLocaleName();
+    void setLocaleName(const char *cpcLocaleName);
+
 	virtual bool less(const Comparable &lang);
 	virtual bool equal(const Comparable &lang);
 protected:
 	auto_ptr<string> m_apsName;
+    auto_ptr<string> m_apsLocaleName;
 };
 
 #endif

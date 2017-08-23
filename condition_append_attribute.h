@@ -14,22 +14,22 @@
 #include <memory>
 #include <string>
 
-#define CONDITION_APPEND_ATTRIBUTE_POSITION_INVLAID_VALUE (static_cast<int16_t>(-1))
+#define CONDITION_APPEND_ATTRIBUTE_UNITS_INVLAID_VALUE (static_cast<int16_t>(-1))
 
 class ConditionAppendAttribute : public Attribute {
 public:
 	ConditionAppendAttribute();
-	ConditionAppendAttribute(int16_t iId, int16_t iPosition, const char *cpcPronunciation);
+    ConditionAppendAttribute(int16_t iId, int16_t iPosition, const wchar_t *cpcPronunciation);
 	ConditionAppendAttribute(const ConditionAppendAttribute &attribute);
 	virtual ~ConditionAppendAttribute();
 
-	virtual int16_t getPosition();
-	virtual void setPosition(const int16_t iPosition);
+    virtual int16_t getUnits();
+    virtual void setUnits(const int16_t iUnits);
 
-	virtual const char* getPronunciation();
-	virtual void setPronunciation(const char *cpcPronunciation);
+    virtual const wchar_t* getPronunciation();
+    virtual void setPronunciation(const wchar_t *cpcPronunciation);
 private:
-	auto_ptr<pair<int16_t, auto_ptr<string>>> m_apCouple;
+    auto_ptr<pair<int16_t, auto_ptr<wstring>>> m_apCouple;
 };
 
 #endif
