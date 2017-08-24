@@ -19,8 +19,8 @@ Config::Config() :
 
 }
 
-Config::Config(const char *cpcLangName) :
-	m_apLang(new Language(cpcLangName)),
+Config::Config(const char *cpcLangName, const char *cpcLocaleName) :
+	m_apLang(new Language(cpcLangName, cpcLocaleName)),
 	m_apAttributes(new vector<shared_ptr<Attribute>>()),
 	m_apSpecialDigitAttributes(new set<Container>()),
 	m_apNormalDigitAttributes(new set<Container>()),

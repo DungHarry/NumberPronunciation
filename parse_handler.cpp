@@ -13,7 +13,7 @@ auto_ptr<ParseHandler> ParseHandler::m_apInstance (NULL);
 ParseHandler::ParseHandler() :
     Handler(HANDLER_TYPE_PARSE),
     m_apConfig (NULL),
-    m_apsBuffer (new string())
+    m_apsBuffer (new wstring())
 {
 
 }
@@ -38,15 +38,15 @@ const wchar_t* ParseHandler::getBuffer() {
     return (this->m_apsBuffer.get() == NULL) ? NULL : this->m_apsBuffer->c_str();
 }
 
-void ParseHandler::wsetBuffer(const wchar_t *cpcBuffer) {
+void ParseHandler::setBuffer(const wchar_t *cpcBuffer) {
     if(cpcBuffer == NULL)
         return;
 
-    this->m_apsBuffer.reset(new string(cpcBuffer));
+    this->m_apsBuffer.reset(new wstring(cpcBuffer));
 }
 
 bool ParseHandler::execute() {
-    wchar_t *pwcLine;
+    wchar_t *pwcLine, *pwcCleanLine, wcFirstCharacter, wcSecondCharacter;
 
     if(this->m_apsBuffer.get() == NULL)
         return false;
@@ -62,7 +62,29 @@ bool ParseHandler::execute() {
             continue;
         }
 
+		pwcCleanLine = NULL;
 
+		if(StringUtility::getInstance()->clearWString(pwcLine, &pwcCleanLine) == false || pwcCleanLine == NULL) {
+			this->m_apConfig.reset(new Config());
+
+			if((wcFirstCharacter = *(pwcCleanLine + 0)) == static_cast<wchar_t>('l')) {
+				if ((wcSecondCharacter = *(pwcCleanLine + 1)) == static_cast<wchar_t>('a'))
+					this->parseLanguage(pwcCleanLine, this->m_apConfig.get());
+				else if (wcSecondCharacter == static_cast<wchar_t>('o'))
+					this->parseLocaleName(pwcCleanLine, this->m_apConfig.get());
+			} else if(wcFirstCharacter == static_cast<wchar_t>('0'))
+				this->parseNormalDigitAttribute(pwcCleanLine, this->m_apConfig.get());
+			else if(wcFirstCharacter == static_cast<wchar_t>('1'))
+				this->parseSpecialDigitAttribute(pwcCleanLine, this->m_apConfig.get());
+			else if(wcFirstCharacter == static_cast<wchar_t>('2'))
+				this->parseMultipleDigitsAttribute(pwcCleanLine, this->m_apConfig.get());
+			else if(wcFirstCharacter == static_cast<wchar_t>('3'))
+				this->parseConditionAppendAttribute(pwcCleanLine, this->m_apConfig.get());
+			else if(wcFirstCharacter == static_cast<wchar_t>('4'))
+				this->parseConditionDigitAttribute(pwcCleanLine, this->m_apConfig.get());
+
+			delete[] pwcCleanLine;
+		}
 
         delete[] pwcLine;
     }
@@ -88,17 +110,49 @@ ParseHandler* ParseHandler::getInstance() {
 }
 
 bool ParseHandler::parseLanguage(const wchar_t *pwcLine, Config *pConfig) {
-    if(pwcLine == NULL || pConfig == NULL)
+	wchar_t *pwcBuffer;
+	char *pcLanguage;
+
+    if(pwcLine == NULL || pConfig == NULL || pConfig->getLang() == NULL)
         return false;
+
+	pwcBuffer = new wchar_t[1 << 10];
+
+	if (swscanf(pwcLine, L"lang %ls", pwcBuffer) == EOF || (pcLanguage = StringUtility::getInstance()->convertToChar(pwcBuffer)) == NULL) {
+		delete[] pwcBuffer;
+		
+		return false;
+	}
+
+	pConfig->getLang()->setName(pcLanguage); 
+
+	delete[] pwcBuffer;
+	delete[] pcLanguage;
 
     return true;
 }
 
 bool ParseHandler::parseLocaleName(const wchar_t *pwcLine, Config *pConfig) {
-    if(pwcLine == NULL || pConfig == NULL)
-        return false;
+	wchar_t *pwcBuffer;
+	char *pcLocale;
 
-    return true;
+	if (pwcLine == NULL || pConfig == NULL || pConfig->getLang() == NULL)
+		return false;
+
+	pwcBuffer = new wchar_t[1 << 10];
+
+	if (swscanf(pwcLine, L"locale %ls", pwcBuffer) || (pcLocale = StringUtility::getInstance()->convertToChar(pwcBuffer)) == NULL) {
+		delete[] pwcBuffer;
+
+		return false;
+	}
+
+	pConfig->getLang()->setName(pcLocale);
+
+	delete[] pwcBuffer;
+	delete[] pcLocale;
+
+	return true;
 }
 
 bool ParseHandler::parseNormalDigitAttribute(const wchar_t *pwcLine, Config *pConfig) {

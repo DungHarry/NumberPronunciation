@@ -28,7 +28,7 @@ public:
     wstring* convertToWString(const string *psString);
     string* convertToString(const wstring *pwsString);
 
-    bool clearString(const char *pcString, wchar_t **pcResult);
+    bool clearString(const char *pcString, char **pcResult);
     bool clearWString(const wchar_t *pwcString, wchar_t **pwcResult);
 
     bool existWChar(const wchar_t *cpwcString, const wchar_t wcCharacter);

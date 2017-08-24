@@ -88,7 +88,7 @@ string* StringUtility::convertToString(const wstring *pwsString) {
     return psResult;
 }
 
-bool StringUtility::clearString(const char *pcString, wchar_t **pcResult) {
+bool StringUtility::clearString(const char *pcString, char **pcResult) {
     int32_t iStringLength;
     int32_t i, iStartIndex, iEndIndex;
     bool bCommentContain;
@@ -113,9 +113,9 @@ bool StringUtility::clearString(const char *pcString, wchar_t **pcResult) {
     *pcResult = new char[(iEndIndex - iStartIndex) + 2];
 
     for(i = iStartIndex; i <= iEndIndex; i ++)
-        *(pcResult + i - iStartIndex) = *(pcString + i);
+        *((*pcResult) + i - iStartIndex) = *(pcString + i);
 
-    *(pcResult + (iEndIndex - iStartIndex) + 1) = '\0';
+    *((*pcResult) + (iEndIndex - iStartIndex) + 1) = '\0';
 
     return true;
 }
@@ -129,7 +129,7 @@ bool StringUtility::clearWString(const wchar_t *pwcString, wchar_t **pwcResult) 
         return false;
 
     for(bCommentContain = false, i = 0; i < iStringLength - 1; i ++)
-        if(*(pwcString + i) == static_cast<wchar_t>(0x2F) && *(pcString + i + 1) == static_cast<wchar_t>(0x2F)) {
+        if(*(pwcString + i) == static_cast<wchar_t>(0x2F) && *(pwcString + i + 1) == static_cast<wchar_t>(0x2F)) {
             bCommentContain = true;
 
             break;
@@ -145,9 +145,9 @@ bool StringUtility::clearWString(const wchar_t *pwcString, wchar_t **pwcResult) 
     *pwcResult = new wchar_t[(iEndIndex - iStartIndex) + 2];
 
     for(i = iStartIndex; i <= iEndIndex; i ++)
-        *(pwcResult + i - iStartIndex) = *(pwcString + i);
+        *((*pwcResult) + i - iStartIndex) = *(pwcString + i);
 
-    *(pwcResult + (iEndIndex - iStartIndex) + 1) = L'\0';
+    *((*pwcResult) + (iEndIndex - iStartIndex) + 1) = L'\0';
 
     return true;
 }

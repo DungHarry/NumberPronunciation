@@ -19,7 +19,7 @@
 class Config : public Base, public Comparable {
 public:
 	Config();
-	Config(const char *cpcLangName);
+	Config(const char *cpcLangName, const char *cpcLocaleName);
 	Config(const Config &conf);
 	virtual ~Config();
 
