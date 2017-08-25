@@ -14,7 +14,7 @@ SpecialDigitAttribute::SpecialDigitAttribute() :
 	this->m_eType = ATTRIBUTE_TYPE_SPECIAL_DIGIT;
 }
 
-SpecialDigitAttribute::SpecialDigitAttribute(int16_t iId, wchar_tcDigit, const wchar_t*cpcPronunciation) :
+SpecialDigitAttribute::SpecialDigitAttribute(int16_t iId, char cDigit, const wchar_t*cpcPronunciation) :
 	DigitAttribute(ATTRIBUTE_TYPE_SPECIAL_DIGIT, iId, cDigit, cpcPronunciation)
 {
 

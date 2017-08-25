@@ -14,7 +14,7 @@
 class SpecialDigitAttribute : public DigitAttribute {
 public:
 	SpecialDigitAttribute();
-    SpecialDigitAttribute(int16_t iId, wchar_tcDigit, const wchar_t*cpcPronunciation);
+    SpecialDigitAttribute(int16_t iId, char cDigit, const wchar_t*cpcPronunciation);
 	SpecialDigitAttribute(const SpecialDigitAttribute &digitAttribute);
 	virtual ~SpecialDigitAttribute();
 };

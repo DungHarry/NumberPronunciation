@@ -12,6 +12,7 @@ Config::Config() :
 	m_apLang(new Language()),
 	m_apAttributes(new vector<shared_ptr<Attribute>>()),
 	m_apSpecialDigitAttributes(new set<Container>()),
+	m_apMultipleDigitsAttributes(new set<Container>()),
 	m_apNormalDigitAttributes(new set<Container>()),
 	m_apConditionAppendAttributes(new set<Container>()),
 	m_apConditionDigitAttributes(new set<Container>())
@@ -23,6 +24,7 @@ Config::Config(const char *cpcLangName, const char *cpcLocaleName) :
 	m_apLang(new Language(cpcLangName, cpcLocaleName)),
 	m_apAttributes(new vector<shared_ptr<Attribute>>()),
 	m_apSpecialDigitAttributes(new set<Container>()),
+	m_apMultipleDigitsAttributes(new set<Container>()),
 	m_apNormalDigitAttributes(new set<Container>()),
 	m_apConditionAppendAttributes(new set<Container>()),
 	m_apConditionDigitAttributes(new set<Container>())
@@ -34,6 +36,7 @@ Config::Config(const Config &conf) :
 	m_apLang((conf.m_apLang.get() == NULL || conf.m_apLang->getName() == NULL) ? NULL : new Language(conf.m_apLang->getName())),
 	m_apAttributes(new vector<shared_ptr<Attribute>>()),
 	m_apSpecialDigitAttributes(new set<Container>()),
+	m_apMultipleDigitsAttributes(new set<Container>()),
 	m_apNormalDigitAttributes(new set<Container>()),
 	m_apConditionAppendAttributes(new set<Container>()),
 	m_apConditionDigitAttributes(new set<Container>())
@@ -49,7 +52,13 @@ Config::Config(const Config &conf) :
 	}
 
 	if (conf.m_apNormalDigitAttributes.get() != NULL) {
-		for (set<Container>)
+		for (set<Container>::iterator iter = conf.m_apNormalDigitAttributes->begin(); iter != conf.m_apSpecialDigitAttributes->end(); ++iter)
+			this->m_apNormalDigitAttributes->insert(*iter);
+	}
+
+	if (conf.m_apMultipleDigitsAttributes.get() != NULL) {
+		for (set<Container>::iterator iter = conf.m_apMultipleDigitsAttributes->begin(); iter != conf.m_apMultipleDigitsAttributes->end(); ++iter)
+			this->m_apMultipleDigitsAttributes->insert(*iter);
 	}
 }
 
@@ -74,6 +83,11 @@ Config::~Config() {
 	if (this->m_apConditionDigitAttributes.get() != NULL) {
 		this->m_apConditionDigitAttributes->clear();
 		this->m_apConditionDigitAttributes.reset();
+	}
+
+	if (this->m_apMultipleDigitsAttributes.get() != NULL) {
+		this->m_apMultipleDigitsAttributes->clear();
+		this->m_apMultipleDigitsAttributes.reset();
 	}
 
 	if (this->m_apAttributes.get() != NULL) {
@@ -111,7 +125,28 @@ set<Container>* Config::getConditionDigitAttributes() {
 }
 
 bool Config::classify() {
+	if (this->m_apAttributes.get() == NULL || this->m_apAttributes->size() <= 0 || this->m_apConditionAppendAttributes.get() == NULL || this->m_apConditionDigitAttributes.get() == NULL || this->m_apNormalDigitAttributes.get() == NULL || this->m_apSpecialDigitAttributes.get() == NULL)
+		return false;
 
+	this->m_apConditionAppendAttributes->clear();
+	this->m_apConditionDigitAttributes->clear();
+	this->m_apNormalDigitAttributes->clear();
+	this->m_apSpecialDigitAttributes->clear();
+
+	for (vector<shared_ptr<Attribute>>::iterator iter = this->m_apAttributes->begin(); iter != this->m_apAttributes->end(); ++ iter) {
+		if ((*iter)->getId() == ATTRIBUTE_TYPE_CONDITION_APPEND)
+			this->m_apConditionAppendAttributes->insert(Container(shared_ptr<Comparable>(*iter)));
+		else if ((*iter)->getId() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
+			this->m_apConditionDigitAttributes->insert(shared_ptr<Comparable>(*iter));
+		else if ((*iter)->getId() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
+			this->m_apMultipleDigitsAttributes->insert(shared_ptr<Comparable>(*iter));
+		else if ((*iter)->getId() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
+			this->m_apNormalDigitAttributes->insert(shared_ptr<Comparable>(*iter));
+		else if ((*iter)->getId() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
+			this->m_apSpecialDigitAttributes->insert(shared_ptr<Comparable>(*iter));
+	}
+
+	return true;
 }
 
 bool Config::less(const Comparable &config) {

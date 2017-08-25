@@ -46,6 +46,7 @@ private:
 	auto_ptr<vector<shared_ptr<Attribute>>> m_apAttributes;
 	auto_ptr<set<Container>> m_apSpecialDigitAttributes;
 	auto_ptr<set<Container>> m_apNormalDigitAttributes;
+	auto_ptr<set<Container>> m_apMultipleDigitsAttributes;
 	auto_ptr<set<Container>> m_apConditionAppendAttributes;
 	auto_ptr<set<Container>> m_apConditionDigitAttributes;
 };

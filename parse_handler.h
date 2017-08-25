@@ -15,6 +15,11 @@
 #include "string_utility.h"
 #include "config.h"
 #include "handler.h"
+#include "normal_digit_attribute.h"
+#include "special_digit_attribute.h"
+#include "multiple_digits_attribute.h"
+#include "condition_append_attribute.h"
+#include "condition_digit_attribute.h"
 
 using namespace std;
 
