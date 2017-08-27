@@ -9,6 +9,7 @@
 #include "number.h"
 
 Number::Number() : 
+    Object(OBJECT_TYPE_NUMBER),
 	m_iLowestUnit(NUMBER_LOWEST_UNIT_INVALID_VALUE),
 	m_apNumbers(new vector<auto_ptr<Object>>())
 {
@@ -16,6 +17,7 @@ Number::Number() :
 }
 
 Number::Number(const int32_t iLowestUnit) :
+    Object(OBJECT_TYPE_NUMBER),
 	m_iLowestUnit(iLowestUnit < 0 ? NUMBER_LOWEST_UNIT_INVALID_VALUE : iLowestUnit),
 	m_apNumbers(new vector<auto_ptr<Object>>())
 {
