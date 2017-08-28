@@ -50,6 +50,9 @@ protected:
     char* getNumberStringNumericalPart();
     char* getNumberStringFloatingPointPart();
 private:
+	bool processSpecialDigit(char cSpecialDigit);
+	bool processNumberString(const char *cpcNumberString);
+
     static auto_ptr<NumberHandler> m_apInstance;
 };
 

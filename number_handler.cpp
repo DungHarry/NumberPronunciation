@@ -319,3 +319,16 @@ char* NumberHandler::getNumberStringFloatingPointPart() {
 
     return pcResult;
 }
+
+bool NumberHandler::processSpecialDigit(char cSpecialDigit) {
+	Object *pSpecialDigit;
+
+	if (this->m_apNumber.get() == NULL)
+		return false;
+
+	pSpecialDigit = new SpecialDigit(cSpecialDigit, 0);
+}
+
+bool NumberHandler::processNumberString(const char *cpcNumberString) {
+
+}
