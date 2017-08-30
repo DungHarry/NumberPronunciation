@@ -9,141 +9,145 @@
 #include "config.h"
 
 Config::Config() :
-	m_apLang(new Language()),
-	m_apAttributes(new vector<shared_ptr<Attribute>>()),
-	m_apSpecialDigitAttributes(new set<Container>()),
-	m_apMultipleDigitsAttributes(new set<Container>()),
-	m_apNormalDigitAttributes(new set<Container>()),
-	m_apConditionAppendAttributes(new set<Container>()),
-	m_apConditionDigitAttributes(new set<Container>())
+	m_upLang(new Language()),
+	m_upAttributes(new vector<shared_ptr<Attribute>>()),
+	m_upSpecialDigitAttributes(new set<Container>()),
+	m_upMultipleDigitsAttributes(new set<Container>()),
+	m_upNormalDigitAttributes(new set<Container>()),
+	m_upConditionAppendAttributes(new set<Container>()),
+	m_upConditionDigitAttributes(new set<Container>())
 {
 
 }
 
 Config::Config(const char *cpcLangName, const char *cpcLocaleName) :
-	m_apLang(new Language(cpcLangName, cpcLocaleName)),
-	m_apAttributes(new vector<shared_ptr<Attribute>>()),
-	m_apSpecialDigitAttributes(new set<Container>()),
-	m_apMultipleDigitsAttributes(new set<Container>()),
-	m_apNormalDigitAttributes(new set<Container>()),
-	m_apConditionAppendAttributes(new set<Container>()),
-	m_apConditionDigitAttributes(new set<Container>())
+	m_upLang(new Language(cpcLangName, cpcLocaleName)),
+	m_upAttributes(new vector<shared_ptr<Attribute>>()),
+	m_upSpecialDigitAttributes(new set<Container>()),
+	m_upMultipleDigitsAttributes(new set<Container>()),
+	m_upNormalDigitAttributes(new set<Container>()),
+	m_upConditionAppendAttributes(new set<Container>()),
+	m_upConditionDigitAttributes(new set<Container>())
 {
 
 }
 
 Config::Config(const Config &conf) : 
-	m_apLang((conf.m_apLang.get() == NULL || conf.m_apLang->getName() == NULL) ? NULL : new Language(conf.m_apLang->getName())),
-	m_apAttributes(new vector<shared_ptr<Attribute>>()),
-	m_apSpecialDigitAttributes(new set<Container>()),
-	m_apMultipleDigitsAttributes(new set<Container>()),
-	m_apNormalDigitAttributes(new set<Container>()),
-	m_apConditionAppendAttributes(new set<Container>()),
-	m_apConditionDigitAttributes(new set<Container>())
+	m_upLang((conf.m_upLang.get() == nullptr || conf.m_upLang->getName() == nullptr) ? nullptr : new Language(conf.m_upLang->getName())),
+	m_upAttributes(new vector<shared_ptr<Attribute>>()),
+	m_upSpecialDigitAttributes(new set<Container>()),
+	m_upMultipleDigitsAttributes(new set<Container>()),
+	m_upNormalDigitAttributes(new set<Container>()),
+	m_upConditionAppendAttributes(new set<Container>()),
+	m_upConditionDigitAttributes(new set<Container>())
 {
-	if (conf.m_apAttributes.get() != NULL) {
-		for (vector<shared_ptr<Attribute>>::iterator iter = conf.m_apAttributes->begin(); iter != conf.m_apAttributes->end(); ++iter)
-			this->m_apAttributes->push_back(*iter);
+	if (conf.m_upAttributes.get() != nullptr) {
+		for (vector<shared_ptr<Attribute>>::iterator iter = conf.m_upAttributes->begin(); iter != conf.m_upAttributes->end(); ++iter)
+			this->m_upAttributes->push_back(*iter);
 	}
 
-	if (conf.m_apSpecialDigitAttributes.get() != NULL) {
-		for (set<Container>::iterator iter = conf.m_apSpecialDigitAttributes->begin(); iter != conf.m_apSpecialDigitAttributes->end(); ++iter)
-			this->m_apSpecialDigitAttributes->insert(*iter);
+	if (conf.m_upSpecialDigitAttributes.get() != nullptr) {
+		for (set<Container>::iterator iter = conf.m_upSpecialDigitAttributes->begin(); iter != conf.m_upSpecialDigitAttributes->end(); ++iter)
+			this->m_upSpecialDigitAttributes->insert(*iter);
 	}
 
-	if (conf.m_apNormalDigitAttributes.get() != NULL) {
-		for (set<Container>::iterator iter = conf.m_apNormalDigitAttributes->begin(); iter != conf.m_apSpecialDigitAttributes->end(); ++iter)
-			this->m_apNormalDigitAttributes->insert(*iter);
+	if (conf.m_upNormalDigitAttributes.get() != nullptr) {
+		for (set<Container>::iterator iter = conf.m_upNormalDigitAttributes->begin(); iter != conf.m_upSpecialDigitAttributes->end(); ++iter)
+			this->m_upNormalDigitAttributes->insert(*iter);
 	}
 
-	if (conf.m_apMultipleDigitsAttributes.get() != NULL) {
-		for (set<Container>::iterator iter = conf.m_apMultipleDigitsAttributes->begin(); iter != conf.m_apMultipleDigitsAttributes->end(); ++iter)
-			this->m_apMultipleDigitsAttributes->insert(*iter);
+	if (conf.m_upMultipleDigitsAttributes.get() != nullptr) {
+		for (set<Container>::iterator iter = conf.m_upMultipleDigitsAttributes->begin(); iter != conf.m_upMultipleDigitsAttributes->end(); ++iter)
+			this->m_upMultipleDigitsAttributes->insert(*iter);
 	}
 }
 
 Config::~Config() {
-	this->m_apLang.reset();
+	this->m_upLang.reset();
 
-	if (this->m_apSpecialDigitAttributes.get() != NULL) {
-		this->m_apSpecialDigitAttributes->clear();
-		this->m_apSpecialDigitAttributes.reset();
+	if (this->m_upSpecialDigitAttributes.get() != nullptr) {
+		this->m_upSpecialDigitAttributes->clear();
+		this->m_upSpecialDigitAttributes.reset();
 	}
 
-	if (this->m_apNormalDigitAttributes.get() != NULL) {
-		this->m_apNormalDigitAttributes->clear();
-		this->m_apNormalDigitAttributes.reset();
+	if (this->m_upNormalDigitAttributes.get() != nullptr) {
+		this->m_upNormalDigitAttributes->clear();
+		this->m_upNormalDigitAttributes.reset();
 	}
 
-	if (this->m_apConditionAppendAttributes.get() != NULL) {
-		this->m_apConditionAppendAttributes->clear();
-		this->m_apConditionAppendAttributes.reset();
+	if (this->m_upConditionAppendAttributes.get() != nullptr) {
+		this->m_upConditionAppendAttributes->clear();
+		this->m_upConditionAppendAttributes.reset();
 	}
 
-	if (this->m_apConditionDigitAttributes.get() != NULL) {
-		this->m_apConditionDigitAttributes->clear();
-		this->m_apConditionDigitAttributes.reset();
+	if (this->m_upConditionDigitAttributes.get() != nullptr) {
+		this->m_upConditionDigitAttributes->clear();
+		this->m_upConditionDigitAttributes.reset();
 	}
 
-	if (this->m_apMultipleDigitsAttributes.get() != NULL) {
-		this->m_apMultipleDigitsAttributes->clear();
-		this->m_apMultipleDigitsAttributes.reset();
+	if (this->m_upMultipleDigitsAttributes.get() != nullptr) {
+		this->m_upMultipleDigitsAttributes->clear();
+		this->m_upMultipleDigitsAttributes.reset();
 	}
 
-	if (this->m_apAttributes.get() != NULL) {
-		this->m_apAttributes->clear();
-		this->m_apAttributes.reset();
+	if (this->m_upAttributes.get() != nullptr) {
+		this->m_upAttributes->clear();
+		this->m_upAttributes.reset();
 	}
 }
 
 Language* Config::getLang() {
-	return this->m_apLang.get();
+	return this->m_upLang.get();
 }
 
 void Config::setLang(Language *pLang) {
-	this->m_apLang.reset(pLang);
+	this->m_upLang.reset(pLang);
 }
 
 vector<shared_ptr<Attribute>>* Config::getAttributes() {
-	return this->m_apAttributes.get();
+	return this->m_upAttributes.get();
 }
 
 set<Container>* Config::getSpecialDigitAttributes() {
-	return this->m_apSpecialDigitAttributes.get();
+	return this->m_upSpecialDigitAttributes.get();
 }
 
 set<Container>* Config::getNormalDigitAttributes() {
-	return this->m_apNormalDigitAttributes.get();
+	return this->m_upNormalDigitAttributes.get();
 }
 
 set<Container>* Config::getConditionAppendAttributes() {
-	return this->m_apConditionAppendAttributes.get();
+	return this->m_upConditionAppendAttributes.get();
 }
 
 set<Container>* Config::getConditionDigitAttributes() {
-	return this->m_apConditionDigitAttributes.get();
+	return this->m_upConditionDigitAttributes.get();
+}
+
+set<Container>* Config::getMultipleDigitsAttributes() {
+	return this->m_upMultipleDigitsAttributes.get();
 }
 
 bool Config::classify() {
-	if (this->m_apAttributes.get() == NULL || this->m_apAttributes->size() <= 0 || this->m_apConditionAppendAttributes.get() == NULL || this->m_apConditionDigitAttributes.get() == NULL || this->m_apNormalDigitAttributes.get() == NULL || this->m_apSpecialDigitAttributes.get() == NULL)
+	if (this->m_upAttributes.get() == nullptr || this->m_upAttributes->size() <= 0 || this->m_upConditionAppendAttributes.get() == nullptr || this->m_upConditionDigitAttributes.get() == nullptr || this->m_upNormalDigitAttributes.get() == nullptr || this->m_upSpecialDigitAttributes.get() == nullptr)
 		return false;
 
-	this->m_apConditionAppendAttributes->clear();
-	this->m_apConditionDigitAttributes->clear();
-	this->m_apNormalDigitAttributes->clear();
-	this->m_apSpecialDigitAttributes->clear();
+	this->m_upConditionAppendAttributes->clear();
+	this->m_upConditionDigitAttributes->clear();
+	this->m_upNormalDigitAttributes->clear();
+	this->m_upSpecialDigitAttributes->clear();
 
-	for (vector<shared_ptr<Attribute>>::iterator iter = this->m_apAttributes->begin(); iter != this->m_apAttributes->end(); ++ iter) {
+	for (vector<shared_ptr<Attribute>>::iterator iter = this->m_upAttributes->begin(); iter != this->m_upAttributes->end(); ++ iter) {
 		if ((*iter)->getId() == ATTRIBUTE_TYPE_CONDITION_APPEND)
-			this->m_apConditionAppendAttributes->insert(Container(shared_ptr<Comparable>(*iter)));
+			this->m_upConditionAppendAttributes->insert(Container(shared_ptr<Comparable>(*iter)));
 		else if ((*iter)->getId() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
-			this->m_apConditionDigitAttributes->insert(shared_ptr<Comparable>(*iter));
+			this->m_upConditionDigitAttributes->insert(shared_ptr<Comparable>(*iter));
 		else if ((*iter)->getId() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
-			this->m_apMultipleDigitsAttributes->insert(shared_ptr<Comparable>(*iter));
+			this->m_upMultipleDigitsAttributes->insert(shared_ptr<Comparable>(*iter));
 		else if ((*iter)->getId() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
-			this->m_apNormalDigitAttributes->insert(shared_ptr<Comparable>(*iter));
+			this->m_upNormalDigitAttributes->insert(shared_ptr<Comparable>(*iter));
 		else if ((*iter)->getId() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
-			this->m_apSpecialDigitAttributes->insert(shared_ptr<Comparable>(*iter));
+			this->m_upSpecialDigitAttributes->insert(shared_ptr<Comparable>(*iter));
 	}
 
 	return true;
@@ -152,11 +156,11 @@ bool Config::classify() {
 bool Config::less(const Comparable &config) {
 	const Config *pConfig = dynamic_cast<const Config *>(&config);
 
-	return (pConfig == NULL || pConfig->m_apLang.get() == NULL || this->m_apLang.get() == NULL) ? false : this->m_apLang->less(*(pConfig->m_apLang));
+	return (pConfig == nullptr || pConfig->m_upLang.get() == nullptr || this->m_upLang.get() == nullptr) ? false : this->m_upLang->less(*(pConfig->m_upLang));
 }
 
 bool Config::equal(const Comparable &config) {
 	const Config *pConfig = dynamic_cast<const Config *>(&config);
 
-	return (pConfig == NULL || pConfig->m_apLang.get() == NULL || this->m_apLang.get() == NULL) ? false : this->m_apLang->equal(*(pConfig->m_apLang));
+	return (pConfig == nullptr || pConfig->m_upLang.get() == nullptr || this->m_upLang.get() == nullptr) ? false : this->m_upLang->equal(*(pConfig->m_upLang));
 }

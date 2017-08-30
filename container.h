@@ -21,8 +21,8 @@ public:
 	Container(const Container &con);
 	virtual ~Container();
 
-	bool operator< (const Container &c);
-	bool operator== (const Container &c);
+	friend bool operator< (const Container &con1, const Container &con2);
+	friend bool operator== (const Container &con1, const Container &con2);
 
 	shared_ptr<Comparable> getData() const;
 

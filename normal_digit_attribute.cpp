@@ -21,7 +21,7 @@ NormalDigitAttribute::NormalDigitAttribute(int16_t iId, char cDigit, const wchar
 }
 
 NormalDigitAttribute::NormalDigitAttribute(const NormalDigitAttribute &digitAttribute) :
-DigitAttribute(ATTRIBUTE_TYPE_NORMAL_DIGIT, digitAttribute.m_iId, digitAttribute.m_apCouple.get() == NULL ? DIGIT_ATTRIBUTE_DIGIT_INVALID_VALUE : digitAttribute.m_apCouple->first, digitAttribute.m_apCouple.get() == NULL || digitAttribute.m_apCouple->second.get() == NULL ? NULL : digitAttribute.m_apCouple->second->c_str())
+DigitAttribute(ATTRIBUTE_TYPE_NORMAL_DIGIT, digitAttribute.m_iId, digitAttribute.m_upCouple.get() == nullptr ? DIGIT_ATTRIBUTE_DIGIT_INVALID_VALUE : digitAttribute.m_upCouple->first, digitAttribute.m_upCouple.get() == nullptr || digitAttribute.m_upCouple->second.get() == nullptr ? nullptr : digitAttribute.m_upCouple->second->c_str())
 {
 
 }

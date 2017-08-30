@@ -27,8 +27,11 @@ public:
 
     virtual const wchar_t* getPronunciation();
     virtual void setPronunciation(const wchar_t *cpcPronunciation);
+
+	virtual bool less(const Comparable &attr);
+	virtual bool equal(const Comparable &attr);
 protected:
-    auto_ptr<pair<char, auto_ptr<wstring>>> m_apCouple;
+    unique_ptr<pair<char, unique_ptr<wstring>>> m_upCouple;
 };
 
 #endif

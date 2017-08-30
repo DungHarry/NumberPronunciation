@@ -14,11 +14,11 @@ bool LocaleHandler::setStreamLocale<wifstream>(wifstream *pStream);
 template
 bool LocaleHandler::setStreamLocale<wofstream>(wofstream *pStream);
 
-auto_ptr<LocaleHandler> LocaleHandler::m_apInstance (NULL);
+unique_ptr<LocaleHandler> LocaleHandler::m_upInstance (nullptr);
 
 LocaleHandler::LocaleHandler() :
     Handler(HANDLER_TYPE_LOCALE),
-    m_apsLocaleName (new string(LOCALE_HANDLER_LOCALE_NAME_DEFAULT_VALUE)),
+    m_upsLocaleName (new string(LOCALE_HANDLER_LOCALE_NAME_DEFAULT_VALUE)),
     m_eScope (LOCALE_HANDLER_SCOPE_ALL)
 {
 
@@ -27,20 +27,20 @@ LocaleHandler::LocaleHandler() :
 LocaleHandler::LocaleHandler(LocaleHandlerScope eScope, const char *cpcLocaleName) :
     Handler(HANDLER_TYPE_LOCALE),
     m_eScope (eScope < 0 || eScope >= LOCALE_HANDLER_SCOPE_COUNT ? LOCALE_HANDLER_SCOPE_ALL : eScope),
-    m_apsLocaleName (new string(cpcLocaleName == NULL ? LOCALE_HANDLER_LOCALE_NAME_DEFAULT_VALUE : cpcLocaleName))
+    m_upsLocaleName (new string(cpcLocaleName == nullptr ? LOCALE_HANDLER_LOCALE_NAME_DEFAULT_VALUE : cpcLocaleName))
 {
 
 }
 
 LocaleHandler::~LocaleHandler() {
-    m_apsLocaleName.reset();
+    m_upsLocaleName.reset();
 }
 
 bool LocaleHandler::execute() {
-    if(this->m_apsLocaleName.get() == NULL)
+    if(this->m_upsLocaleName.get() == nullptr)
         return false;
 
-    setlocale(this->m_eScope == LOCALE_HANDLER_SCOPE_ALL ? LC_ALL : (this->m_eScope == LOCALE_HANDLER_SCOPE_COLLATE ? LC_COLLATE : (this->m_eScope == LOCALE_HANDLER_SCOPE_MONETARY ? LC_MONETARY : (this->m_eScope == LOCALE_HANDLER_SCOPE_NUMERIC ? LC_NUMERIC : LC_TIME))), this->m_apsLocaleName->c_str());
+    setlocale(this->m_eScope == LOCALE_HANDLER_SCOPE_ALL ? LC_ALL : (this->m_eScope == LOCALE_HANDLER_SCOPE_COLLATE ? LC_COLLATE : (this->m_eScope == LOCALE_HANDLER_SCOPE_MONETARY ? LC_MONETARY : (this->m_eScope == LOCALE_HANDLER_SCOPE_NUMERIC ? LC_NUMERIC : LC_TIME))), this->m_upsLocaleName->c_str());
 }
 
 LocaleHandlerScope LocaleHandler::getScope() {
@@ -55,29 +55,29 @@ void LocaleHandler::setScope(LocaleHandlerScope eScope) {
 }
 
 const char* LocaleHandler::getLocaleName() {
-    return (this->m_apsLocaleName.get() == NULL) ? NULL : this->m_apsLocaleName->c_str();
+    return (this->m_upsLocaleName.get() == nullptr) ? nullptr : this->m_upsLocaleName->c_str();
 }
 
 void LocaleHandler::setLocaleName(const char *cpcLocaleName) {
-    if(cpcLocaleName == NULL)
+    if(cpcLocaleName == nullptr)
         return;
 
-    this->m_apsLocaleName.reset(new string(cpcLocaleName));
+    this->m_upsLocaleName.reset(new string(cpcLocaleName));
 }
 
 template <class T>
 bool LocaleHandler::setStreamLocale(T *pStream) {
-    if(pStream == NULL || this->m_apsLocaleName.get() == NULL)
+    if(pStream == nullptr || this->m_upsLocaleName.get() == nullptr)
         return false;
 
-    pStream->imbue(locale(this->m_apsLocaleName->c_str()));
+    pStream->imbue(locale(this->m_upsLocaleName->c_str()));
 
     return true;
 }
 
 LocaleHandler* LocaleHandler::getInstance() {
-    if(m_apInstance.get() == NULL)
-        m_apInstance.reset(new LocaleHandler());
+    if(m_upInstance.get() == nullptr)
+        m_upInstance.reset(new LocaleHandler());
 
-    return m_apInstance.get();
+    return m_upInstance.get();
 }

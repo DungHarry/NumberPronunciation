@@ -11,7 +11,8 @@
 Digit::Digit() :
 	Object(OBJECT_TYPE_NORMAL_DIGIT),
 	m_cValue(DIGIT_VALUE_INVALID_VALUE),
-	m_iPosition(DIGIT_POSITION_INVALID_VALUE)
+	m_iPosition(DIGIT_POSITION_INVALID_VALUE),
+	m_bIgnore(false)
 {
 
 }
@@ -19,7 +20,8 @@ Digit::Digit() :
 Digit::Digit(ObjectType eType, char cValue, int16_t iPosition) :
 	Object(eType != OBJECT_TYPE_NORMAL_DIGIT && eType != OBJECT_TYPE_SPECIAL_DIGIT ? OBJECT_TYPE_NORMAL_DIGIT : eType),
 	m_cValue(cValue),
-	m_iPosition(iPosition)
+	m_iPosition(iPosition),
+	m_bIgnore(false)
 {
 
 }
@@ -42,6 +44,14 @@ int16_t Digit::getPosition() {
 
 void Digit::setPosition(const int16_t iPosition) {
 	this->m_iPosition;
+}
+
+bool Digit::getIgnore() {
+	return this->m_bIgnore;
+}
+
+void Digit::setIgnore(const bool bIgnore) {
+	this->m_bIgnore == bIgnore;
 }
 
 bool Digit::isValid() {

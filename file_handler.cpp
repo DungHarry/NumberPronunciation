@@ -8,23 +8,23 @@
 
 #include "file_handler.h"
 
-auto_ptr<FileHandler> FileHandler::m_apInstance(NULL);
+unique_ptr<FileHandler> FileHandler::m_upInstance(nullptr);
 
 FileHandler::FileHandler() :
     Handler(HANDLER_TYPE_FILE),
-    m_apsBuffer (new wstring()),
-    m_apsFileName (new string()),
+    m_upsBuffer (new wstring()),
+    m_upsFileName (new string()),
     m_eType (FILE_HANDLER_TYPE_NONE)
 {
 
 }
 
 FileHandler::~FileHandler() {
-    if(this->m_apsBuffer.get() != NULL)
-        this->m_apsBuffer.reset();
+    if(this->m_upsBuffer.get() != nullptr)
+        this->m_upsBuffer.reset();
 
-    if(this->m_apsFileName.get() != NULL)
-        this->m_apsFileName.reset();
+    if(this->m_upsFileName.get() != nullptr)
+        this->m_upsFileName.reset();
 }
 
 bool FileHandler::execute() {
@@ -32,23 +32,23 @@ bool FileHandler::execute() {
 }
 
 FileHandler* FileHandler::getInstance() {
-    if(m_apInstance.get() == NULL)
-        m_apInstance.reset(new FileHandler());
+    if(m_upInstance.get() == nullptr)
+        m_upInstance.reset(new FileHandler());
 
-    return m_apInstance.get();
+    return m_upInstance.get();
 }
 
 bool FileHandler::read() {
-    auto_ptr<wifstream> apfFile(NULL);
-    wchar_t* pcTmpBuffer = NULL;
+    unique_ptr<wifstream> apfFile(nullptr);
+    wchar_t* pcTmpBuffer = nullptr;
     int32_t iFileSize;
 
-    if(this->m_eType != FILE_HANDLER_TYPE_READ || this->m_apsFileName.get() == NULL)
+    if(this->m_eType != FILE_HANDLER_TYPE_READ || this->m_upsFileName.get() == nullptr)
         return false;
 
-    apfFile.reset(new wifstream(this->m_apsFileName->c_str()));
+    apfFile.reset(new wifstream(this->m_upsFileName->c_str()));
 
-    if(apfFile.get() == NULL || apfFile->is_open() == false)
+    if(apfFile.get() == nullptr || apfFile->is_open() == false)
         return false;
 
     LocaleHandler::getInstance()->setStreamLocale<wifstream>(apfFile.get());
@@ -64,7 +64,7 @@ bool FileHandler::read() {
 
     apfFile->read(pcTmpBuffer, iFileSize);
 
-    this->m_apsBuffer->assign(pcTmpBuffer);
+    this->m_upsBuffer->assign(pcTmpBuffer);
 
     apfFile->close();
 
@@ -74,18 +74,18 @@ bool FileHandler::read() {
 }
 
 bool FileHandler::write() {
-    auto_ptr<wofstream> apfFile(NULL);
+    unique_ptr<wofstream> apfFile(nullptr);
 
-    if(this->m_eType != FILE_HANDLER_TYPE_WRITE || this->m_apsFileName.get() == NULL)
+    if(this->m_eType != FILE_HANDLER_TYPE_WRITE || this->m_upsFileName.get() == nullptr)
         return false;
 
-    apfFile.reset(new wofstream(this->m_apsFileName->c_str()));
+    apfFile.reset(new wofstream(this->m_upsFileName->c_str()));
 
-    if(apfFile.get() == NULL || apfFile->is_open() == false)
+    if(apfFile.get() == nullptr || apfFile->is_open() == false)
         return false;
 
     LocaleHandler::getInstance()->setStreamLocale<wofstream>(apfFile.get());
-    apfFile->write(this->m_apsBuffer->c_str(), this->m_apsBuffer->size());
+    apfFile->write(this->m_upsBuffer->c_str(), this->m_upsBuffer->size());
 
     apfFile->close();
 
@@ -93,13 +93,13 @@ bool FileHandler::write() {
 }
 
 const wchar_t* FileHandler::getBufferContent() {
-    return (this->m_apsBuffer.get() == NULL) ? NULL : this->m_apsBuffer->c_str();
+    return (this->m_upsBuffer.get() == nullptr) ? nullptr : this->m_upsBuffer->c_str();
 }
 
 int32_t FileHandler::getFileSize(wifstream *pInputFileStream) {
     int32_t iCurrentPosition, iFileSize;
 
-    if(pInputFileStream == NULL || pInputFileStream->is_open() == false)
+    if(pInputFileStream == nullptr || pInputFileStream->is_open() == false)
         return -1;
 
     iCurrentPosition = pInputFileStream->tellg();
@@ -127,12 +127,12 @@ void FileHandler::setType(FileHandlerType eType) {
 }
 
 const char *FileHandler::getFileName() {
-    return (this->m_apsFileName.get() == NULL) ? NULL : this->m_apsFileName->c_str();
+    return (this->m_upsFileName.get() == nullptr) ? nullptr : this->m_upsFileName->c_str();
 }
 
 void FileHandler::setFileName(const char *cpcFileName) {
-    if(cpcFileName == NULL)
+    if(cpcFileName == nullptr)
         return;
 
-    this->m_apsFileName.reset(new string(cpcFileName));
+    this->m_upsFileName.reset(new string(cpcFileName));
 }

@@ -36,7 +36,7 @@ public:
 
     static StringUtility* getInstance();
 private:
-    static auto_ptr<StringUtility> m_apInstance;
+    static unique_ptr<StringUtility> m_upInstance;
 };
 
 #endif

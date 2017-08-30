@@ -35,8 +35,8 @@ public:
 	virtual bool less(const Comparable &lang);
 	virtual bool equal(const Comparable &lang);
 protected:
-	auto_ptr<string> m_apsName;
-    auto_ptr<string> m_apsLocaleName;
+	unique_ptr<string> m_upsName;
+    unique_ptr<string> m_upsLocaleName;
 };
 
 #endif

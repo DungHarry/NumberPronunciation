@@ -38,8 +38,8 @@ public:
 
     static ParseHandler* getInstance();
 protected:
-    auto_ptr<Config> m_apConfig;
-    auto_ptr<wstring> m_apsBuffer;
+    unique_ptr<Config> m_upConfig;
+    unique_ptr<wstring> m_upsBuffer;
 private:
     bool parseLanguage(const wchar_t *pwcLine, Config *pConfig);
     bool parseLocaleName(const wchar_t *pwcLine, Config *pConfig);
@@ -49,7 +49,7 @@ private:
     bool parseConditionAppendAttribute(const wchar_t *pwcLine, Config *pConfig);
     bool parseConditionDigitAttribute(const wchar_t *pwcLine, Config *pConfig);
 
-    static auto_ptr<ParseHandler> m_apInstance;
+    static unique_ptr<ParseHandler> m_upInstance;
 };
 
 #endif

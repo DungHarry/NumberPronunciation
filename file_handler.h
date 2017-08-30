@@ -45,12 +45,12 @@ protected:
     bool write();
 
     FileHandlerType m_eType;
-    auto_ptr<string> m_apsFileName;
-    auto_ptr<wstring> m_apsBuffer;
+    unique_ptr<string> m_upsFileName;
+    unique_ptr<wstring> m_upsBuffer;
 private:
     int32_t getFileSize(wifstream *pInputFileStream);
 
-    static auto_ptr<FileHandler> m_apInstance;
+    static unique_ptr<FileHandler> m_upInstance;
 };
 
 #endif

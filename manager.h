@@ -28,7 +28,7 @@ public:
     iterator begin();
     iterator end();
 private:
-	auto_ptr<set<Container>> m_apObjects;
+	unique_ptr<set<Container>> m_upObjects;
 };
 
 #endif

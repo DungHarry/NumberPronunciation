@@ -8,27 +8,27 @@
 
 #include "stream_utility.h"
 
-auto_ptr<StreamUtility> StreamUtility::m_apInstance (NULL);
+unique_ptr<StreamUtility> StreamUtility::m_upInstance (nullptr);
 
 StreamUtility::StreamUtility() :
     Utility (UTILITY_TYPE_STREAM),
-    m_apStream (new wstringstream())
+    m_upStream (new wstringstream())
 {
 
 }
 
 StreamUtility::StreamUtility(const wchar_t *pwcContent) :
     Utility (UTILITY_TYPE_STREAM),
-    m_apStream (new wstringstream(wstring(pwcContent)))
+    m_upStream (new wstringstream(wstring(pwcContent)))
 {
 
 }
 
 StreamUtility::~StreamUtility() {
-    if(this->m_apStream.get() != NULL) {
-        this->m_apStream->clear();
+    if(this->m_upStream.get() != nullptr) {
+        this->m_upStream->clear();
 
-        this->m_apStream.reset();
+        this->m_upStream.reset();
     }
 }
 
@@ -37,12 +37,12 @@ wchar_t* StreamUtility::readLine() {
     wchar_t *pwcResult;
     wchar_t c;
 
-    if(this->m_apStream.get() == NULL || this->m_apStream->str().size() <= 0)
-        return NULL;
+    if(this->m_upStream.get() == nullptr || this->m_upStream->str().size() <= 0)
+        return nullptr;
 
     pLine = new vector<wchar_t>();
 
-    while(this->m_apStream->eof() == false && (c = this->m_apStream->get()) != '\n')
+    while(this->m_upStream->eof() == false && (c = this->m_upStream->get()) != '\n')
         pLine->push_back(c);
 
     pLine->push_back(L'\0');
@@ -59,34 +59,34 @@ wchar_t* StreamUtility::readLine() {
 }
 
 wchar_t StreamUtility::readCharacter() {
-    return (this->m_apStream.get() == NULL) ? WEOF : this->m_apStream->get();
+    return (this->m_upStream.get() == nullptr) ? WEOF : this->m_upStream->get();
 }
 
 bool StreamUtility::isEndOfStream() {
-    return (this->m_apStream.get() == NULL) ? false : this->m_apStream->eof();
+    return (this->m_upStream.get() == nullptr) ? false : this->m_upStream->eof();
 }
 
 bool StreamUtility::setContent(const wchar_t *pwcContent) {
-    if(this->m_apStream.get() == NULL || pwcContent == NULL)
+    if(this->m_upStream.get() == nullptr || pwcContent == nullptr)
         return false;
 
-    this->m_apStream->str(wstring(pwcContent));
+    this->m_upStream->str(wstring(pwcContent));
 
     return true;
 }
 
 bool StreamUtility::clearContent() {
-    if(this->m_apStream.get() == NULL)
+    if(this->m_upStream.get() == nullptr)
         return false;
 
-    this->m_apStream->str(wstring(L""));
+    this->m_upStream->str(wstring(L""));
 
     return true;
 }
 
 StreamUtility* StreamUtility::getInstance() {
-    if(m_apInstance.get() == NULL)
-        m_apInstance.reset(new StreamUtility());
+    if(m_upInstance.get() == nullptr)
+        m_upInstance.reset(new StreamUtility());
 
-    return m_apInstance.get();
+    return m_upInstance.get();
 }

@@ -36,19 +36,21 @@ public:
 
 	set<Container>* getConditionDigitAttributes();
 
+	set<Container>* getMultipleDigitsAttributes();
+
 	bool classify();
 
 	virtual bool less(const Comparable &config);
 	virtual bool equal(const Comparable &config);
 private:
-	auto_ptr<Language> m_apLang;
+	unique_ptr<Language> m_upLang;
 
-	auto_ptr<vector<shared_ptr<Attribute>>> m_apAttributes;
-	auto_ptr<set<Container>> m_apSpecialDigitAttributes;
-	auto_ptr<set<Container>> m_apNormalDigitAttributes;
-	auto_ptr<set<Container>> m_apMultipleDigitsAttributes;
-	auto_ptr<set<Container>> m_apConditionAppendAttributes;
-	auto_ptr<set<Container>> m_apConditionDigitAttributes;
+	unique_ptr<vector<shared_ptr<Attribute>>> m_upAttributes;
+	unique_ptr<set<Container>> m_upSpecialDigitAttributes;
+	unique_ptr<set<Container>> m_upNormalDigitAttributes;
+	unique_ptr<set<Container>> m_upMultipleDigitsAttributes;
+	unique_ptr<set<Container>> m_upConditionAppendAttributes;
+	unique_ptr<set<Container>> m_upConditionDigitAttributes;
 };
 
 #endif

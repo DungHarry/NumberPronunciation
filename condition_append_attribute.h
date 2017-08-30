@@ -23,13 +23,16 @@ public:
 	ConditionAppendAttribute(const ConditionAppendAttribute &attribute);
 	virtual ~ConditionAppendAttribute();
 
-    virtual int16_t getUnits();
+    virtual int16_t getUnits() const;
     virtual void setUnits(const int16_t iUnits);
 
     virtual const wchar_t* getPronunciation();
     virtual void setPronunciation(const wchar_t *cpcPronunciation);
+
+	virtual bool less(const Comparable &attr);
+	virtual bool equal(const Comparable &attr);
 private:
-    auto_ptr<pair<int16_t, auto_ptr<wstring>>> m_apCouple;
+    unique_ptr<pair<int16_t, unique_ptr<wstring>>> m_upCouple;
 };
 
 #endif

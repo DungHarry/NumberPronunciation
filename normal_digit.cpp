@@ -9,21 +9,21 @@
 #include "normal_digit.h"
 
 NormalDigit::NormalDigit() :
-	Digit()
+	Digit(OBJECT_TYPE_NORMAL_DIGIT, DIGIT_VALUE_INVALID_VALUE, DIGIT_POSITION_INVALID_VALUE)
 {
 
 }
 
-NormalDigit::NormalDigit(AttributeType eType, char cValue, int16_t iPosition) :
-	Digit(eType != ATTRIBUTE_TYPE_NORMAL_DIGIT && eType != ATTRIBUTE_TYPE_SPECIAL_DIGIT ? ATTRIBUTE_TYPE_NORMAL_DIGIT : eType, cValue, iPosition)
+NormalDigit::NormalDigit(char cValue, int16_t iPosition) :
+	Digit(OBJECT_TYPE_NORMAL_DIGIT, cValue, iPosition)
 {
 
 }
 
-NormalDigit::NormalDigit(const NormalDigit &digit) {
-	this->m_eType = digit.m_eType;
-	this->m_cValue = digit.m_cValue;
-	this->m_iPosition = digit.m_iPosition;
+NormalDigit::NormalDigit(const NormalDigit &digit) :
+	Digit(digit.m_eType, digit.m_cValue, digit.m_iPosition)
+{
+
 }
 
 NormalDigit::~NormalDigit() {

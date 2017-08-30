@@ -48,11 +48,11 @@ void Attribute::setId(const int16_t iId) {
 bool Attribute::less(const Comparable &attr) {
 	const Attribute *pAttr = dynamic_cast<const Attribute *>(&attr);
 
-	return (pAttr == NULL) ? false : (this->m_iId < pAttr->m_iId);
+	return (pAttr == nullptr) ? false : (this->m_iId < pAttr->m_iId);
 }
 
 bool Attribute::equal(const Comparable &attr) {
 	const Attribute *pAttr = dynamic_cast<const Attribute *>(&attr);
 
-	return (pAttr == NULL) ? false : (this->m_iId == pAttr->m_iId);
+	return (pAttr == nullptr) ? false : (this->m_iId == pAttr->m_iId);
 }

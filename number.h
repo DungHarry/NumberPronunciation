@@ -12,6 +12,7 @@
 #include <memory>
 #include <vector>
 #include "object.h"
+#include "normal_digit.h"
 
 #define NUMBER_LOWEST_UNIT_INVALID_VALUE (static_cast<int32_t>(-1))
 
@@ -24,10 +25,18 @@ public:
 	virtual int32_t getLowestUnit();
 	virtual void setLowestUnit(const int32_t iLowestUnit);
 
-	virtual vector<auto_ptr<Object>>* getNumbers();
+	virtual vector<unique_ptr<Object>>* getNumbers();
+
+	bool verifyIgnoreToDigits();
 protected:
 	int32_t m_iLowestUnit;
-	auto_ptr<vector<auto_ptr<Object>>> m_apNumbers;
+	unique_ptr<vector<unique_ptr<Object>>> m_upNumbers;
+
+private:
+	bool verifyIgnoreToNumberUnit(Number *pNumber, bool &bNonZeroGlobal, int32_t &iLevel, int32_t &iNumberUnitOffset);
+	bool verifyIgnoreToObject(Object *pObject, bool &bNonZeroGlobal, bool &bNonZeroLocal, int32_t &iNumberUnitOffset);
+	
+	bool verifyIgnoreToNumberUnitAgain(Number *pNumber);
 };
 
 #endif

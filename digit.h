@@ -26,8 +26,12 @@ public:
 	virtual int16_t getPosition();
 	virtual void setPosition(const int16_t iPosition);
 
+	virtual bool getIgnore();
+	virtual void setIgnore(const bool bIgnore);
+
 	virtual bool isValid();
 protected:
+	bool m_bIgnore;
 	int16_t m_iPosition;
 	char m_cValue;
 };

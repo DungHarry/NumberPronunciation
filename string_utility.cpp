@@ -8,7 +8,7 @@
 
 #include "string_utility.h"
 
-auto_ptr<StringUtility> StringUtility::m_apInstance ( NULL );
+unique_ptr<StringUtility> StringUtility::m_upInstance ( nullptr );
 
 StringUtility::StringUtility() :
     Utility(UTILITY_TYPE_STRING)
@@ -24,8 +24,8 @@ wchar_t* StringUtility::convertToWChar(const char *cpcString) {
     wchar_t *pcResult;
     int32_t iSize, iReturn;
 
-    if(cpcString == NULL)
-        return NULL;
+    if(cpcString == nullptr)
+        return nullptr;
 
     pcResult = new wchar_t[(iSize = strlen(cpcString) + 1)];
 
@@ -44,8 +44,8 @@ char* StringUtility::convertToChar(const wchar_t *cpcString) {
     char *pcResult;
     int32_t iSize, iReturn;
 
-    if(cpcString == NULL)
-        return NULL;
+    if(cpcString == nullptr)
+        return nullptr;
 
     pcResult = new char[(iSize = wcslen(cpcString) + 1)];
 
@@ -64,8 +64,8 @@ wstring* StringUtility::convertToWString(const string *psString) {
     wstring *pwsResult;
     wchar_t *pwcBuffer;
 
-    if(psString == NULL || psString->size() <= 0 || (pwcBuffer = this->convertToWChar(psString->c_str())) == NULL)
-        return NULL;
+    if(psString == nullptr || psString->size() <= 0 || (pwcBuffer = this->convertToWChar(psString->c_str())) == nullptr)
+        return nullptr;
 
     pwsResult = new wstring(pwcBuffer);
 
@@ -78,8 +78,8 @@ string* StringUtility::convertToString(const wstring *pwsString) {
     string *psResult;
     char *pcBuffer;
 
-    if(pwsString == NULL || pwsString->size() <= 0 || (pcBuffer = this->convertToChar(pwsString->c_str())) == NULL)
-        return NULL;
+    if(pwsString == nullptr || pwsString->size() <= 0 || (pcBuffer = this->convertToChar(pwsString->c_str())) == nullptr)
+        return nullptr;
 
     psResult = new string(pcBuffer);
 
@@ -93,7 +93,7 @@ bool StringUtility::clearString(const char *pcString, char **pcResult) {
     int32_t i, iStartIndex, iEndIndex;
     bool bCommentContain;
 
-    if(pcString == NULL || strlen(pcString) <= 0 || pcResult == NULL || *pcResult != NULL)
+    if(pcString == nullptr || strlen(pcString) <= 0 || pcResult == nullptr || *pcResult != nullptr)
         return false;
 
     for(bCommentContain = false, i = 0; i < iStringLength - 1; i ++)
@@ -125,7 +125,7 @@ bool StringUtility::clearWString(const wchar_t *pwcString, wchar_t **pwcResult) 
     int32_t i, iStartIndex, iEndIndex;
     bool bCommentContain;
 
-    if(pwcString == NULL || wcslen(pwcString) <= 0 || pwcResult == NULL || *pwcResult != NULL)
+    if(pwcString == nullptr || wcslen(pwcString) <= 0 || pwcResult == nullptr || *pwcResult != nullptr)
         return false;
 
     for(bCommentContain = false, i = 0; i < iStringLength - 1; i ++)
@@ -155,7 +155,7 @@ bool StringUtility::clearWString(const wchar_t *pwcString, wchar_t **pwcResult) 
 bool StringUtility::existWChar(const wchar_t *cpwcString, const wchar_t wcCharacter) {
     int32_t iLength, i;
 
-    if(cpwcString == NULL)
+    if(cpwcString == nullptr)
         return false;
 
     for(i = 0, iLength = wcslen(cpwcString); *(cpwcString + i) != wcCharacter && i < iLength; i ++);
@@ -166,7 +166,7 @@ bool StringUtility::existWChar(const wchar_t *cpwcString, const wchar_t wcCharac
 bool StringUtility::existChar(const char *cpcString, const char cCharacter) {
     int32_t iLength, i;
 
-    if(cpcString == NULL)
+    if(cpcString == nullptr)
         return false;
 
     for(i = 0, iLength = strlen(cpcString); *(cpcString + i) != cCharacter && i < iLength; i ++);
@@ -175,8 +175,8 @@ bool StringUtility::existChar(const char *cpcString, const char cCharacter) {
 }
 
 StringUtility* StringUtility::getInstance() {
-    if(m_apInstance.get() == NULL)
-        m_apInstance.reset(new StringUtility());
+    if(m_upInstance.get() == nullptr)
+        m_upInstance.reset(new StringUtility());
 
-    return m_apInstance.get();
+    return m_upInstance.get();
 }

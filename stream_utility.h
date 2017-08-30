@@ -32,9 +32,9 @@ public:
 
     static StreamUtility* getInstance();
 protected:
-    auto_ptr<wstringstream> m_apStream;
+    unique_ptr<wstringstream> m_upStream;
 private:
-    static auto_ptr<StreamUtility> m_apInstance;
+    static unique_ptr<StreamUtility> m_upInstance;
 };
 
 #endif

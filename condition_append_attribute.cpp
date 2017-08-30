@@ -10,55 +10,67 @@
 
 ConditionAppendAttribute::ConditionAppendAttribute() :
 	Attribute(ATTRIBUTE_ID_INVALID_VALUE, ATTRIBUTE_TYPE_CONDITION_APPEND),
-    m_apCouple(new pair<int16_t, auto_ptr<wstring>>(CONDITION_APPEND_ATTRIBUTE_UNITS_INVLAID_VALUE, auto_ptr<wstring>(NULL)))
+    m_upCouple(new pair<int16_t, unique_ptr<wstring>>(CONDITION_APPEND_ATTRIBUTE_UNITS_INVLAID_VALUE, unique_ptr<wstring>(nullptr)))
 {
 
 }
 
 ConditionAppendAttribute::ConditionAppendAttribute(int16_t iId, int16_t iPosition, const wchar_t *cpcPronunciation) :
 	Attribute(iId, ATTRIBUTE_TYPE_CONDITION_APPEND),
-    m_apCouple(new pair<int16_t, auto_ptr<wstring>>(iPosition, auto_ptr<wstring>(cpcPronunciation == NULL ? NULL : new wstring(cpcPronunciation))))
+    m_upCouple(new pair<int16_t, unique_ptr<wstring>>(iPosition, unique_ptr<wstring>(cpcPronunciation == nullptr ? nullptr : new wstring(cpcPronunciation))))
 {
 
 }
 
 ConditionAppendAttribute::ConditionAppendAttribute(const ConditionAppendAttribute &attribute) :
 	Attribute(attribute.m_iId, ATTRIBUTE_TYPE_CONDITION_APPEND),
-    m_apCouple(new pair<int16_t, auto_ptr<wstring>>(attribute.m_apCouple.get() == NULL ? CONDITION_APPEND_ATTRIBUTE_UNITS_INVLAID_VALUE : attribute.m_apCouple->first, auto_ptr<wstring>(attribute.m_apCouple.get() == NULL || attribute.m_apCouple->second.get() == NULL ? NULL : new wstring(attribute.m_apCouple->second->c_str()))))
+    m_upCouple(new pair<int16_t, unique_ptr<wstring>>(attribute.m_upCouple.get() == nullptr ? CONDITION_APPEND_ATTRIBUTE_UNITS_INVLAID_VALUE : attribute.m_upCouple->first, unique_ptr<wstring>(attribute.m_upCouple.get() == nullptr || attribute.m_upCouple->second.get() == nullptr ? nullptr : new wstring(attribute.m_upCouple->second->c_str()))))
 {
 
 }
 
 ConditionAppendAttribute::~ConditionAppendAttribute() {
-	if (this->m_apCouple.get() != NULL) {
-		if (this->m_apCouple->second.get() != NULL)
-			this->m_apCouple->second.reset();
+	if (this->m_upCouple.get() != nullptr) {
+		if (this->m_upCouple->second.get() != nullptr)
+			this->m_upCouple->second.reset();
 
-		this->m_apCouple.reset();
+		this->m_upCouple.reset();
 	}
 }
 
-int16_t ConditionAppendAttribute::getUnits() {
-    return (this->m_apCouple.get() == NULL) ? CONDITION_APPEND_ATTRIBUTE_UNITS_INVLAID_VALUE : this->m_apCouple->first;
+int16_t ConditionAppendAttribute::getUnits() const {
+    return (this->m_upCouple.get() == nullptr) ? CONDITION_APPEND_ATTRIBUTE_UNITS_INVLAID_VALUE : this->m_upCouple->first;
 }
 
 void ConditionAppendAttribute::setUnits(const int16_t iUnits) {
-	if (this->m_apCouple.get() == NULL)
+	if (this->m_upCouple.get() == nullptr)
 		return;
 
-    this->m_apCouple->first = iUnits;
+    this->m_upCouple->first = iUnits;
 }
 
 const wchar_t *ConditionAppendAttribute::getPronunciation() {
-	return (this->m_apCouple.get() == NULL || this->m_apCouple->second.get() == NULL) ? NULL : this->m_apCouple->second->c_str();
+	return (this->m_upCouple.get() == nullptr || this->m_upCouple->second.get() == nullptr) ? nullptr : this->m_upCouple->second->c_str();
 }
 
 void ConditionAppendAttribute::setPronunciation(const wchar_t *cpcPronunciation) {
-	if (this->m_apCouple.get() == NULL)
+	if (this->m_upCouple.get() == nullptr)
 		return;
 
-	if (cpcPronunciation == NULL)
-		this->m_apCouple->second.reset();
+	if (cpcPronunciation == nullptr)
+		this->m_upCouple->second.reset();
 	else
-        this->m_apCouple->second.reset(new wstring(cpcPronunciation));
+        this->m_upCouple->second.reset(new wstring(cpcPronunciation));
+}
+
+bool ConditionAppendAttribute::less(const Comparable &attr) {
+	const ConditionAppendAttribute *pConditionAppendAttribute = dynamic_cast<const ConditionAppendAttribute *>(&attr);
+
+	return (pConditionAppendAttribute == nullptr || pConditionAppendAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? false : (this->m_upCouple->first < pConditionAppendAttribute->m_upCouple->first);
+}
+
+bool ConditionAppendAttribute::equal(const Comparable &attr) {
+	const ConditionAppendAttribute *pConditionAppendAttribute = dynamic_cast<const ConditionAppendAttribute *>(&attr);
+
+	return (pConditionAppendAttribute == nullptr || pConditionAppendAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? false : (this->m_upCouple->first == pConditionAppendAttribute->m_upCouple->first);
 }

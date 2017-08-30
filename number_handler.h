@@ -12,6 +12,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <stack>
 #include "handler.h"
 #include "normal_digit.h"
 #include "special_digit.h"
@@ -41,19 +42,21 @@ public:
     bool isNumberStringNegative();
 
     bool isNumberStringFloat();
+
+	static NumberHandler* getInstance();
 protected:
-    auto_ptr<Number> m_apNumber;
+    unique_ptr<Number> m_upNumber;
     shared_ptr<Config> m_spConfig;
-    auto_ptr<string> m_apNumberString;
+    unique_ptr<string> m_upNumberString;
 
     bool preprocessStringNumber();
     char* getNumberStringNumericalPart();
     char* getNumberStringFloatingPointPart();
 private:
 	bool processSpecialDigit(char cSpecialDigit);
-	bool processNumberString(const char *cpcNumberString);
+	bool processNumberString(const char *cpcNumberString, int32_t iOffset);
 
-    static auto_ptr<NumberHandler> m_apInstance;
+    static unique_ptr<NumberHandler> m_upInstance;
 };
 
 #endif

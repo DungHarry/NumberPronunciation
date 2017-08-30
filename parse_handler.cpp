@@ -11,80 +11,80 @@
 #define PARSE_HANDLER_MULTIPLE_DIGITS_BUFFER_SIZE (static_cast<int32_t>(1 << 8))
 #define PARSE_HANDLER_DEFAULT_BUFFER_SIZE (static_cast<int32_t>(1 << 12))
 
-auto_ptr<ParseHandler> ParseHandler::m_apInstance (NULL);
+unique_ptr<ParseHandler> ParseHandler::m_upInstance (nullptr);
 
 ParseHandler::ParseHandler() :
     Handler(HANDLER_TYPE_PARSE),
-    m_apConfig (NULL),
-    m_apsBuffer (new wstring())
+    m_upConfig (nullptr),
+    m_upsBuffer (new wstring())
 {
 
 }
 
 ParseHandler::ParseHandler(const wchar_t *cpcBuffer) :
     Handler(HANDLER_TYPE_PARSE),
-    m_apConfig (NULL),
-    m_apsBuffer (cpcBuffer == NULL ? NULL : new wstring(cpcBuffer))
+    m_upConfig (nullptr),
+    m_upsBuffer (cpcBuffer == nullptr ? nullptr : new wstring(cpcBuffer))
 {
 
 }
 
 ParseHandler::~ParseHandler() {
-    if(this->m_apsBuffer.get() != NULL)
-        this->m_apsBuffer.reset();
+    if(this->m_upsBuffer.get() != nullptr)
+        this->m_upsBuffer.reset();
 
-    if(this->m_apConfig.get() != NULL)
-        this->m_apConfig.reset();
+    if(this->m_upConfig.get() != nullptr)
+        this->m_upConfig.reset();
 }
 
 const wchar_t* ParseHandler::getBuffer() {
-    return (this->m_apsBuffer.get() == NULL) ? NULL : this->m_apsBuffer->c_str();
+    return (this->m_upsBuffer.get() == nullptr) ? nullptr : this->m_upsBuffer->c_str();
 }
 
 void ParseHandler::setBuffer(const wchar_t *cpcBuffer) {
-    if(cpcBuffer == NULL)
+    if(cpcBuffer == nullptr)
         return;
 
-    this->m_apsBuffer.reset(new wstring(cpcBuffer));
+    this->m_upsBuffer.reset(new wstring(cpcBuffer));
 }
 
 bool ParseHandler::execute() {
     wchar_t *pwcLine, *pwcCleanLine, wcFirstCharacter, wcSecondCharacter;
 
-    if(this->m_apsBuffer.get() == NULL)
+    if(this->m_upsBuffer.get() == nullptr)
         return false;
 
-    StreamUtility::getInstance()->setContent(this->m_apsBuffer->c_str());
+    StreamUtility::getInstance()->setContent(this->m_upsBuffer->c_str());
 
-    this->m_apConfig.reset(new Config());
+    this->m_upConfig.reset(new Config());
 
     while(StreamUtility::getInstance()->isEndOfStream() == false) {
-        if((pwcLine = StreamUtility::getInstance()->readLine()) == NULL || wcslen(pwcLine) <= 0) {
+        if((pwcLine = StreamUtility::getInstance()->readLine()) == nullptr || wcslen(pwcLine) <= 0) {
             delete[] pwcLine;
 
             continue;
         }
 
-		pwcCleanLine = NULL;
+		pwcCleanLine = nullptr;
 
-		if(StringUtility::getInstance()->clearWString(pwcLine, &pwcCleanLine) == false || pwcCleanLine == NULL) {
-			this->m_apConfig.reset(new Config());
+		if(StringUtility::getInstance()->clearWString(pwcLine, &pwcCleanLine) == false || pwcCleanLine == nullptr) {
+			this->m_upConfig.reset(new Config());
 
 			if((wcFirstCharacter = *(pwcCleanLine + 0)) == static_cast<wchar_t>('l')) {
 				if ((wcSecondCharacter = *(pwcCleanLine + 1)) == static_cast<wchar_t>('a'))
-					this->parseLanguage(pwcCleanLine, this->m_apConfig.get());
+					this->parseLanguage(pwcCleanLine, this->m_upConfig.get());
 				else if (wcSecondCharacter == static_cast<wchar_t>('o'))
-					this->parseLocaleName(pwcCleanLine, this->m_apConfig.get());
+					this->parseLocaleName(pwcCleanLine, this->m_upConfig.get());
 			} else if(wcFirstCharacter == static_cast<wchar_t>('0'))
-				this->parseNormalDigitAttribute(pwcCleanLine, this->m_apConfig.get());
+				this->parseNormalDigitAttribute(pwcCleanLine, this->m_upConfig.get());
 			else if(wcFirstCharacter == static_cast<wchar_t>('1'))
-				this->parseSpecialDigitAttribute(pwcCleanLine, this->m_apConfig.get());
+				this->parseSpecialDigitAttribute(pwcCleanLine, this->m_upConfig.get());
 			else if(wcFirstCharacter == static_cast<wchar_t>('2'))
-				this->parseMultipleDigitsAttribute(pwcCleanLine, this->m_apConfig.get());
+				this->parseMultipleDigitsAttribute(pwcCleanLine, this->m_upConfig.get());
 			else if(wcFirstCharacter == static_cast<wchar_t>('3'))
-				this->parseConditionAppendAttribute(pwcCleanLine, this->m_apConfig.get());
+				this->parseConditionAppendAttribute(pwcCleanLine, this->m_upConfig.get());
 			else if(wcFirstCharacter == static_cast<wchar_t>('4'))
-				this->parseConditionDigitAttribute(pwcCleanLine, this->m_apConfig.get());
+				this->parseConditionDigitAttribute(pwcCleanLine, this->m_upConfig.get());
 
 			delete[] pwcCleanLine;
 		}
@@ -94,34 +94,34 @@ bool ParseHandler::execute() {
 
     StreamUtility::getInstance()->clearContent();
 
-	return this->m_apConfig->classify();
+	return this->m_upConfig->classify();
 }
 
 Config* ParseHandler::releaseConfig() {
-    Config *pConfig = this->m_apConfig.get();
+    Config *pConfig = this->m_upConfig.get();
 
-    this->m_apConfig.release();
+    this->m_upConfig.release();
 
     return pConfig;
 }
 
 ParseHandler* ParseHandler::getInstance() {
-    if(m_apInstance.get() == NULL)
-        m_apInstance.reset(new ParseHandler());
+    if(m_upInstance.get() == nullptr)
+        m_upInstance.reset(new ParseHandler());
 
-    return m_apInstance.get();
+    return m_upInstance.get();
 }
 
 bool ParseHandler::parseLanguage(const wchar_t *pwcLine, Config *pConfig) {
 	wchar_t *pwcBuffer;
 	char *pcLanguage;
 
-    if(pwcLine == NULL || pConfig == NULL || pConfig->getLang() == NULL)
+    if(pwcLine == nullptr || pConfig == nullptr || pConfig->getLang() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[1 << 10];
 
-	if (swscanf(pwcLine, L"lang %ls", pwcBuffer) != 1 || (pcLanguage = StringUtility::getInstance()->convertToChar(pwcBuffer)) == NULL) {
+	if (swscanf(pwcLine, L"lang %ls", pwcBuffer) != 1 || (pcLanguage = StringUtility::getInstance()->convertToChar(pwcBuffer)) == nullptr) {
 		delete[] pwcBuffer;
 		
 		return false;
@@ -139,12 +139,12 @@ bool ParseHandler::parseLocaleName(const wchar_t *pwcLine, Config *pConfig) {
 	wchar_t *pwcBuffer;
 	char *pcLocale;
 
-	if (pwcLine == NULL || pConfig == NULL || pConfig->getLang() == NULL)
+	if (pwcLine == nullptr || pConfig == nullptr || pConfig->getLang() == nullptr)
 		return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"locale %ls", pwcBuffer) != 1 || (pcLocale = StringUtility::getInstance()->convertToChar(pwcBuffer)) == NULL) {
+	if (swscanf(pwcLine, L"locale %ls", pwcBuffer) != 1 || (pcLocale = StringUtility::getInstance()->convertToChar(pwcBuffer)) == nullptr) {
 		delete[] pwcBuffer;
 
 		return false;
@@ -164,7 +164,7 @@ bool ParseHandler::parseNormalDigitAttribute(const wchar_t *pwcLine, Config *pCo
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
 
-    if(pwcLine == NULL || pConfig == NULL || pConfig->getAttributes() == NULL)
+    if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
@@ -190,7 +190,7 @@ bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pC
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
 
-    if(pwcLine == NULL || pConfig == NULL || pConfig->getAttributes() == NULL)
+    if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
@@ -215,7 +215,7 @@ bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *
 	int16_t iId;
 	wchar_t *pwcDigitsBuffer, *pwcBuffer;
 
-    if(pwcLine == NULL || pConfig == NULL || pConfig->getAttributes() == NULL)
+    if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcDigitsBuffer = new wchar_t[PARSE_HANDLER_MULTIPLE_DIGITS_BUFFER_SIZE];
@@ -243,7 +243,7 @@ bool ParseHandler::parseConditionAppendAttribute(const wchar_t *pwcLine, Config 
 	int16_t iId, iPosition;
 	wchar_t *pwcBuffer;
 
-    if(pwcLine == NULL || pConfig == NULL || pConfig->getAttributes() == NULL)
+    if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
@@ -269,7 +269,7 @@ bool ParseHandler::parseConditionDigitAttribute(const wchar_t *pwcLine, Config *
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
 
-    if(pwcLine == NULL || pConfig == NULL || pConfig->getAttributes() == NULL)
+    if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];

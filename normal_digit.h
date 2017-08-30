@@ -14,7 +14,7 @@
 class NormalDigit : public Digit {
 public:
 	NormalDigit();
-	NormalDigit(AttributeType eType, char cValue, int16_t iPosition);
+	NormalDigit(char cValue, int16_t iPosition);
 	NormalDigit(const NormalDigit &digit);
 	virtual ~NormalDigit();
 };

@@ -43,10 +43,10 @@ public:
 
     template <class T>
     bool setStreamLocale(T *pStream); /*{
-        if(pStream == NULL || this->m_apsLocaleName.get() == NULL)
+        if(pStream == nullptr || this->m_upsLocaleName.get() == nullptr)
             return false;
 
-        pStream->imbue(locale(this->m_apsLocaleName->c_str()));
+        pStream->imbue(locale(this->m_upsLocaleName->c_str()));
 
         return true;
     }*/
@@ -54,9 +54,9 @@ public:
     static LocaleHandler* getInstance();
 protected:
     LocaleHandlerScope m_eScope;
-    auto_ptr<string> m_apsLocaleName;
+    unique_ptr<string> m_upsLocaleName;
 private:
-    static auto_ptr<LocaleHandler> m_apInstance;
+    static unique_ptr<LocaleHandler> m_upInstance;
 };
 
 extern template
