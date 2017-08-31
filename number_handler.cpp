@@ -362,7 +362,7 @@ bool NumberHandler::processNumberString(const char *cpcNumberString, int32_t iOf
 
 	iStringLength = strlen(cpcNumberString);
 
-	for (i = iStringLength - 1, iLevel = 0, pNumber = nullptr; i >= iOffset; i--, iLevel ++) {
+	for (i = iStringLength - 1, iLevel =  0, pNumber = nullptr; i >= iOffset; i--, iLevel ++) {
 		if ((j = (iLevel % 3)) == 0) {
 			if (iLevel > 0) {
 				pNumberStack->push(unique_ptr<Object>(pNumber));

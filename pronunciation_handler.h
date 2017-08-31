@@ -58,7 +58,7 @@ protected:
 	unique_ptr<wstring> m_upwsPronunciation;
 private:
 	PronunciationHandlerState detectExecutionState(Object *pObject);
-	bool processState(const PronunciationHandlerState eState, Object *pObject, int32_t iLength);
+	bool processState(const PronunciationHandlerState eState, Object *pObject, int32_t iLength, int32_t iUnit);
 
 	bool processNumberUnit(Number *pNumber);
 

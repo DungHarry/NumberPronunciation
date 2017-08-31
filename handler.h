@@ -11,14 +11,15 @@
 
 #include "global.h"
 #include "base.h"
+#include "executable.h"
 
-class Handler : public Base {
+class Handler : public Base, public Executable {
 public:
 	Handler();
     Handler(HandlerType eType);
 	virtual ~Handler();
 
-    virtual bool execute() = 0;
+    virtual bool execute();
 
     HandlerType getType();
     void setType(HandlerType eType);

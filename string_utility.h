@@ -9,13 +9,15 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_STRING_UTILITY_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_STRING_UTILITY_H_
 
-#include "utility.h"
 #include <memory>
 #include <string>
 #include <cstring>
 #include <cwchar>
 #include <cstdlib>
 #include <iostream>
+#include "utility.h"
+#include "number.h"
+#include "normal_digit.h"
 
 class StringUtility : public Utility {
 public:
@@ -33,6 +35,8 @@ public:
 
     bool existWChar(const wchar_t *cpwcString, const wchar_t wcCharacter);
     bool existChar(const char *cpcString, const char cCharacter);
+
+	char* getSubStringNumber(Number *pNumber, int32_t iLength);
 
     static StringUtility* getInstance();
 private:

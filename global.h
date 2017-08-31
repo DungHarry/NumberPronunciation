@@ -57,4 +57,9 @@ enum ExceptionType {
 	EXCEPTION_TYPE_COUNT
 };
 
+enum DataType {
+	DATA_TYPE_NONE = 0,
+	DATA_TYPE_COUNT
+};
+
 #endif

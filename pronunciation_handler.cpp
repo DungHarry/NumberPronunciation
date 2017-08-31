@@ -85,22 +85,24 @@ PronunciationHandlerState PronunciationHandler::detectExecutionState(Object *pOb
 	return eStateResult;
 }
 
-bool PronunciationHandler::processState(const PronunciationHandlerState eState, Object *pObject, int32_t iLength) {
+bool PronunciationHandler::processState(const PronunciationHandlerState eState, Object *pObject, int32_t iLength, int32_t iUnit) {
 	NormalDigit *pNormalDigit;
 	SpecialDigit *pSpecialDigit;
 	Number *pNumber;
+	PronunciationHandlerState eObjectState;
+	char *pcNumber;
 
 	if (pObject == nullptr || eState <= PRONUNCIATION_HANDLER_STATE_NONE || eState >= PRONUNCIATION_HANDLER_STATE_COUNT)
 		return false;
 
 	if (eState == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
-		if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
+		if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || pNormalDigit->getIgnore() == true)
 			return false;
 
 		if (pNormalDigit->getIgnore() == false && this->pronounceNormalDigit(pNormalDigit->getValue()) == false)
 			return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
-		if ((pSpecialDigit = dynamic_cast<SpecialDigit *>(pObject)) == nullptr)
+		if ((pSpecialDigit = dynamic_cast<SpecialDigit *>(pObject)) == nullptr || pNormalDigit->getIgnore() == true)
 			return false;
 
 		if (pNormalDigit->getIgnore() == false && this->pronounceSpecialDigit(pSpecialDigit->getValue()) == false)
@@ -112,11 +114,25 @@ bool PronunciationHandler::processState(const PronunciationHandlerState eState, 
 		if (this->processNumberUnit(pNumber) == false)
 			return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND) {
-
+		if (this->pronounceConditionAppend(iUnit) == false)
+			return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT) {
+		if ((eObjectState = this->detectExecutionState(pObject)) != PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT || (pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
+			return false;
 
+		this->pronounceConditionDigit(pNormalDigit->getValue(), iUnit);
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS) {
+		pcNumber = nullptr;
 
+		if (iLength <= 0 || StringUtility::getInstance() == nullptr || (pNumber = dynamic_cast<Number *>(pObject)) == nullptr || (pcNumber = StringUtility::getInstance()->getSubStringNumber(pNumber, iLength)) == nullptr || this->pronounceMutipleDigits(pcNumber) == false) {
+			if (pcNumber != nullptr)
+				delete[] pcNumber;
+			
+			return false;
+		}
+
+		if (pcNumber != nullptr)
+			delete[] pcNumber;
 	}
 
 	return true;
@@ -145,10 +161,21 @@ bool PronunciationHandler::pronounceSpecialDigit(const char cDigit) {
 }
 
 bool PronunciationHandler::processNumberUnit(Number *pNumber) {
-	if (pNumber == nullptr || pNumber->getNumbers() == nullptr || pNumber->getNumbers()->size() <= 0 || pNumber->getNumbers()->size() > NUMBER_UNIT_MAX_DIGITS_VALUE || this->m_upConfig.get() == nullptr || this->m_upwsPronunciation.get() == nullptr)
+	int32_t i;
+	PronunciationHandlerState eState;
+	Object *pObject;
+	
+	if (pNumber == nullptr || pNumber->getNumbers() == nullptr || this->m_upConfig.get() == nullptr || this->m_upwsPronunciation.get() == nullptr)
 		return false;
 
-	return this->handleNumberUnitNumDigits(pNumber, pNumber->getNumbers()->size());
+	for (i = pNumber->getNumbers()->size() - 1; i >= 0; i ++)
+	if ((pObject = ((*(pNumber->getNumbers()->data() + i)).get())) != nullptr && (eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NUMBER_UNIT)
+		this->processState(eState, pObject, 0, i);
+
+	if (this->handleNumberUnitNumDigits(pNumber, pNumber->getNumbers()->size()) == false)
+		return false;
+
+	return this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pNumber, 0, pNumber->getLowestUnit());
 }
 
 bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iNumDigits) {
@@ -159,60 +186,60 @@ bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iN
 	vector<unique_ptr<Object>> *pNumberObjects;
 	Config *pConfig;
 
-	if (pNumber == nullptr || (pNumberObjects = pNumber->getNumbers()) == nullptr || iNumDigits <= 0 || iNumDigits > NUMBER_UNIT_MAX_DIGITS_VALUE || (pConfig = this->m_upConfig.get()) == nullptr || this->m_upwsPronunciation.get() == nullptr)
+	if (pNumber == nullptr || (pNumberObjects = pNumber->getNumbers()) == nullptr || (pConfig = this->m_upConfig.get()) == nullptr || this->m_upwsPronunciation.get() == nullptr)
 		return false;
 
 	if (iNumDigits == 3) {
-		if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 3) == false) {
+		if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 3, 2) == false) {
 			if ((pObject = (*(pNumberObjects->data() + 2)).get()) == nullptr)
 				return false;
 
 			if ((eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
-				if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 3) == false) {
-					if (this->processState(eState, pObject, 3) == false)
+				if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 3, 2) == false) {
+					if (this->processState(eState, pObject, 3, 2) == false)
 						return false;
 
-					this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 3);
+					this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 3, 2);
 				}
 			} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
-				if (this->processState(eState, pObject, 3) == false)
+				if (this->processState(eState, pObject, 3, 2) == false)
 					return false;
 			}
-
-			this->handleNumberUnitNumDigits(pNumber, 2);
 		}
+
+		this->handleNumberUnitNumDigits(pNumber, 2);
 	} else if (iNumDigits == 2) {
-		if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 2) == false) {
+		if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 2, 1) == false) {
 			if ((pObject = (*(pNumberObjects->data() + 1)).get()) == nullptr)
 				return false;
 
 			if ((eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
-				if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 2) == false) {
-					if (this->processState(eState, pObject, 2) == false)
+				if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 2, 1) == false) {
+					if (this->processState(eState, pObject, 2, 1) == false)
 						return false;
 
-					this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 2);
+					this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 2, 1);
 				}
 			} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
-				if (this->processState(eState, pObject, 2) == false)
+				if (this->processState(eState, pObject, 2, 1) == false)
 					return false;
 			}
-
-			this->handleNumberUnitNumDigits(pNumber, 1);
 		}
+
+		this->handleNumberUnitNumDigits(pNumber, 1);
 	} else if (iNumDigits == 1) {
 		if ((pObject = (*(pNumberObjects->data() + 0)).get()) == nullptr)
 			return false;
 
 		if ((eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
-			if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 1) == false) {
-				if (this->processState(eState, pObject, 1) == false)
+			if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 1, 0) == false) {
+				if (this->processState(eState, pObject, 1, 0) == false)
 					return false;
 
-				this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 1);
+				this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 1, 0);
 			}
 		} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
-			if (this->processState(eState, pObject, 1) == false)
+			if (this->processState(eState, pObject, 1, 0) == false)
 				return false;
 		}
 	}

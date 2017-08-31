@@ -174,6 +174,24 @@ bool StringUtility::existChar(const char *cpcString, const char cCharacter) {
     return (i < iLength);
 }
 
+char* StringUtility::getSubStringNumber(Number *pNumber, int32_t iLength) {
+	char *pcResult;
+	NormalDigit *pNormalDigit;
+	int32_t i;
+
+	if (iLength <= 0 || pNumber == nullptr || pNumber->getNumbers() == nullptr || pNumber->getNumbers()->size() < iLength)
+		return nullptr;
+
+	pcResult = new char[iLength + 1];
+
+	for (i = 0; i < iLength; i++)
+		*(pcResult + i) = ((*(pNumber->getNumbers()->data() + i)).get() == nullptr || (pNormalDigit = dynamic_cast<NormalDigit *>((*(pNumber->getNumbers()->data() + i)).get())) == nullptr) ? '0' : pNormalDigit->getValue();
+
+	*(pcResult + iLength) = '\0';
+
+	return pcResult;
+}
+
 StringUtility* StringUtility::getInstance() {
     if(m_upInstance.get() == nullptr)
         m_upInstance.reset(new StringUtility());

@@ -24,6 +24,10 @@ Handler::~Handler() {
 
 }
 
+bool Handler::execute() {
+	return true;
+}
+
 HandlerType Handler::getType() {
     return this->m_eType;
 }
