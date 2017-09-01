@@ -35,8 +35,8 @@ public:
 
 	set<PipelineStateType>* getPossibleStates();
 
-	map<DataKey, shared_ptr<Base>>* getData();
-	void setData(map<DataKey, shared_ptr<Base>> *pData);
+	map<Key, shared_ptr<Base>>* getData();
+	void setData(map<Key, shared_ptr<Base>> *pData);
 
 	virtual bool less(const Comparable &com);
 	virtual bool equal(const Comparable &com);
@@ -47,5 +47,5 @@ public:
 protected:
 	PipelineStateType m_eStateType;
 	unique_ptr<set<PipelineStateType>> m_upPossibleStates;
-	shared_ptr<map<DataKey, shared_ptr<Base>>> m_spData;
+	shared_ptr<map<Key, shared_ptr<Base>>> m_spData;
 };

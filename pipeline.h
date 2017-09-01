@@ -29,13 +29,13 @@ public:
 	PipelineStateType getCurrentState();
 	void setCurrentState(const PipelineStateType eState);
 
-	map<DataKey, shared_ptr<Base>>* getData();
+	map<Key, shared_ptr<Base>>* getData();
 
 	static Pipeline* getInstance();
 protected:
 	PipelineStateType m_eCurrentState;
 	unique_ptr<map<PipelineStateKey, PipelineState*>> m_upStates;
-	shared_ptr<map<DataKey, shared_ptr<Base>>> m_spData;
+	shared_ptr<map<Key, shared_ptr<Base>>> m_spData;
 
 private:
 	virtual bool determineNextState();

@@ -51,11 +51,11 @@ set<PipelineStateType>* PipelineState::getPossibleStates() {
 	return this->m_upPossibleStates.get();
 }
 
-map<DataKey, shared_ptr<Base>>* PipelineState::getData() {
+map<Key, shared_ptr<Base>>* PipelineState::getData() {
 	return this->m_spData.get();
 }
 
-void PipelineState::setData(map<DataKey, shared_ptr<Base>> *pData) {
+void PipelineState::setData(map<Key, shared_ptr<Base>> *pData) {
 	this->m_spData.reset(pData);
 }
 
