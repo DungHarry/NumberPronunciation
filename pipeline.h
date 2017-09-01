@@ -9,40 +9,39 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_PIPELINE_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_PIPELINE_H_
 
-#include <vector>
+#include <map>
 #include <memory>
-#include <set>
+#include "pipeline_state.h"
+#include "container.h"
 #include "handler.h"
-#include "executable.h"
 #include "data.h"
-
-enum PipelineStateType {
-	PIPELINE_STATE_TYPE_NONE = 0,
-	PIPELINE_STATE_TYPE_COUNT
-};
-
-class PipelineState : public Base, public Executable {
-public:
-	PipelineState();
-	PipelineState(PipelineStateType eStateType);
-
-	virtual bool execute();
-
-	bool switchToState();
-protected:
-	PipelineStateType m_eStateType;
-	unique_ptr<set<PipelineState>> m_upPossibleStates;
-	unique_ptr<vector<shared_ptr<Base>>> m_upData;
-};
 
 class Pipeline : public Handler, public Executable {
 public:
 	Pipeline();
+	Pipeline(const PipelineStateType eCurrentState);
 	virtual ~Pipeline();
 
+	virtual bool execute();
 
+	map<PipelineStateKey, PipelineState*>* getStates();
+
+	PipelineStateType getCurrentState();
+	void setCurrentState(const PipelineStateType eState);
+
+	map<DataKey, shared_ptr<Base>>* getData();
+
+	static Pipeline* getInstance();
+protected:
+	PipelineStateType m_eCurrentState;
+	unique_ptr<map<PipelineStateKey, PipelineState*>> m_upStates;
+	shared_ptr<map<DataKey, shared_ptr<Base>>> m_spData;
 
 private:
+	virtual bool determineNextState();
+
+	int32_t doBinarySearch();
+
 	static unique_ptr<Pipeline> m_upInstance;
 };
 
