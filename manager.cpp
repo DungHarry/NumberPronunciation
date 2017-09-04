@@ -21,6 +21,10 @@ Manager::~Manager() {
 	}
 }
 
+set<Container>* Manager::getObjects() {
+    return this->m_upObjects.get();
+}
+
 Comparable* Manager::get(const Container &con) {
 	set<Container>::iterator iter;
 
@@ -40,4 +44,12 @@ Manager::iterator Manager::begin() {
 
 Manager::iterator Manager::end() {
     return this->m_upObjects->end();
+}
+
+Manager::reverse_iterator Manager::rbegin() {
+    return this->m_upObjects->rbegin();
+}
+
+Manager::reverse_iterator Manager::rend() {
+    return this->m_upObjects->rend();
 }

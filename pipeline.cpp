@@ -12,18 +12,22 @@ unique_ptr<Pipeline> Pipeline::m_upInstance (nullptr);
 
 Pipeline::Pipeline() :
 	Handler (HANDLER_TYPE_PIPELINE),
+    m_ePreviousState (PIPELINE_STATE_TYPE_NONE),
 	m_eCurrentState (PIPELINE_STATE_TYPE_NONE),
 	m_upStates(new map<int32_t, PipelineState*>()),
-	m_spData (new map<int32_t, shared_ptr<Base>>())
+    m_spData (new map<int32_t, shared_ptr<Base>>()),
+    m_upManager (new Manager())
 {
 
 }
 
 Pipeline::Pipeline(const PipelineStateType eCurrentState) :
 	Handler (HANDLER_TYPE_PIPELINE),
+    m_ePreviousState (PIPELINE_STATE_TYPE_NONE),
 	m_eCurrentState (eCurrentState <= PIPELINE_STATE_TYPE_NONE || eCurrentState >= PIPELINE_STATE_TYPE_COUNT ? PIPELINE_STATE_TYPE_NONE : eCurrentState),
 	m_upStates(new map<int32_t, PipelineState*>()),
-	m_spData(new map<Key, shared_ptr<Base>>())
+    m_spData(new map<Key, shared_ptr<Base>>()),
+    m_upManager (new Manager())
 {
 
 }
@@ -80,14 +84,29 @@ PipelineStateType Pipeline::getCurrentState() {
 }
 
 void Pipeline::setCurrentState(const PipelineStateType eType) {
-	if (this->m_eCurrentState <= PIPELINE_STATE_TYPE_NONE || this->m_eCurrentState >= PIPELINE_STATE_TYPE_COUNT)
+    if (eType <= PIPELINE_STATE_TYPE_NONE || eType >= PIPELINE_STATE_TYPE_COUNT)
 		return;
 
 	this->m_eCurrentState = eType;
 }
 
+PipelineStateType Pipeline::getPreviousState() {
+    return this->m_ePreviousState;
+}
+
+void Pipeline::setPreviousState(const PipelineStateType eState) {
+    if(eState < PIPELINE_STATE_TYPE_NONE || eState >= PIPELINE_STATE_TYPE_COUNT)
+        return;
+
+    this->m_ePreviousState = eState;
+}
+
 map<Key, shared_ptr<Base>>* Pipeline::getData() {
 	return this->m_spData.get();
+}
+
+Manager* Pipeline::getManager() {
+    return this->m_upManager.get();
 }
 
 Pipeline* Pipeline::getInstance() {
@@ -107,6 +126,7 @@ bool Pipeline::determineNextState() {
 	if ((pPipelineState = this->m_upStates->at(static_cast<PipelineStateKey>(this->m_eCurrentState))) == nullptr || (eNextState = pPipelineState->determineNextStateType()) <= PIPELINE_STATE_TYPE_NONE || eNextState >= PIPELINE_STATE_TYPE_COUNT || pPipelineState->isValidState(eNextState) == false)
 		return false;
 
+    this->m_ePreviousState = this->m_eCurrentState;
 	this->m_eCurrentState = eNextState;
 
 	return true;

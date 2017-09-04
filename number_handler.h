@@ -20,6 +20,7 @@
 #include "special_digit_attribute.h"
 #include "number.h"
 #include "config.h"
+#include "number_exception.h"
 
 class NumberHandler : public Handler {
 public:

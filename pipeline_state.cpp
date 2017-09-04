@@ -9,27 +9,45 @@
 #include "pipeline_state.h"
 
 PipelineState::PipelineState() :
+    m_spPipeline (nullptr),
 	m_eStateType (PIPELINE_STATE_TYPE_NONE),
 	m_upPossibleStates (new set<PipelineStateType>()),
-	m_spData (nullptr)
+    m_upInternalData (new map<Key, unique_ptr<Data>>()),
+    m_spData (shared_ptr<map<Key, shared_ptr<Base>>>(nullptr))
 {
 
 }
 
-PipelineState::PipelineState(PipelineStateType eStateType) :
+PipelineState::PipelineState(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData, PipelineStateType eStateType) :
+    m_spPipeline (shared_ptr<Pipeline>(pPipeline)),
 	m_eStateType (eStateType <= PIPELINE_STATE_TYPE_NONE || eStateType >= PIPELINE_STATE_TYPE_COUNT ? PIPELINE_STATE_TYPE_NONE : eStateType),
 	m_upPossibleStates (new set<PipelineStateType>()),
-	m_spData (nullptr)
+    m_upInternalData (new map<Key, unique_ptr<Data>>()),
+    m_spData (shared_ptr<map<Key, shared_ptr<Base>>>(pData))
 {
 
 }
 
 PipelineState::~PipelineState() {
-	if (this->m_spData.get() != nullptr)
+    map<Key, unique_ptr<Data>>::iterator iter;
+
+    if(this->m_spData.get() != nullptr)
 		this->m_spData.reset();
 
-	if (this->m_upPossibleStates.get() != nullptr)
+    if(this->m_upPossibleStates.get() != nullptr)
 		this->m_upPossibleStates.reset();
+
+    if(this->m_spPipeline.get() != nullptr)
+        this->m_spPipeline.reset();
+
+    if(this->m_upInternalData.get() != nullptr) {
+        for(iter = this->m_upPossibleStates; i < this->m_upInternalData->size(); i ++)
+            if(iter->second.get() != nullptr)
+                iter->second.reset();
+
+        this->m_upInternalData->clear();
+        this->m_upInternalData.reset();
+    }
 }
 
 bool PipelineState::execute() {
@@ -56,7 +74,11 @@ map<Key, shared_ptr<Base>>* PipelineState::getData() {
 }
 
 void PipelineState::setData(map<Key, shared_ptr<Base>> *pData) {
-	this->m_spData.reset(pData);
+    this->m_spData.reset(pData);
+}
+
+map<Key, unique_ptr<Data>>* PipelineState::getInternalData() {
+    return this->m_upInternalData.get();
 }
 
 bool PipelineState::less(const Comparable &com) {

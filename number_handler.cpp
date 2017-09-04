@@ -42,12 +42,13 @@ NumberHandler::~NumberHandler() {
 bool NumberHandler::execute() {
     bool bIsNegative, bIsFloat;
     char *pcNumericalPart, *pcFloatPart;
-    int32_t iNumericalPartLength, iFloatPartLength, iOffset, iTmpValue, i;
-    Number *pTmpNumber;
-    Object *pTmpObject;
+    int32_t iNumericalPartLength, iFloatPartLength, iOffset;
 
-    if(this->m_upNumberString.get() == nullptr || this->m_spConfig.get() == nullptr || this->isNumberStringValid() == false)
+    if(this->m_upNumberString.get() == nullptr || this->m_spConfig.get() == nullptr || this->isNumberStringValid() == false) {
+        throw NumberException(NUMBER_EXCEPTION_REASON_BAD_FORMAT);
+
         return false;
+    }
 
     this->m_upNumber.reset(new Number(0));
 

@@ -15,6 +15,7 @@
 #include "container.h"
 #include "handler.h"
 #include "data.h"
+#include "manager.h"
 
 class Pipeline : public Handler, public Executable {
 public:
@@ -29,14 +30,20 @@ public:
 	PipelineStateType getCurrentState();
 	void setCurrentState(const PipelineStateType eState);
 
+    PipelineStateType getPreviousState();
+    void setPreviousState(const PipelineStateType eState);
+
 	map<Key, shared_ptr<Base>>* getData();
+
+    Manager* getManager();
 
 	static Pipeline* getInstance();
 protected:
+    PipelineStateType m_ePreviousState;
 	PipelineStateType m_eCurrentState;
 	unique_ptr<map<PipelineStateKey, PipelineState*>> m_upStates;
 	shared_ptr<map<Key, shared_ptr<Base>>> m_spData;
-
+    unique_ptr<Manager> m_upManager;
 private:
 	virtual bool determineNextState();
 

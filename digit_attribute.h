@@ -6,7 +6,7 @@
 	Description: this is the header file of the DigitAttribute class in C++ programming language
 */
 
-#ifndef _COC_COC_NUMBER_PRONUMCIATION_DIGIT_ATTRIBUTE_H_
+#ifndef _COC_COC_NUMBER_PRONUNCIATION_DIGIT_ATTRIBUTE_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_DIGIT_ATTRIBUTE_H_
 
 #include "attribute.h"

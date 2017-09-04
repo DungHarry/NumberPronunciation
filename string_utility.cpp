@@ -93,7 +93,7 @@ bool StringUtility::clearString(const char *pcString, char **pcResult) {
     int32_t i, iStartIndex, iEndIndex;
     bool bCommentContain;
 
-    if(pcString == nullptr || strlen(pcString) <= 0 || pcResult == nullptr || *pcResult != nullptr)
+    if(pcString == nullptr || (iStringLength = strlen(pcString)) <= 0 || pcResult == nullptr || *pcResult != nullptr)
         return false;
 
     for(bCommentContain = false, i = 0; i < iStringLength - 1; i ++)
@@ -103,9 +103,9 @@ bool StringUtility::clearString(const char *pcString, char **pcResult) {
             break;
         }
 
-    for(iStartIndex = 0; *(pcString + iStartIndex) == ' '; iStartIndex ++);
+    for(iStartIndex = 0; iStartIndex < iStringLength && *(pcString + iStartIndex) == ' '; iStartIndex ++);
 
-    for(iEndIndex = bCommentContain ? i - 1 : iStringLength - 1; *(pcString + iEndIndex) == ' '; iEndIndex --);
+    for(iEndIndex = bCommentContain ? i - 1 : iStringLength - 1; iEndIndex >= 0 && *(pcString + iEndIndex) == ' '; iEndIndex --);
 
     if(iStartIndex >= iEndIndex)
         return false;
@@ -125,7 +125,7 @@ bool StringUtility::clearWString(const wchar_t *pwcString, wchar_t **pwcResult) 
     int32_t i, iStartIndex, iEndIndex;
     bool bCommentContain;
 
-    if(pwcString == nullptr || wcslen(pwcString) <= 0 || pwcResult == nullptr || *pwcResult != nullptr)
+    if(pwcString == nullptr || (iStringLength = wcslen(pwcString)) <= 0 || pwcResult == nullptr || *pwcResult != nullptr)
         return false;
 
     for(bCommentContain = false, i = 0; i < iStringLength - 1; i ++)
@@ -135,9 +135,9 @@ bool StringUtility::clearWString(const wchar_t *pwcString, wchar_t **pwcResult) 
             break;
         }
 
-    for(iStartIndex = 0; *(pwcString + iStartIndex) == L' '; iStartIndex ++);
+    for(iStartIndex = 0; iStartIndex < iStringLength && *(pwcString + iStartIndex) == L' '; iStartIndex ++);
 
-    for(iEndIndex = bCommentContain ? i - 1 : iStringLength - 1; *(pwcString + iEndIndex) == L' '; iEndIndex --);
+    for(iEndIndex = bCommentContain ? i - 1 : iStringLength - 1; iEndIndex >= 0 && *(pwcString + iEndIndex) == L' '; iEndIndex --);
 
     if(iStartIndex >= iEndIndex)
         return false;

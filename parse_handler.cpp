@@ -58,9 +58,10 @@ bool ParseHandler::execute() {
 
     this->m_upConfig.reset(new Config());
 
-    while(StreamUtility::getInstance()->isEndOfStream() == false) {
+    for(pwcLine = nullptr; StreamUtility::getInstance()->isEndOfStream() == false; ) {
         if((pwcLine = StreamUtility::getInstance()->readLine()) == nullptr || wcslen(pwcLine) <= 0) {
-            delete[] pwcLine;
+            if(pwcLine != nullptr)
+                delete[] pwcLine;
 
             continue;
         }
@@ -68,26 +69,33 @@ bool ParseHandler::execute() {
 		pwcCleanLine = nullptr;
 
 		if(StringUtility::getInstance()->clearWString(pwcLine, &pwcCleanLine) == false || pwcCleanLine == nullptr) {
-			this->m_upConfig.reset(new Config());
+            delete[] pwcLine;
 
-			if((wcFirstCharacter = *(pwcCleanLine + 0)) == static_cast<wchar_t>('l')) {
-				if ((wcSecondCharacter = *(pwcCleanLine + 1)) == static_cast<wchar_t>('a'))
-					this->parseLanguage(pwcCleanLine, this->m_upConfig.get());
-				else if (wcSecondCharacter == static_cast<wchar_t>('o'))
-					this->parseLocaleName(pwcCleanLine, this->m_upConfig.get());
-			} else if(wcFirstCharacter == static_cast<wchar_t>('0'))
-				this->parseNormalDigitAttribute(pwcCleanLine, this->m_upConfig.get());
-			else if(wcFirstCharacter == static_cast<wchar_t>('1'))
-				this->parseSpecialDigitAttribute(pwcCleanLine, this->m_upConfig.get());
-			else if(wcFirstCharacter == static_cast<wchar_t>('2'))
-				this->parseMultipleDigitsAttribute(pwcCleanLine, this->m_upConfig.get());
-			else if(wcFirstCharacter == static_cast<wchar_t>('3'))
-				this->parseConditionAppendAttribute(pwcCleanLine, this->m_upConfig.get());
-			else if(wcFirstCharacter == static_cast<wchar_t>('4'))
-				this->parseConditionDigitAttribute(pwcCleanLine, this->m_upConfig.get());
+            if(pwcCleanLine != nullptr)
+                delete[] pwcCleanLine;
 
-			delete[] pwcCleanLine;
+            continue;
 		}
+
+        this->m_upConfig.reset(new Config());
+
+        if((wcFirstCharacter = *(pwcCleanLine + 0)) == static_cast<wchar_t>('l')) {
+            if ((wcSecondCharacter = *(pwcCleanLine + 1)) == static_cast<wchar_t>('a'))
+                this->parseLanguage(pwcCleanLine, this->m_upConfig.get());
+            else if (wcSecondCharacter == static_cast<wchar_t>('o'))
+                this->parseLocaleName(pwcCleanLine, this->m_upConfig.get());
+        } else if(wcFirstCharacter == static_cast<wchar_t>('0'))
+            this->parseNormalDigitAttribute(pwcCleanLine, this->m_upConfig.get());
+        else if(wcFirstCharacter == static_cast<wchar_t>('1'))
+            this->parseSpecialDigitAttribute(pwcCleanLine, this->m_upConfig.get());
+        else if(wcFirstCharacter == static_cast<wchar_t>('2'))
+            this->parseMultipleDigitsAttribute(pwcCleanLine, this->m_upConfig.get());
+        else if(wcFirstCharacter == static_cast<wchar_t>('3'))
+            this->parseConditionAppendAttribute(pwcCleanLine, this->m_upConfig.get());
+        else if(wcFirstCharacter == static_cast<wchar_t>('4'))
+            this->parseConditionDigitAttribute(pwcCleanLine, this->m_upConfig.get());
+
+        delete[] pwcCleanLine;
 
         delete[] pwcLine;
     }
@@ -98,11 +106,7 @@ bool ParseHandler::execute() {
 }
 
 Config* ParseHandler::releaseConfig() {
-    Config *pConfig = this->m_upConfig.get();
-
-    this->m_upConfig.release();
-
-    return pConfig;
+    return this->m_upConfig.release();
 }
 
 ParseHandler* ParseHandler::getInstance() {

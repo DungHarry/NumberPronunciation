@@ -61,7 +61,6 @@ bool Number::verifyIgnoreToDigits() {
 
 bool Number::verifyIgnoreToNumberUnit(Number *pNumber, bool &bNonZeroGlobal, int32_t &iLevel, int32_t &iNumberUnitOffset) {
 	bool bNonZeroLocal = false;
-	Number *pNumber;
 	Object *pObject;
 	int32_t i;
 	

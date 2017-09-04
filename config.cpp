@@ -129,6 +129,8 @@ set<Container>* Config::getMultipleDigitsAttributes() {
 }
 
 bool Config::classify() {
+    int32_t i;
+
 	if (this->m_upAttributes.get() == nullptr || this->m_upAttributes->size() <= 0 || this->m_upConditionAppendAttributes.get() == nullptr || this->m_upConditionDigitAttributes.get() == nullptr || this->m_upNormalDigitAttributes.get() == nullptr || this->m_upSpecialDigitAttributes.get() == nullptr)
 		return false;
 
@@ -137,17 +139,17 @@ bool Config::classify() {
 	this->m_upNormalDigitAttributes->clear();
 	this->m_upSpecialDigitAttributes->clear();
 
-	for (vector<shared_ptr<Attribute>>::iterator iter = this->m_upAttributes->begin(); iter != this->m_upAttributes->end(); ++ iter) {
-		if ((*iter)->getId() == ATTRIBUTE_TYPE_CONDITION_APPEND)
-			this->m_upConditionAppendAttributes->insert(Container(shared_ptr<Comparable>(*iter)));
-		else if ((*iter)->getId() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
-			this->m_upConditionDigitAttributes->insert(shared_ptr<Comparable>(*iter));
-		else if ((*iter)->getId() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
-			this->m_upMultipleDigitsAttributes->insert(shared_ptr<Comparable>(*iter));
-		else if ((*iter)->getId() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
-			this->m_upNormalDigitAttributes->insert(shared_ptr<Comparable>(*iter));
-		else if ((*iter)->getId() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
-			this->m_upSpecialDigitAttributes->insert(shared_ptr<Comparable>(*iter));
+    for (i = 0; i < this->m_upAttributes->size(); ++ i) {
+        if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_CONDITION_APPEND)
+            this->m_upConditionAppendAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
+        else if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
+            this->m_upConditionDigitAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
+        else if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
+            this->m_upMultipleDigitsAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
+        else if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
+            this->m_upNormalDigitAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
+        else if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
+            this->m_upSpecialDigitAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
 	}
 
 	return true;

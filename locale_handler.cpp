@@ -41,6 +41,8 @@ bool LocaleHandler::execute() {
         return false;
 
     setlocale(this->m_eScope == LOCALE_HANDLER_SCOPE_ALL ? LC_ALL : (this->m_eScope == LOCALE_HANDLER_SCOPE_COLLATE ? LC_COLLATE : (this->m_eScope == LOCALE_HANDLER_SCOPE_MONETARY ? LC_MONETARY : (this->m_eScope == LOCALE_HANDLER_SCOPE_NUMERIC ? LC_NUMERIC : LC_TIME))), this->m_upsLocaleName->c_str());
+
+    return true;
 }
 
 LocaleHandlerScope LocaleHandler::getScope() {

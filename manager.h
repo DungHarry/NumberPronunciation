@@ -9,9 +9,9 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_MANAGER_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_MANAGER_H_
 
-#include "container.h"
 #include <set>
 #include <memory>
+#include "container.h"
 
 class Manager {
 public:
@@ -21,13 +21,18 @@ public:
 	Manager();
 	virtual ~Manager();
 
+    set<Container>* getObjects();
+
 	Comparable* get(const Container &con);
 
 	void cleanUp();
 
     iterator begin();
     iterator end();
-private:
+
+    reverse_iterator rbegin();
+    reverse_iterator rend();
+protected:
 	unique_ptr<set<Container>> m_upObjects;
 };
 
