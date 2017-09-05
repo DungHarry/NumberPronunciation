@@ -25,12 +25,24 @@ PronunciationHandler::PronunciationHandler(Config *pConfig, Number *pNumber) :
 }
 
 bool PronunciationHandler::execute() {
-	if (this->m_upConfig.get() == nullptr || this->m_upNumber.get() == nullptr)
+	int32_t i;
+	vector<unique_ptr<Object>> *pNumbers;
+	PronunciationHandlerState eState;
+
+	if (this->m_upConfig.get() == nullptr || this->m_upNumber.get() == nullptr || (pNumbers = this->m_upNumber->getNumbers()) == nullptr)
 		return false;
 
 	this->m_upwsPronunciation.reset();
 
+	for (i = 0; i < pNumbers->size(); i ++)
+		if ((*(pNumbers->data() + i)).get() != nullptr) {
+			eState = this->detectExecutionState((*(pNumbers->data() + i)).get());
 
+			this->processState(eState, (*(pNumbers->data() + i)).get(), 0, 0);
+
+			if (this->processState(eState, (*(pNumbers->data() + i)).get(), 0, 0) == false) 
+				return false;
+		}
 
 	return true;
 }
@@ -169,8 +181,8 @@ bool PronunciationHandler::processNumberUnit(Number *pNumber) {
 		return false;
 
 	for (i = pNumber->getNumbers()->size() - 1; i >= 0; i ++)
-	if ((pObject = ((*(pNumber->getNumbers()->data() + i)).get())) != nullptr && (eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NUMBER_UNIT)
-		this->processState(eState, pObject, 0, i);
+		if ((pObject = ((*(pNumber->getNumbers()->data() + i)).get())) != nullptr && (eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NUMBER_UNIT)
+			this->processState(eState, pObject, 0, i);
 
 	if (this->handleNumberUnitNumDigits(pNumber, pNumber->getNumbers()->size()) == false)
 		return false;

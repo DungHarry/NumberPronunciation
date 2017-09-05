@@ -12,6 +12,7 @@ unique_ptr<Pipeline> Pipeline::m_upInstance (nullptr);
 
 Pipeline::Pipeline() :
 	Handler (HANDLER_TYPE_PIPELINE),
+	m_iDataCount (static_cast<int32_t>(0)),
     m_ePreviousState (PIPELINE_STATE_TYPE_NONE),
 	m_eCurrentState (PIPELINE_STATE_TYPE_NONE),
 	m_upStates(new map<int32_t, PipelineState*>()),
@@ -23,6 +24,7 @@ Pipeline::Pipeline() :
 
 Pipeline::Pipeline(const PipelineStateType eCurrentState) :
 	Handler (HANDLER_TYPE_PIPELINE),
+	m_iDataCount(static_cast<int32_t>(0)),
     m_ePreviousState (PIPELINE_STATE_TYPE_NONE),
 	m_eCurrentState (eCurrentState <= PIPELINE_STATE_TYPE_NONE || eCurrentState >= PIPELINE_STATE_TYPE_COUNT ? PIPELINE_STATE_TYPE_NONE : eCurrentState),
 	m_upStates(new map<int32_t, PipelineState*>()),
@@ -99,6 +101,10 @@ void Pipeline::setPreviousState(const PipelineStateType eState) {
         return;
 
     this->m_ePreviousState = eState;
+}
+
+int32_t Pipeline::getDataCount() {
+	return this->m_iDataCount;
 }
 
 map<Key, shared_ptr<Base>>* Pipeline::getData() {

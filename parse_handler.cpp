@@ -154,7 +154,7 @@ bool ParseHandler::parseLocaleName(const wchar_t *pwcLine, Config *pConfig) {
 		return false;
 	}
 
-	pConfig->getLang()->setName(pcLocale);
+	pConfig->getLang()->setLocaleName(pcLocale);
 
 	delete[] pwcBuffer;
 	delete[] pcLocale;

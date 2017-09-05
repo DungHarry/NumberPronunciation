@@ -12,8 +12,10 @@
 #include "string_data.h"
 #include "wstring_data.h"
 #include "pipeline_state.h"
+#include "config_name_parser.h"
+#include "file_handler.h"
 
-#define PS_READ_CONFIGS_KEY_INPUT_CONFIG_NAME (static_cast<int32_t>(1 << 10))
+#define PS_READ_CONFIGS_KEY_INPUT_CONFIG_NAME (static_cast<int32_t>(1 << 14))
 
 class PSReadConfigs : public PipelineState {
 public:
@@ -25,6 +27,15 @@ public:
 
     const char* getConfigFileName();
     void setConfigFileName(const char *cpcConfigFileName);
+
+	virtual PipelineStateType determineNextStateType() const;
+
+	virtual bool cleanup();
+protected:
+	PipelineStateType m_eNextState;
+
+private:
+	virtual bool constructPossibleStates();
 };
 
 #endif

@@ -20,7 +20,7 @@ PipelineState::PipelineState() :
 
 PipelineState::PipelineState(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData, PipelineStateType eStateType) :
     m_spPipeline (shared_ptr<Pipeline>(pPipeline)),
-	m_eStateType (eStateType <= PIPELINE_STATE_TYPE_NONE || eStateType >= PIPELINE_STATE_TYPE_COUNT ? PIPELINE_STATE_TYPE_NONE : eStateType),
+	m_eStateType ((eStateType <= PIPELINE_STATE_TYPE_NONE || eStateType >= PIPELINE_STATE_TYPE_COUNT) ? PIPELINE_STATE_TYPE_NONE : eStateType),
 	m_upPossibleStates (new set<PipelineStateType>()),
     m_upInternalData (new map<Key, unique_ptr<Data>>()),
     m_spData (shared_ptr<map<Key, shared_ptr<Base>>>(pData))
@@ -41,7 +41,7 @@ PipelineState::~PipelineState() {
         this->m_spPipeline.reset();
 
     if(this->m_upInternalData.get() != nullptr) {
-        for(iter = this->m_upPossibleStates; i < this->m_upInternalData->size(); i ++)
+        for(iter = this->m_upInternalData->begin(); iter != this->m_upInternalData->end(); ++ iter)
             if(iter->second.get() != nullptr)
                 iter->second.reset();
 
@@ -101,4 +101,15 @@ bool PipelineState::isValidState(const PipelineStateType eType) const {
 
 PipelineStateType PipelineState::determineNextStateType() const {
 	return this->m_eStateType;
+}
+
+bool PipelineState::constructPossibleStates() {
+	if (this->m_upPossibleStates.get() == nullptr)
+		return false;
+
+	return true;
+}
+
+bool PipelineState::cleanup() {
+	return true;
 }

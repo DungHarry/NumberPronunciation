@@ -33,12 +33,16 @@ public:
     PipelineStateType getPreviousState();
     void setPreviousState(const PipelineStateType eState);
 
+	int32_t getDataCount();
+
 	map<Key, shared_ptr<Base>>* getData();
 
     Manager* getManager();
 
 	static Pipeline* getInstance();
 protected:
+	int32_t m_iDataCount;
+
     PipelineStateType m_ePreviousState;
 	PipelineStateType m_eCurrentState;
 	unique_ptr<map<PipelineStateKey, PipelineState*>> m_upStates;
