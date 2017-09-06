@@ -19,7 +19,7 @@
 class PSChooseLanguage : public PipelineState {
 public:
 	PSChooseLanguage();
-	PSChooseLanguage(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData);
+	PSChooseLanguage(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data);
 	virtual ~PSChooseLanguage();
 
 	virtual bool execute();
@@ -27,6 +27,8 @@ public:
 	virtual PipelineStateType determineNextStateType() const;
 
 	virtual bool cleanup();
+
+	Key getLangKey();
 protected:
 	PipelineStateType m_eNextState;
 	Key m_kLangKey;

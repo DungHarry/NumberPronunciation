@@ -15,7 +15,7 @@ Pipeline::Pipeline() :
 	m_iDataCount (static_cast<int32_t>(0)),
     m_ePreviousState (PIPELINE_STATE_TYPE_NONE),
 	m_eCurrentState (PIPELINE_STATE_TYPE_NONE),
-	m_upStates(new map<int32_t, PipelineState*>()),
+	m_upStates(new map<int32_t, unique_ptr<PipelineState>>()),
     m_spData (new map<int32_t, shared_ptr<Base>>()),
     m_upManager (new Manager())
 {
@@ -27,7 +27,7 @@ Pipeline::Pipeline(const PipelineStateType eCurrentState) :
 	m_iDataCount(static_cast<int32_t>(0)),
     m_ePreviousState (PIPELINE_STATE_TYPE_NONE),
 	m_eCurrentState (eCurrentState <= PIPELINE_STATE_TYPE_NONE || eCurrentState >= PIPELINE_STATE_TYPE_COUNT ? PIPELINE_STATE_TYPE_NONE : eCurrentState),
-	m_upStates(new map<int32_t, PipelineState*>()),
+	m_upStates(new map<int32_t, unique_ptr<PipelineState>>()),
     m_spData(new map<Key, shared_ptr<Base>>()),
     m_upManager (new Manager())
 {
@@ -55,7 +55,7 @@ bool Pipeline::execute() {
 		return false;
 
 	while (this->m_eCurrentState != PIPELINE_STATE_FINISH) {
-		if ((pPipelineState = this->m_upStates->at(static_cast<PipelineStateKey>(this->m_eCurrentState))) == nullptr) {
+		if (this->m_upStates->find(static_cast<PipelineStateKey>(this->m_eCurrentState)) == this->m_upStates->end() || (pPipelineState = this->m_upStates->at(static_cast<PipelineStateKey>(this->m_eCurrentState)).get()) == nullptr) {
 			this->m_eCurrentState = PIPELINE_STATE_TYPE_NONE;
 
 			return false;
@@ -77,7 +77,7 @@ bool Pipeline::execute() {
 	return true;
 }
 
-map<PipelineStateKey, PipelineState*>* Pipeline::getStates() {
+map<PipelineStateKey, unique_ptr<PipelineState>>* Pipeline::getStates() {
 	return this->m_upStates.get();
 }
 
@@ -101,6 +101,10 @@ void Pipeline::setPreviousState(const PipelineStateType eState) {
         return;
 
     this->m_ePreviousState = eState;
+}
+
+PipelineState* Pipeline::getStateByKey(const PipelineStateKey k) {
+	return (this->m_upStates.get() == nullptr || this->m_upStates->find(k) == this->m_upStates->end()) ? nullptr : (*(this->m_upStates.get()))[k].get();
 }
 
 int32_t Pipeline::getDataCount() {
@@ -129,7 +133,7 @@ bool Pipeline::determineNextState() {
 	if (this->m_eCurrentState <= PIPELINE_STATE_TYPE_NONE || this->m_eCurrentState >= PIPELINE_STATE_TYPE_COUNT || this->m_upStates.get() == nullptr)
 		return false;
 
-	if ((pPipelineState = this->m_upStates->at(static_cast<PipelineStateKey>(this->m_eCurrentState))) == nullptr || (eNextState = pPipelineState->determineNextStateType()) <= PIPELINE_STATE_TYPE_NONE || eNextState >= PIPELINE_STATE_TYPE_COUNT || pPipelineState->isValidState(eNextState) == false)
+	if (this->m_upStates->find(static_cast<PipelineStateKey>(this->m_eCurrentState)) == this->m_upStates->end() || (pPipelineState = this->m_upStates->at(static_cast<PipelineStateKey>(this->m_eCurrentState)).get()) == nullptr || (eNextState = pPipelineState->determineNextStateType()) <= PIPELINE_STATE_TYPE_NONE || eNextState >= PIPELINE_STATE_TYPE_COUNT || pPipelineState->isValidState(eNextState) == false)
 		return false;
 
     this->m_ePreviousState = this->m_eCurrentState;

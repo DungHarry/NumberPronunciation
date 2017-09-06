@@ -192,6 +192,18 @@ char* StringUtility::getSubStringNumber(Number *pNumber, int32_t iLength) {
 	return pcResult;
 }
 
+bool StringUtility::isAllDigitsValid(const char *cpcString, Config *pConfig) {
+	set<Container> *pNormalDigitAttributeSet, *pSpecialDigitAttributeSet;
+	set<Container>::iterator iter;
+	NormalDigitAttribute *pNormalDigitAttribute;
+	SpecialDigitAttribute *pSpecialDigitAttribute;
+
+	if (cpcString == nullptr || pConfig == nullptr || ((pNormalDigitAttributeSet = pConfig->getNormalDigitAttributes()) == nullptr && (pSpecialDigitAttributeSet = )))
+		return false;
+
+	return true;
+}
+
 StringUtility* StringUtility::getInstance() {
     if(m_upInstance.get() == nullptr)
         m_upInstance.reset(new StringUtility());

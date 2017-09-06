@@ -22,8 +22,8 @@ PSChooseLanguage::PSChooseLanguage() :
 		(*(this->m_spData.get()))[this->m_kLangKey] = shared_ptr<Base>(new StringData());
 }
 
-PSChooseLanguage::PSChooseLanguage(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData) :
-	PipelineState(pPipeline, pData, PIPELINE_STATE_TYPE_CHOOSE_LANG)
+PSChooseLanguage::PSChooseLanguage(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data) :
+	PipelineState(pipeline, data, PIPELINE_STATE_TYPE_CHOOSE_LANG)
 {
 	this->constructPossibleStates();
 	this->determineLangKey();
@@ -97,6 +97,11 @@ bool PSChooseLanguage::cleanup() {
 
 	return true;
 }
+
+Key PSChooseLanguage::getLangKey() {
+	return this->m_kLangKey;
+}
+
 
 bool PSChooseLanguage::constructPossibleStates() {
 	if (this->m_upPossibleStates.get() == nullptr)

@@ -18,6 +18,9 @@
 #include "utility.h"
 #include "number.h"
 #include "normal_digit.h"
+#include "normal_digit_attribute.h"
+#include "special_digit_attribute.h"
+#include "config.h"
 
 class StringUtility : public Utility {
 public:
@@ -37,6 +40,8 @@ public:
     bool existChar(const char *cpcString, const char cCharacter);
 
 	char* getSubStringNumber(Number *pNumber, int32_t iLength);
+
+	bool isAllDigitsValid(const char *cpcString, Config *pConfig);
 
     static StringUtility* getInstance();
 private:

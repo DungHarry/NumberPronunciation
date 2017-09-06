@@ -11,7 +11,11 @@
 
 #include <iostream>
 #include "pipeline_state.h"
+#include "ps_choose_lang.h"
 #include "config.h"
+#include "string_data.h"
+#include "normal_digit_attribute.h"
+#include "special_digit_attribute.h"
 
 enum PSHelpType {
 	PS_HELP_TYPE_NONE = 0,
@@ -23,7 +27,7 @@ enum PSHelpType {
 class PSHelp : public PipelineState {
 public:
 	PSHelp();
-	PSHelp(PSHelpType eHelpType, Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData);
+	PSHelp(PSHelpType eHelpType, shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data);
 	virtual ~PSHelp();
 
 	virtual bool execute();

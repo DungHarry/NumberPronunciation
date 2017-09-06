@@ -16,8 +16,8 @@ PSParseConfigs::PSParseConfigs() :
 	this->constructPossibleStates();
 }
 
-PSParseConfigs::PSParseConfigs(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData) :
-	PipelineState(pPipeline, pData, PIPELINE_STATE_TYPE_PARSE_CONFIGS)
+PSParseConfigs::PSParseConfigs(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data) :
+	PipelineState(pipeline, data, PIPELINE_STATE_TYPE_PARSE_CONFIGS)
 {
 	this->constructPossibleStates();
 }

@@ -20,7 +20,7 @@
 class PSReadConfigs : public PipelineState {
 public:
     PSReadConfigs();
-    PSReadConfigs(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData, const char *cpcConfigFileName);
+    PSReadConfigs(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data, const char *cpcConfigFileName);
     virtual ~PSReadConfigs();
 
     virtual bool execute();

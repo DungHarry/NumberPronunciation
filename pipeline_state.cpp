@@ -18,12 +18,12 @@ PipelineState::PipelineState() :
 
 }
 
-PipelineState::PipelineState(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData, PipelineStateType eStateType) :
-    m_spPipeline (shared_ptr<Pipeline>(pPipeline)),
+PipelineState::PipelineState(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data, PipelineStateType eStateType) :
+    m_spPipeline (pipeline),
 	m_eStateType ((eStateType <= PIPELINE_STATE_TYPE_NONE || eStateType >= PIPELINE_STATE_TYPE_COUNT) ? PIPELINE_STATE_TYPE_NONE : eStateType),
 	m_upPossibleStates (new set<PipelineStateType>()),
     m_upInternalData (new map<Key, unique_ptr<Data>>()),
-    m_spData (shared_ptr<map<Key, shared_ptr<Base>>>(pData))
+    m_spData (data)
 {
 
 }

@@ -21,7 +21,7 @@ typedef int32_t PipelineStateKey;
 class PipelineState : public Base, public Executable, public Comparable, public Cleanupable {
 public:
 	PipelineState();
-    PipelineState(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData, PipelineStateType eStateType);
+    PipelineState(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data, PipelineStateType eStateType);
 	virtual ~PipelineState();
 
 	virtual bool execute();

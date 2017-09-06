@@ -17,8 +17,8 @@ PSReadConfigs::PSReadConfigs() :
 	this->constructPossibleStates();
 }
 
-PSReadConfigs::PSReadConfigs(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData, const char *cpcConfigFileName) :
-	PipelineState(pPipeline, pData, PIPELINE_STATE_TYPE_READ_CONFIGS),
+PSReadConfigs::PSReadConfigs(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data, const char *cpcConfigFileName) :
+	PipelineState(pipeline, data, PIPELINE_STATE_TYPE_READ_CONFIGS),
 	m_eNextState (PIPELINE_STATE_FINISH)
 {
     (*(this->m_upInternalData.get()))[PS_READ_CONFIGS_KEY_INPUT_CONFIG_NAME] = unique_ptr<Data>(new StringData(cpcConfigFileName));

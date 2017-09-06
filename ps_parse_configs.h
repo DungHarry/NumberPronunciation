@@ -19,7 +19,7 @@
 class PSParseConfigs : public PipelineState {
 public:
 	PSParseConfigs();
-	PSParseConfigs(Pipeline *pPipeline, map<Key, shared_ptr<Base>> *pData);
+	PSParseConfigs(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data);
 	virtual ~PSParseConfigs();
 
 	virtual bool execute();

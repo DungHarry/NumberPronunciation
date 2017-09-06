@@ -25,13 +25,15 @@ public:
 
 	virtual bool execute();
 
-	map<PipelineStateKey, PipelineState*>* getStates();
+	map<PipelineStateKey, unique_ptr<PipelineState>>* getStates();
 
 	PipelineStateType getCurrentState();
 	void setCurrentState(const PipelineStateType eState);
 
     PipelineStateType getPreviousState();
     void setPreviousState(const PipelineStateType eState);
+
+	PipelineState* getStateByKey(const PipelineStateKey k);
 
 	int32_t getDataCount();
 
@@ -45,13 +47,11 @@ protected:
 
     PipelineStateType m_ePreviousState;
 	PipelineStateType m_eCurrentState;
-	unique_ptr<map<PipelineStateKey, PipelineState*>> m_upStates;
+	unique_ptr<map<PipelineStateKey, unique_ptr<PipelineState>>> m_upStates;
 	shared_ptr<map<Key, shared_ptr<Base>>> m_spData;
     unique_ptr<Manager> m_upManager;
 private:
 	virtual bool determineNextState();
-
-	int32_t doBinarySearch();
 
 	static unique_ptr<Pipeline> m_upInstance;
 };
