@@ -10,7 +10,7 @@
 
 PSHelp::PSHelp() :
 	PipelineState (),
-	m_eNextState (PIPELINE_STATE_FINISH),
+	m_eNextState (PIPELINE_STATE_TYPE_FINISH),
 	m_eHelpType (PS_HELP_TYPE_NONE)
 {
 	this->m_eStateType = PIPELINE_STATE_TYPE_HELP;
@@ -18,7 +18,7 @@ PSHelp::PSHelp() :
 
 PSHelp::PSHelp(PSHelpType eHelpType, shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data) :
 	PipelineState (pipeline, data, PIPELINE_STATE_TYPE_HELP),
-	m_eNextState (PIPELINE_STATE_FINISH),
+	m_eNextState (PIPELINE_STATE_TYPE_FINISH),
 	m_eHelpType (eHelpType < PS_HELP_TYPE_NONE || eHelpType >= PS_HELP_TYPE_COUNT ? PS_HELP_TYPE_NONE : eHelpType)
 {
 
@@ -30,7 +30,7 @@ PSHelp::~PSHelp() {
 
 bool PSHelp::execute() {
 	if (this->m_eHelpType <= PS_HELP_TYPE_NONE || this->m_eHelpType >= PS_HELP_TYPE_COUNT) {
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
 	}
@@ -44,7 +44,7 @@ bool PSHelp::execute() {
 
 		this->m_eNextState = PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING;
 	} else 
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 
 	return true;
 }
@@ -72,7 +72,7 @@ bool PSHelp::constructPossibleStates() {
 	if (this->m_upPossibleStates.get() == nullptr)
 		return false;
 
-	this->m_upPossibleStates->insert(PIPELINE_STATE_FINISH);
+	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_FINISH);
 	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_CHOOSE_LANG);
 	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING);
 

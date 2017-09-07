@@ -194,14 +194,29 @@ char* StringUtility::getSubStringNumber(Number *pNumber, int32_t iLength) {
 
 bool StringUtility::isAllDigitsValid(const char *cpcString, Config *pConfig) {
 	set<Container> *pNormalDigitAttributeSet, *pSpecialDigitAttributeSet;
-	set<Container>::iterator iter;
 	NormalDigitAttribute *pNormalDigitAttribute;
 	SpecialDigitAttribute *pSpecialDigitAttribute;
+	int32_t i, iStringLength;
+	Container c;
 
-	if (cpcString == nullptr || pConfig == nullptr || ((pNormalDigitAttributeSet = pConfig->getNormalDigitAttributes()) == nullptr && (pSpecialDigitAttributeSet = )))
+	if (cpcString == nullptr || pConfig == nullptr || ((pNormalDigitAttributeSet = pConfig->getNormalDigitAttributes()) == nullptr && (pSpecialDigitAttributeSet = pConfig->getSpecialDigitAttributes()) == nullptr))
 		return false;
 
-	return true;
+	for (iStringLength = strlen(cpcString), i = 0; i < iStringLength; i++) {
+		c.setData(shared_ptr<Comparable>(new NormalDigitAttribute(0, *(cpcString + i), nullptr)));
+
+		if (pNormalDigitAttributeSet->find(c) != pNormalDigitAttributeSet->end())
+			continue;
+
+		c.setData(shared_ptr<Comparable>(new SpecialDigitAttribute(0, *(cpcString + i), nullptr)));
+
+		if (pSpecialDigitAttributeSet->find(c) != pNormalDigitAttributeSet->end())
+			continue;
+
+		break;
+	}
+
+	return (i < iStringLength) ? false : true;
 }
 
 StringUtility* StringUtility::getInstance() {

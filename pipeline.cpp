@@ -54,7 +54,7 @@ bool Pipeline::execute() {
 	if (this->m_eCurrentState <= PIPELINE_STATE_TYPE_NONE || this->m_eCurrentState >= PIPELINE_STATE_TYPE_COUNT || this->m_upStates.get() == nullptr || this->m_upStates->size() <= 0)
 		return false;
 
-	while (this->m_eCurrentState != PIPELINE_STATE_FINISH) {
+	while (this->m_eCurrentState != PIPELINE_STATE_TYPE_FINISH) {
 		if (this->m_upStates->find(static_cast<PipelineStateKey>(this->m_eCurrentState)) == this->m_upStates->end() || (pPipelineState = this->m_upStates->at(static_cast<PipelineStateKey>(this->m_eCurrentState)).get()) == nullptr) {
 			this->m_eCurrentState = PIPELINE_STATE_TYPE_NONE;
 

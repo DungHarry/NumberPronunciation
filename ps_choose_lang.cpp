@@ -11,7 +11,9 @@
 #define PS_CHOOSE_LANG_BUFFER_SIZE (static_cast<int32_t>(1 << 10))
 
 PSChooseLanguage::PSChooseLanguage() :
-	PipelineState()
+	PipelineState(),
+	m_iMaxTries (PS_CHOOSE_LANGUAGE_MAX_TRIES_DEFAULT_VALUE),
+	m_iTryCount (0)
 {
 	this->m_eStateType = PIPELINE_STATE_TYPE_CHOOSE_LANG;
 
@@ -22,8 +24,10 @@ PSChooseLanguage::PSChooseLanguage() :
 		(*(this->m_spData.get()))[this->m_kLangKey] = shared_ptr<Base>(new StringData());
 }
 
-PSChooseLanguage::PSChooseLanguage(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data) :
-	PipelineState(pipeline, data, PIPELINE_STATE_TYPE_CHOOSE_LANG)
+PSChooseLanguage::PSChooseLanguage(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data, const int16_t iMaxTries) :
+	PipelineState(pipeline, data, PIPELINE_STATE_TYPE_CHOOSE_LANG),
+	m_iMaxTries (iMaxTries <= 0 ? PS_CHOOSE_LANGUAGE_MAX_TRIES_DEFAULT_VALUE : iMaxTries),
+	m_iTryCount (0)
 {
 	this->constructPossibleStates();
 	this->determineLangKey();
@@ -40,8 +44,8 @@ bool PSChooseLanguage::execute() {
 	char *pcBuffer;
 	Config *pConfig;
 	
-	if (StandardIOUtility::getInstance() == nullptr) {
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+	if (StandardIOUtility::getInstance() == nullptr || this->m_iTryCount >= this->m_iMaxTries) {
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 
 		return false;
 	}
@@ -49,7 +53,7 @@ bool PSChooseLanguage::execute() {
 	pcBuffer = new char[PS_CHOOSE_LANG_BUFFER_SIZE];
 
 	if (StandardIOUtility::getInstance()->readLine(pcBuffer, PS_CHOOSE_LANG_BUFFER_SIZE) == false) {
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		delete[] pcBuffer;
 		
@@ -57,6 +61,8 @@ bool PSChooseLanguage::execute() {
 	}
 
 	if ((pConfig = this->isLangAvailable(pcBuffer)) == nullptr) {
+		this->m_iTryCount ++;
+
 		this->m_eNextState = PIPELINE_STATE_TYPE_HELP;
 
 		delete[] pcBuffer;
@@ -74,6 +80,7 @@ bool PSChooseLanguage::execute() {
 	}
 
 	this->m_eNextState = PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING;
+	this->m_iTryCount = 0;
 
 	delete[] pcBuffer;
 
@@ -81,9 +88,10 @@ bool PSChooseLanguage::execute() {
 }
 
 PipelineStateType PSChooseLanguage::determineNextStateType() const {
-	if (this->m_eNextState == PIPELINE_STATE_TYPE_HELP) {
+	PSHelp *pHelpPipeline;
 
-	}
+	if (this->m_eNextState == PIPELINE_STATE_TYPE_HELP && this->m_spPipeline.get() != nullptr && (pHelpPipeline = dynamic_cast<PSHelp *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_HELP))) != nullptr)
+		pHelpPipeline->setHelpType(PS_HELP_TYPE_LANG);
 
 	return this->m_eNextState;
 }
@@ -95,6 +103,8 @@ bool PSChooseLanguage::cleanup() {
 	if (this->m_spData->find(this->m_kLangKey) != this->m_spData->end() && this->m_spData->at(this->m_kLangKey).get() != nullptr)
 		this->m_spData->at(this->m_kLangKey).reset();
 
+	this->m_iTryCount = 0;
+
 	return true;
 }
 
@@ -102,12 +112,33 @@ Key PSChooseLanguage::getLangKey() {
 	return this->m_kLangKey;
 }
 
+int16_t PSChooseLanguage::getMaxTries() {
+	return this->m_iMaxTries;
+}
+
+void PSChooseLanguage::setMaxTries(const int16_t iMaxTries) {
+	if (iMaxTries <= 0)
+		return;
+
+	this->m_iMaxTries = iMaxTries;
+}
+
+int16_t PSChooseLanguage::getTryCount() {
+	return this->m_iTryCount;
+}
+
+void PSChooseLanguage::setTryCount(const int16_t iTryCount) {
+	if (iTryCount <= 0)
+		return;
+
+	this->m_iTryCount = iTryCount;
+}
 
 bool PSChooseLanguage::constructPossibleStates() {
 	if (this->m_upPossibleStates.get() == nullptr)
 		return false;
 
-	this->m_upPossibleStates->insert(PIPELINE_STATE_FINISH);
+	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_FINISH);
 	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_HELP);
 	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING);
 
