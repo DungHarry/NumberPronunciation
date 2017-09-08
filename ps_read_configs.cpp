@@ -10,7 +10,7 @@
 
 PSReadConfigs::PSReadConfigs() :
     PipelineState (),
-	m_eNextState (PIPELINE_STATE_FINISH)
+	m_eNextState (PIPELINE_STATE_TYPE_FINISH)
 {
     this->m_eStateType = PIPELINE_STATE_TYPE_READ_CONFIGS;
 
@@ -19,7 +19,7 @@ PSReadConfigs::PSReadConfigs() :
 
 PSReadConfigs::PSReadConfigs(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data, const char *cpcConfigFileName) :
 	PipelineState(pipeline, data, PIPELINE_STATE_TYPE_READ_CONFIGS),
-	m_eNextState (PIPELINE_STATE_FINISH)
+	m_eNextState (PIPELINE_STATE_TYPE_FINISH)
 {
     (*(this->m_upInternalData.get()))[PS_READ_CONFIGS_KEY_INPUT_CONFIG_NAME] = unique_ptr<Data>(new StringData(cpcConfigFileName));
 
@@ -36,7 +36,7 @@ bool PSReadConfigs::execute() {
 	int32_t i;
 
 	if (ConfigNameParser::getInstance() == nullptr || FileHandler::getInstance() == nullptr || (pFileNameData = dynamic_cast<StringData *>(this->m_upInternalData->at(PS_READ_CONFIGS_KEY_INPUT_CONFIG_NAME).get())) == nullptr || pFileNameData->getValue() == nullptr || this->m_spData.get() == nullptr) {
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
 	}
@@ -45,7 +45,7 @@ bool PSReadConfigs::execute() {
 	FileHandler::getInstance()->setType(FILE_HANDLER_TYPE_READ);
 
 	if (FileHandler::getInstance()->execute() == false || FileHandler::getInstance()->getBufferContent() == nullptr) {
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
 	}
@@ -53,7 +53,7 @@ bool PSReadConfigs::execute() {
 	ConfigNameParser::getInstance()->setBuffer(FileHandler::getInstance()->getBufferContent());
 	
 	if (ConfigNameParser::getInstance()->execute() == false || (pConfigNames = ConfigNameParser::getInstance()->releaseConfigNames()) == nullptr) {
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
 	}
@@ -99,7 +99,7 @@ bool PSReadConfigs::constructPossibleStates() {
 	if (this->m_upPossibleStates.get() == nullptr)
 		return false;
 	
-	this->m_upPossibleStates->insert(PIPELINE_STATE_FINISH);
+	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_FINISH);
 	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_PARSE_CONFIGS);
 
 	return true;

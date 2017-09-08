@@ -23,6 +23,12 @@ public:
 	bool readLine(char *pcBuffer, int32_t iBufferSize);
 	bool readLine(wchar_t *pwcBuffer, int32_t iBufferSize);
 
+	bool write(const char *pcContent);
+	bool write(const wchar_t *pwcContent);
+
+	bool writeLine(const char *pcContent);
+	bool writeLine(const wchar_t *pwcContent);
+
 	static StandardIOUtility* getInstance();
 private:
 	static unique_ptr<StandardIOUtility> m_upInstance;

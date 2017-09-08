@@ -32,7 +32,7 @@ bool PSParseConfigs::execute() {
 	Config *pConfig;
 
 	if (this->m_spData.get() == nullptr || StringUtility::getInstance() == nullptr || FileHandler::getInstance() == nullptr || ParseHandler::getInstance() == nullptr) {
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 
 		return false;
 	}
@@ -53,7 +53,7 @@ bool PSParseConfigs::execute() {
 		}
 	
 	if (this->m_spPipeline->getManager() == nullptr || this->m_spPipeline->getManager()->getObjects() == nullptr || this->m_spPipeline->getManager()->getObjects()->size() <= 0) {
-		this->m_eNextState = PIPELINE_STATE_FINISH;
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 
 		return false;
 	}
@@ -82,7 +82,7 @@ bool PSParseConfigs::constructPossibleStates() {
 	if (this->m_upPossibleStates.get() == nullptr)
 		return false;
 
-	this->m_upPossibleStates->insert(PIPELINE_STATE_FINISH);
+	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_FINISH);
 	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_CHOOSE_LANG);
 
 	return true;

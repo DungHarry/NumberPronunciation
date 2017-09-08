@@ -46,6 +46,42 @@ bool StandardIOUtility::readLine(wchar_t *pwcBuffer, int32_t iBufferSize) {
 	return true;
 }
 
+bool StandardIOUtility::write(const char *pcContent) {
+	if (pcContent == nullptr)
+		return false;
+
+	cout << pcContent ;
+
+	return true;
+}
+
+bool StandardIOUtility::write(const wchar_t *pwcContent) {
+	if (pwcContent == nullptr)
+		return false;
+
+	wcout << pwcContent ;
+
+	return true;
+}
+bool StandardIOUtility::writeLine(const char *pcContent) {
+	if (pcContent == nullptr)
+		return false;
+
+	cout << pcContent <<endl;
+
+	return true;
+}
+
+bool StandardIOUtility::writeLine(const wchar_t *pwcContent) {
+	if (pwcContent == nullptr)
+		return false;
+
+	wcout << pwcContent <<endl;
+
+	return true;
+}
+
+
 StandardIOUtility* StandardIOUtility::getInstance() {
 	if (m_upInstance.get() == nullptr)
 		m_upInstance.reset(new StandardIOUtility());

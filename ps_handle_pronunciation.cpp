@@ -1,0 +1,133 @@
+/*
+	Author: Dung Ly Viet
+	Date created: September 8th, 2017
+	Compiler: Visual C++ Compiler 2013
+
+	Description: this is the source code file of the PSHandlePronunciation class in C++ programming language
+*/
+
+#include "ps_handle_pronunciation.h"
+
+PSHandlePronunciation::PSHandlePronunciation() :
+	PipelineState (),
+	m_eNextState (PIPELINE_STATE_TYPE_NONE)
+{
+	this->m_eStateType = PIPELINE_STATE_TYPE_HANDLE_PRONUNCIATION;
+
+	this->constructPossibleStates();
+	this->determinePronunciationKey();
+
+	if (this->m_spData.get() != nullptr)
+		(*(this->m_spData.get()))[this->m_kPronunciationKey] = shared_ptr<Base>(nullptr);
+}
+
+PSHandlePronunciation::PSHandlePronunciation(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data) :
+	PipelineState (pipeline, data, PIPELINE_STATE_TYPE_HANDLE_PRONUNCIATION),
+	m_eNextState (PIPELINE_STATE_TYPE_NONE)
+{
+	this->constructPossibleStates();
+	this->determinePronunciationKey();
+}
+
+PSHandlePronunciation::~PSHandlePronunciation() {
+	this->cleanup();
+}
+
+bool PSHandlePronunciation::execute() {
+	Number *pNumber;
+	Config *pConfig;
+	wstring *pwsPronunciation;
+
+	if (this->m_spData.get() == nullptr || PronunciationHandler::getInstance() == nullptr || (pConfig = this->getConfig()) == nullptr || (pNumber = this->getNumber()) == nullptr) {
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
+		
+		return false;
+	}
+
+	PronunciationHandler::getInstance()->setConfig(pConfig);
+	PronunciationHandler::getInstance()->setNumber(pNumber);
+
+	if (PronunciationHandler::getInstance()->execute() == false || (pwsPronunciation = PronunciationHandler::getInstance()->getPronunciation()) == nullptr) {
+		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
+
+		return false;
+	}
+
+	(*(this->m_spData.get()))[this->m_kPronunciationKey].reset(new WStringData(pwsPronunciation->c_str()));
+
+	this->m_eNextState = PIPELINE_STATE_TYPE_OUTPUT_PRONUNCIATION;
+
+	delete pwsPronunciation;
+
+	return true;
+}
+
+PipelineStateType PSHandlePronunciation::determineNextStateType() const {
+	return this->m_eNextState;
+}
+
+bool PSHandlePronunciation::cleanup() {
+	if (this->m_spData.get() == nullptr || this->m_spData->find(this->m_kPronunciationKey) == this->m_spData->end())
+		return false;
+
+	this->m_spData->at(this->m_kPronunciationKey).reset();
+
+	return true;
+}
+
+Key PSHandlePronunciation::getPronunciationKey() {
+	return this->m_kPronunciationKey;
+}
+
+bool PSHandlePronunciation::constructPossibleStates() {
+	if (this->m_upPossibleStates.get() == nullptr)
+		return false;
+
+	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_OUTPUT_PRONUNCIATION);
+	this->m_upPossibleStates->insert(PIPELINE_STATE_TYPE_FINISH);
+
+	return true;
+}
+
+bool PSHandlePronunciation::determinePronunciationKey() {
+	PSHandleNumberString *pHandleNumberStringPipeline;
+
+	if (this->m_spPipeline.get() == nullptr || (pHandleNumberStringPipeline = dynamic_cast<PSHandleNumberString *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING))) == nullptr) {
+		this->m_kPronunciationKey = -3;
+		
+		return false;
+	}
+
+	this->m_kPronunciationKey = pHandleNumberStringPipeline->getNumberKey() > 0 && pHandleNumberStringPipeline->getNumberKey() < LANGUAGE_MAX_VALUE - 1 ? pHandleNumberStringPipeline->getNumberKey() + 1 : pHandleNumberStringPipeline->getNumberKey() - 1;
+
+	return true;
+}
+
+Config* PSHandlePronunciation::getConfig() {
+	PSChooseLanguage *pChooseLangPipeline;
+	Container c;
+	StringData *psLang;
+	Config *pConfig;
+
+	if (this->m_spPipeline.get() == nullptr || (pChooseLangPipeline = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_CHOOSE_LANG))) == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(pChooseLangPipeline->getLangKey()) == this->m_spData->end() || (psLang = dynamic_cast<StringData *>(this->m_spData->at(pChooseLangPipeline->getLangKey()).get())) == nullptr || this->m_spPipeline->getManager() == nullptr)
+		return nullptr;
+
+	c.setData(shared_ptr<Comparable>(new Config(psLang->getValue(), nullptr)));
+
+	if ((pConfig = dynamic_cast<Config *>(this->m_spPipeline->getManager()->get(c))) == nullptr)
+		return nullptr;
+
+	c.getData().reset();
+
+	return pConfig;
+}
+
+Number* PSHandlePronunciation::getNumber() {
+	PSHandleNumberString *pHandleNumberStringPipeline;
+	Number *pNumber;
+
+	if (this->m_spPipeline.get() == nullptr || (pHandleNumberStringPipeline = dynamic_cast<PSHandleNumberString *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING))) == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(pHandleNumberStringPipeline->getNumberKey()) == this->m_spData->end() || (pNumber = dynamic_cast<Number *>(this->m_spData->at(pHandleNumberStringPipeline->getNumberKey()).get())) == nullptr)
+		return nullptr;
+
+	return pNumber;
+}

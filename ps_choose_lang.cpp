@@ -44,7 +44,7 @@ bool PSChooseLanguage::execute() {
 	char *pcBuffer;
 	Config *pConfig;
 	
-	if (StandardIOUtility::getInstance() == nullptr || this->m_iTryCount >= this->m_iMaxTries) {
+	if (StandardIOUtility::getInstance() == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(this->m_kLangKey) == this->m_spData->end() || this->m_iTryCount >= this->m_iMaxTries) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 
 		return false;
@@ -54,6 +54,7 @@ bool PSChooseLanguage::execute() {
 
 	if (StandardIOUtility::getInstance()->readLine(pcBuffer, PS_CHOOSE_LANG_BUFFER_SIZE) == false) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
+		this->m_iTryCount = 0;
 		
 		delete[] pcBuffer;
 		
@@ -149,8 +150,11 @@ bool PSChooseLanguage::determineLangKey() {
 	Key k;
 	map<Key, shared_ptr<Base>>::iterator iter;
 
-	if (this->m_spData.get() == nullptr)
+	if (this->m_spData.get() == nullptr) {
+		this->m_kLangKey = 0;
+		
 		return false;
+	}
 
 	for (k = 1; k < LANGUAGE_MAX_VALUE && (iter = this->m_spData->find(k)) != this->m_spData->end(); k ++);
 
