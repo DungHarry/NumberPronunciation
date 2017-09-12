@@ -6,6 +6,9 @@
 	Description: this is the header file of the PipelineState class in C++ programming language
 */
 
+#ifndef _COC_COC_NUMBER_PRONUNCIATION_PIPELINE_STATE_H_
+#define _COC_COC_NUMBER_PRONUNCIATION_PIPELINE_STATE_H_
+
 #include <map>
 #include <memory>
 #include <set>
@@ -16,7 +19,7 @@
 #include "pipeline.h"
 #include "cleanupable.h"
 
-typedef int32_t PipelineStateKey;
+class Pipeline;
 
 class PipelineState : public Base, public Executable, public Comparable, public Cleanupable {
 public:
@@ -54,3 +57,5 @@ protected:
 private:
 	virtual bool constructPossibleStates();
 };
+
+#endif

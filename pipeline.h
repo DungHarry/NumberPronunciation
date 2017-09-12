@@ -16,8 +16,16 @@
 #include "handler.h"
 #include "data.h"
 #include "manager.h"
+#include "ps_choose_lang.h"
+#include "ps_handle_number_string.h"
+#include "ps_handle_pronunciation.h"
+#include "ps_help.h"
+#include "ps_input_number_string.h"
+#include "ps_output_pronunciation.h"
+#include "ps_parse_configs.h"
+#include "ps_read_configs.h"
 
-class Pipeline : public Handler, public Executable {
+class Pipeline : public Handler {
 public:
 	Pipeline();
 	Pipeline(const PipelineStateType eCurrentState);
@@ -35,20 +43,18 @@ public:
 
 	PipelineState* getStateByKey(const PipelineStateKey k);
 
-	int32_t getDataCount();
-
 	map<Key, shared_ptr<Base>>* getData();
 
     Manager* getManager();
 
 	static Pipeline* getInstance();
 protected:
-	int32_t m_iDataCount;
+	virtual bool contructStates();
 
     PipelineStateType m_ePreviousState;
 	PipelineStateType m_eCurrentState;
 	unique_ptr<map<PipelineStateKey, unique_ptr<PipelineState>>> m_upStates;
-	shared_ptr<map<Key, shared_ptr<Base>>> m_spData;
+	shared_ptr< map< Key, shared_ptr< Base > > > m_spData;
     unique_ptr<Manager> m_upManager;
 private:
 	virtual bool determineNextState();

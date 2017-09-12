@@ -17,7 +17,7 @@ PSReadConfigs::PSReadConfigs() :
 	this->constructPossibleStates();
 }
 
-PSReadConfigs::PSReadConfigs(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data, const char *cpcConfigFileName) :
+PSReadConfigs::PSReadConfigs(shared_ptr<Pipeline> pipeline, shared_ptr< map< Key, shared_ptr< Base > > > data, const char *cpcConfigFileName) :
 	PipelineState(pipeline, data, PIPELINE_STATE_TYPE_READ_CONFIGS),
 	m_eNextState (PIPELINE_STATE_TYPE_FINISH)
 {

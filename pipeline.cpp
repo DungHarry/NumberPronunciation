@@ -12,26 +12,24 @@ unique_ptr<Pipeline> Pipeline::m_upInstance (nullptr);
 
 Pipeline::Pipeline() :
 	Handler (HANDLER_TYPE_PIPELINE),
-	m_iDataCount (static_cast<int32_t>(0)),
     m_ePreviousState (PIPELINE_STATE_TYPE_NONE),
 	m_eCurrentState (PIPELINE_STATE_TYPE_NONE),
 	m_upStates(new map<int32_t, unique_ptr<PipelineState>>()),
     m_spData (new map<int32_t, shared_ptr<Base>>()),
     m_upManager (new Manager())
 {
-
+	this->contructStates();
 }
 
 Pipeline::Pipeline(const PipelineStateType eCurrentState) :
 	Handler (HANDLER_TYPE_PIPELINE),
-	m_iDataCount(static_cast<int32_t>(0)),
     m_ePreviousState (PIPELINE_STATE_TYPE_NONE),
 	m_eCurrentState (eCurrentState <= PIPELINE_STATE_TYPE_NONE || eCurrentState >= PIPELINE_STATE_TYPE_COUNT ? PIPELINE_STATE_TYPE_NONE : eCurrentState),
 	m_upStates(new map<int32_t, unique_ptr<PipelineState>>()),
     m_spData(new map<Key, shared_ptr<Base>>()),
     m_upManager (new Manager())
 {
-
+	this->contructStates();
 }
 
 Pipeline::~Pipeline() {
@@ -107,10 +105,6 @@ PipelineState* Pipeline::getStateByKey(const PipelineStateKey k) {
 	return (this->m_upStates.get() == nullptr || this->m_upStates->find(k) == this->m_upStates->end()) ? nullptr : (*(this->m_upStates.get()))[k].get();
 }
 
-int32_t Pipeline::getDataCount() {
-	return this->m_iDataCount;
-}
-
 map<Key, shared_ptr<Base>>* Pipeline::getData() {
 	return this->m_spData.get();
 }
@@ -124,6 +118,51 @@ Pipeline* Pipeline::getInstance() {
 		m_upInstance.reset(new Pipeline());
 
 	return m_upInstance.get();
+}
+
+bool Pipeline::contructStates() {
+	if (this->m_upStates.get() == nullptr)
+		return false;
+
+	if (this->m_upStates->find(PIPELINE_STATE_TYPE_READ_CONFIGS) != this->m_upStates->end())
+		this->m_upStates->at(PIPELINE_STATE_TYPE_READ_CONFIGS).reset();
+
+	(*(this->m_upStates.get()))[PIPELINE_STATE_TYPE_READ_CONFIGS] = move(unique_ptr<PipelineState>(new PSReadConfigs(shared_ptr<Pipeline>(this), this->m_spData, "config/locales.conf")));
+
+	if (this->m_upStates->find(PIPELINE_STATE_TYPE_PARSE_CONFIGS) != this->m_upStates->end())
+		this->m_upStates->at(PIPELINE_STATE_TYPE_PARSE_CONFIGS).reset();
+
+	(*(this->m_upStates.get()))[PIPELINE_STATE_TYPE_PARSE_CONFIGS] = move(unique_ptr<PipelineState>(new PSParseConfigs(shared_ptr<Pipeline>(this), this->m_spData)));
+
+	if (this->m_upStates->find(PIPELINE_STATE_TYPE_CHOOSE_LANG) != this->m_upStates->end())
+		this->m_upStates->at(PIPELINE_STATE_TYPE_CHOOSE_LANG).reset();
+
+	(*(this->m_upStates.get()))[PIPELINE_STATE_TYPE_CHOOSE_LANG] = move(unique_ptr<PipelineState>(new PSChooseLanguage(shared_ptr<Pipeline>(this), this->m_spData, PS_CHOOSE_LANGUAGE_MAX_TRIES_DEFAULT_VALUE)));
+	
+	if (this->m_upStates->find(PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING) != this->m_upStates->end())
+		this->m_upStates->at(PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING).reset();
+	
+	(*(this->m_upStates.get()))[PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING] = move(unique_ptr<PipelineState>(new PSInputNumberString(shared_ptr<Pipeline>(this), this->m_spData, PS_INPUT_NUMBER_STRING_MAX_TRIES_DEFAULT_VALUE)));
+	
+	if (this->m_upStates->find(PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING) != this->m_upStates->end())
+		this->m_upStates->at(PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING).reset();
+
+	(*(this->m_upStates.get()))[PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING] = move(unique_ptr<PipelineState>(new PSHandleNumberString(shared_ptr<Pipeline>(this), this->m_spData)));
+
+	if (this->m_upStates->find(PIPELINE_STATE_TYPE_HANDLE_PRONUNCIATION) != this->m_upStates->end())
+		this->m_upStates->at(PIPELINE_STATE_TYPE_HANDLE_PRONUNCIATION).reset();
+
+	(*(this->m_upStates.get()))[PIPELINE_STATE_TYPE_HANDLE_PRONUNCIATION] = move(unique_ptr<PipelineState>(new PSHandlePronunciation(shared_ptr<Pipeline>(this), this->m_spData)));
+
+	if (this->m_upStates->find(PIPELINE_STATE_TYPE_OUTPUT_PRONUNCIATION) != this->m_upStates->end())
+		this->m_upStates->at(PIPELINE_STATE_TYPE_OUTPUT_PRONUNCIATION).reset();
+
+	(*(this->m_upStates.get()))[PIPELINE_STATE_TYPE_OUTPUT_PRONUNCIATION] = move(unique_ptr<PipelineState>(new PSOutputPronunciation(shared_ptr<Pipeline>(this), this->m_spData)));
+
+	this->m_eCurrentState = PIPELINE_STATE_TYPE_READ_CONFIGS;
+	this->m_ePreviousState = PIPELINE_STATE_TYPE_NONE; 
+
+	return true;
 }
 
 bool Pipeline::determineNextState() {

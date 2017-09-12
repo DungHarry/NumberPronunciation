@@ -98,7 +98,7 @@ PronunciationHandlerState PronunciationHandler::detectExecutionState(Object *pOb
 }
 
 bool PronunciationHandler::processState(const PronunciationHandlerState eState, Object *pObject, int32_t iLength, int32_t iUnit) {
-	NormalDigit *pNormalDigit;
+	NormalDigit *pNormalDigit = nullptr;
 	SpecialDigit *pSpecialDigit;
 	Number *pNumber;
 	PronunciationHandlerState eObjectState;

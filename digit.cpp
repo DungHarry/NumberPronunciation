@@ -51,7 +51,7 @@ bool Digit::getIgnore() {
 }
 
 void Digit::setIgnore(const bool bIgnore) {
-	this->m_bIgnore == bIgnore;
+	this->m_bIgnore = bIgnore;
 }
 
 bool Digit::isValid() {

@@ -13,6 +13,8 @@
 #include "ps_handle_pronunciation.h"
 #include "standard_io_utility.h"
 
+class PipelineState;
+
 class PSOutputPronunciation : public PipelineState {
 public:
 	PSOutputPronunciation();
@@ -28,6 +30,8 @@ protected:
 	PipelineStateType m_eNextState;
 private:
 	virtual bool constructPossibleStates();
+
+	WStringData* getPronunciationString();
 };
 
 #endif

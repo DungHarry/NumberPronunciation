@@ -193,9 +193,7 @@ char* StringUtility::getSubStringNumber(Number *pNumber, int32_t iLength) {
 }
 
 bool StringUtility::isAllDigitsValid(const char *cpcString, Config *pConfig) {
-	set<Container> *pNormalDigitAttributeSet, *pSpecialDigitAttributeSet;
-	NormalDigitAttribute *pNormalDigitAttribute;
-	SpecialDigitAttribute *pSpecialDigitAttribute;
+	set<Container> *pNormalDigitAttributeSet = nullptr, *pSpecialDigitAttributeSet = nullptr;
 	int32_t i, iStringLength;
 	Container c;
 

@@ -18,7 +18,7 @@ PSHandleNumberString::PSHandleNumberString() :
 	this->determineNumberKey();
 
 	if (this->m_spData.get() != nullptr)
-		(*(this->m_spData.get))[this->m_kNumberKey] = shared_ptr<Base>(nullptr);
+		(*(this->m_spData.get()))[this->m_kNumberKey] = shared_ptr<Base>(nullptr);
 }
 
 PSHandleNumberString::PSHandleNumberString(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data) :
@@ -29,7 +29,7 @@ PSHandleNumberString::PSHandleNumberString(shared_ptr<Pipeline> pipeline, shared
 	this->determineNumberKey();
 
 	if (this->m_spData.get() != nullptr)
-		(*(this->m_spData.get))[this->m_kNumberKey] = shared_ptr<Base>(nullptr);
+		(*(this->m_spData.get()))[this->m_kNumberKey] = shared_ptr<Base>(nullptr);
 }
 
 PSHandleNumberString::~PSHandleNumberString() {

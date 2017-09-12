@@ -14,6 +14,12 @@ Data::Data() :
 
 }
 
+Data::Data(const DataType eDataType) :
+	m_eType (eDataType < DATA_TYPE_NONE || eDataType >= DATA_TYPE_COUNT ? DATA_TYPE_NONE : eDataType)
+{
+
+}
+
 Data::~Data() {
 
 }

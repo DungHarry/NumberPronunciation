@@ -21,7 +21,7 @@ PSHandlePronunciation::PSHandlePronunciation() :
 		(*(this->m_spData.get()))[this->m_kPronunciationKey] = shared_ptr<Base>(nullptr);
 }
 
-PSHandlePronunciation::PSHandlePronunciation(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data) :
+PSHandlePronunciation::PSHandlePronunciation(shared_ptr<Pipeline> pipeline, shared_ptr< map< Key, shared_ptr< Base > > > data) :
 	PipelineState (pipeline, data, PIPELINE_STATE_TYPE_HANDLE_PRONUNCIATION),
 	m_eNextState (PIPELINE_STATE_TYPE_NONE)
 {

@@ -21,7 +21,7 @@ ConfigUtility::~ConfigUtility() {
 }
 
 int16_t ConfigUtility::getMaxConditionAppendAttributeUnits(const set<Container> *pAppendAttributes) {
-	const ConditionAppendAttribute *pConditionAppendAttribute;
+	const ConditionAppendAttribute *pConditionAppendAttribute = nullptr;
 	
 	if (pAppendAttributes == nullptr || pAppendAttributes->size() <= 0 || (pConditionAppendAttribute = dynamic_cast<const ConditionAppendAttribute *>(&(*(pAppendAttributes->rbegin())))) == nullptr)
 		return 0;

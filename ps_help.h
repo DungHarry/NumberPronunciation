@@ -10,6 +10,7 @@
 #define _COC_COC_NUMBER_PRONUNCIATION_PS_HELP_H_
 
 #include <iostream>
+#include "pipeline.h"
 #include "pipeline_state.h"
 #include "ps_choose_lang.h"
 #include "config.h"

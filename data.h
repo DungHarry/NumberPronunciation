@@ -12,11 +12,10 @@
 #include "base.h"
 #include "global.h"
 
-typedef int32_t Key;
-
 class Data : public Base {
 public:
 	Data();
+	Data(const DataType eDataType);
 	virtual ~Data();
 
 	virtual DataType getType();

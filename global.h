@@ -16,6 +16,9 @@ using namespace std;
 #define NUMBER_UNIT_MAX_DIGITS_VALUE (static_cast<int32_t>(3))
 #define LANGUAGE_MAX_VALUE (static_cast<int32_t>(1 << 10))
 
+typedef int32_t PipelineStateKey;
+typedef int32_t Key;
+
 enum ObjectType {
 	OBJECT_TYPE_NONE = 0,
 	OBJECT_TYPE_NORMAL_DIGIT,

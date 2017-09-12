@@ -24,7 +24,7 @@ PSChooseLanguage::PSChooseLanguage() :
 		(*(this->m_spData.get()))[this->m_kLangKey] = shared_ptr<Base>(new StringData());
 }
 
-PSChooseLanguage::PSChooseLanguage(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data, const int16_t iMaxTries) :
+PSChooseLanguage::PSChooseLanguage(shared_ptr<Pipeline> pipeline, shared_ptr< map< Key, shared_ptr< Base > > > data, const int16_t iMaxTries) :
 	PipelineState(pipeline, data, PIPELINE_STATE_TYPE_CHOOSE_LANG),
 	m_iMaxTries (iMaxTries <= 0 ? PS_CHOOSE_LANGUAGE_MAX_TRIES_DEFAULT_VALUE : iMaxTries),
 	m_iTryCount (0)

@@ -33,7 +33,7 @@ Config::Config(const char *cpcLangName, const char *cpcLocaleName) :
 }
 
 Config::Config(const Config &conf) : 
-	m_upLang((conf.m_upLang.get() == nullptr || conf.m_upLang->getName() == nullptr) ? nullptr : new Language(conf.m_upLang->getName())),
+	m_upLang((conf.m_upLang.get() == nullptr || conf.m_upLang->getName() == nullptr) ? nullptr : new Language(conf.m_upLang->getName(), conf.m_upLang->getLocaleName())),
 	m_upAttributes(new vector<shared_ptr<Attribute>>()),
 	m_upSpecialDigitAttributes(new set<Container>()),
 	m_upMultipleDigitsAttributes(new set<Container>()),
