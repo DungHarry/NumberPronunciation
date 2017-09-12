@@ -13,6 +13,8 @@
 #include "ps_input_number_string.h"
 #include "number_handler.h"
 
+class Pipeline;
+
 class PSHandleNumberString : public PipelineState {
 public:
 	PSHandleNumberString(); 

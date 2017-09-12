@@ -16,6 +16,8 @@
 #include "config_name_parser.h"
 #include "file_handler.h"
 
+class Pipeline;
+
 #define PS_READ_CONFIGS_KEY_INPUT_CONFIG_NAME (static_cast<int32_t>(1 << 14))
 
 class PSReadConfigs : public PipelineState {

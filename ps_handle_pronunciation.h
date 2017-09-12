@@ -15,6 +15,8 @@
 #include "ps_choose_lang.h"
 #include "pronunciation_handler.h"
 
+class Pipeline;
+
 class PSHandlePronunciation : public PipelineState {
 public:
 	PSHandlePronunciation();

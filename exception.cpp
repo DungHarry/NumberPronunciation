@@ -22,6 +22,13 @@ Exception::Exception(ExceptionType eType, const char *cpcMessage) :
 
 }
 
+Exception::Exception(const Exception &e) :
+    m_eType(e.m_eType < EXCEPTION_TYPE_NONE || e.m_eType >= EXCEPTION_TYPE_COUNT ? EXCEPTION_TYPE_NONE : e.m_eType),
+    m_upsMessage(new string(e.m_upsMessage.get() == nullptr ? "Common exception" : e.m_upsMessage->c_str()))
+{
+
+}
+
 Exception::~Exception() {
 	this->m_upsMessage.reset();
 }

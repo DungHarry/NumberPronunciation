@@ -21,6 +21,7 @@ class NumberException : public Exception {
 public:
 	NumberException();
 	NumberException(const NumberExceptionReason eReason);
+    NumberException(const NumberException &e);
 	virtual ~NumberException();
 
 	NumberExceptionReason getReason();

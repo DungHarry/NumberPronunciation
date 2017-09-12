@@ -130,10 +130,16 @@ Config* PSParseConfigs::parseConfigFile() {
 }
 
 bool PSParseConfigs::addConfig(Manager *pManager, Config **pConfig) {
+    shared_ptr<Comparable> spConfig (nullptr);
+
 	if (pManager == nullptr || pManager->getObjects() == nullptr || pConfig == nullptr || *pConfig == nullptr)
 		return false;
 
-	pManager->getObjects()->insert(Container(shared_ptr<Comparable>(*pConfig)));
+    spConfig.reset(*pConfig);
+
+    pManager->getObjects()->insert(Container(spConfig));
+
+    spConfig.reset();
 
 	return true;
 }

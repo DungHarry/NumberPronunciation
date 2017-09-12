@@ -172,11 +172,16 @@ bool PSChooseLanguage::determineLangKey() {
 Config* PSChooseLanguage::isLangAvailable(const char *cpcLang) {
 	Manager *pManager;
 	Container c;
+    shared_ptr<Comparable> spConfig (nullptr);
 
 	if (cpcLang == nullptr || this->m_spPipeline.get() == nullptr || (pManager = this->m_spPipeline->getManager()) == nullptr)
-		return false;
+        return nullptr;
 
-	c.setData(shared_ptr<Comparable>(new Config(cpcLang, nullptr)));
+    spConfig.reset(new Config(cpcLang, nullptr));
+
+    c.setData(spConfig);
+
+    spConfig.reset();
 
 	return dynamic_cast<Config *>(pManager->get(c));
 }

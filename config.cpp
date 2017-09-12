@@ -10,7 +10,7 @@
 
 Config::Config() :
 	m_upLang(new Language()),
-	m_upAttributes(new vector<shared_ptr<Attribute>>()),
+    m_upAttributes(new vector<Container>()),
 	m_upSpecialDigitAttributes(new set<Container>()),
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
@@ -22,7 +22,7 @@ Config::Config() :
 
 Config::Config(const char *cpcLangName, const char *cpcLocaleName) :
 	m_upLang(new Language(cpcLangName, cpcLocaleName)),
-	m_upAttributes(new vector<shared_ptr<Attribute>>()),
+    m_upAttributes(new vector<Container>()),
 	m_upSpecialDigitAttributes(new set<Container>()),
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
@@ -34,7 +34,7 @@ Config::Config(const char *cpcLangName, const char *cpcLocaleName) :
 
 Config::Config(const Config &conf) : 
 	m_upLang((conf.m_upLang.get() == nullptr || conf.m_upLang->getName() == nullptr) ? nullptr : new Language(conf.m_upLang->getName(), conf.m_upLang->getLocaleName())),
-	m_upAttributes(new vector<shared_ptr<Attribute>>()),
+    m_upAttributes(new vector<Container>()),
 	m_upSpecialDigitAttributes(new set<Container>()),
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
@@ -42,7 +42,7 @@ Config::Config(const Config &conf) :
 	m_upConditionDigitAttributes(new set<Container>())
 {
 	if (conf.m_upAttributes.get() != nullptr) {
-		for (vector<shared_ptr<Attribute>>::iterator iter = conf.m_upAttributes->begin(); iter != conf.m_upAttributes->end(); ++iter)
+        for (vector<Container>::iterator iter = conf.m_upAttributes->begin(); iter != conf.m_upAttributes->end(); ++iter)
 			this->m_upAttributes->push_back(*iter);
 	}
 
@@ -104,7 +104,7 @@ void Config::setLang(Language *pLang) {
 	this->m_upLang.reset(pLang);
 }
 
-vector<shared_ptr<Attribute>>* Config::getAttributes() {
+vector<Container> *Config::getAttributes() {
 	return this->m_upAttributes.get();
 }
 
@@ -130,6 +130,7 @@ set<Container>* Config::getMultipleDigitsAttributes() {
 
 bool Config::classify() {
     int32_t i;
+    Attribute *pAttribute;
 
 	if (this->m_upAttributes.get() == nullptr || this->m_upAttributes->size() <= 0 || this->m_upConditionAppendAttributes.get() == nullptr || this->m_upConditionDigitAttributes.get() == nullptr || this->m_upNormalDigitAttributes.get() == nullptr || this->m_upSpecialDigitAttributes.get() == nullptr)
 		return false;
@@ -140,16 +141,19 @@ bool Config::classify() {
 	this->m_upSpecialDigitAttributes->clear();
 
     for (i = 0; i < this->m_upAttributes->size(); ++ i) {
-        if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_CONDITION_APPEND)
-            this->m_upConditionAppendAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
-        else if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
-            this->m_upConditionDigitAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
-        else if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
-            this->m_upMultipleDigitsAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
-        else if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
-            this->m_upNormalDigitAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
-        else if (this->m_upAttributes->at(i)->getId() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
-            this->m_upSpecialDigitAttributes->insert(Container(shared_ptr<Comparable>(this->m_upAttributes->at(i).get())));
+        if((pAttribute = dynamic_cast<Attribute *>(this->m_upAttributes->at(i).getData().get())) == nullptr)
+            continue;
+
+        if (pAttribute->getId() == ATTRIBUTE_TYPE_CONDITION_APPEND)
+            this->m_upConditionAppendAttributes->insert(this->m_upAttributes->at(i));
+        else if (pAttribute->getId() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
+            this->m_upConditionDigitAttributes->insert(this->m_upAttributes->at(i));
+        else if (pAttribute->getId() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
+            this->m_upMultipleDigitsAttributes->insert(this->m_upAttributes->at(i));
+        else if (pAttribute->getId() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
+            this->m_upNormalDigitAttributes->insert(this->m_upAttributes->at(i));
+        else if (pAttribute->getId() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
+            this->m_upSpecialDigitAttributes->insert(this->m_upAttributes->at(i));
 	}
 
 	return true;

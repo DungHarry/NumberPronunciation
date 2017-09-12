@@ -48,6 +48,7 @@ bool PSInputNumberString::execute() {
 	StringData *pLang;
 	Config *pConfig;
 	Container c;
+    shared_ptr<Comparable> spConfig;
 
 	if (StandardIOUtility::getInstance() == nullptr || StringUtility::getInstance() == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(this->m_kNumberStringKey) == this->m_spData->end() || this->m_spPipeline.get() == nullptr || this->m_spPipeline->getManager() == nullptr || (pChooseLangPipeline = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_CHOOSE_LANG))) == nullptr || this->m_iTryCount >= this->m_iMaxTries) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
@@ -75,7 +76,11 @@ bool PSInputNumberString::execute() {
 		return false;
 	}
 
-	c.setData(shared_ptr<Comparable>(new Config(pLang->getValue(), nullptr)));
+    spConfig.reset(new Config(pLang->getValue(), nullptr));
+
+    c.setData(spConfig);
+
+    spConfig.reset();
 
 	if ((pConfig = dynamic_cast<Config *>(this->m_spPipeline->getManager()->get(c))) == nullptr) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;

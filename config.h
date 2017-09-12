@@ -26,7 +26,7 @@ public:
 	Language* getLang();
 	void setLang(Language *pLang);
 
-	vector<shared_ptr<Attribute>>* getAttributes();
+    vector<Container>* getAttributes();
 
 	set<Container>* getSpecialDigitAttributes();
 
@@ -45,7 +45,7 @@ public:
 private:
 	unique_ptr<Language> m_upLang;
 
-	unique_ptr<vector<shared_ptr<Attribute>>> m_upAttributes;
+    unique_ptr<vector<Container>> m_upAttributes;
 	unique_ptr<set<Container>> m_upSpecialDigitAttributes;
 	unique_ptr<set<Container>> m_upNormalDigitAttributes;
 	unique_ptr<set<Container>> m_upMultipleDigitsAttributes;

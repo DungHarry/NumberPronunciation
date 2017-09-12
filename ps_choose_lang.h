@@ -17,6 +17,8 @@
 #include "config.h"
 #include "ps_help.h"
 
+class Pipeline;
+
 #define PS_CHOOSE_LANGUAGE_MAX_TRIES_DEFAULT_VALUE (static_cast<int16_t>(3))
 
 class PSChooseLanguage : public PipelineState {

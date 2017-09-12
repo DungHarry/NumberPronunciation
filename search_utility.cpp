@@ -33,56 +33,65 @@ Comparable* SearchUtility::find(const set<Container> *pSet, const Container &con
 
 Comparable* SearchUtility::find(const set<Container> *pSet, int16_t iPosition) {
 	set<Container>::iterator iter;
-	ConditionAppendAttribute *pConditionAppendAttribute;
+    shared_ptr<Comparable> spConditionAppendAttribute (nullptr);
 
 	if (pSet == nullptr)
 		return nullptr;
 
-	pConditionAppendAttribute = new ConditionAppendAttribute(0, iPosition, nullptr);
+    spConditionAppendAttribute.reset(new ConditionAppendAttribute(0, iPosition, nullptr));
 
-	iter = pSet->find(Container(shared_ptr<Comparable>(pConditionAppendAttribute)));
+    iter = pSet->find(Container(spConditionAppendAttribute));
+
+    spConditionAppendAttribute.reset();
 
 	return (iter == pSet->end()) ? nullptr : iter->getData().get();
 }
 
 Comparable* SearchUtility::find(const set<Container> *pSet, char cDigit) {
 	set<Container>::iterator iter;
-	DigitAttribute *pDigitAttribute;
+    shared_ptr<Comparable> spDigitAttribute (nullptr);
 
 	if (pSet == nullptr)
 		return nullptr;
 
-	pDigitAttribute = new DigitAttribute(ATTRIBUTE_TYPE_NORMAL_DIGIT, 0, cDigit, nullptr);
+    spDigitAttribute.reset(new DigitAttribute(ATTRIBUTE_TYPE_NORMAL_DIGIT, 0, cDigit, nullptr));
 
-	iter = pSet->find(Container(shared_ptr<Comparable>(pDigitAttribute)));
+    iter = pSet->find(Container(spDigitAttribute));
+
+    spDigitAttribute.reset();
 
 	return (iter == pSet->end()) ? nullptr : iter->getData().get();
 }
 
 Comparable* SearchUtility::find(const set<Container> *pSet, const wchar_t *cpwcMultipleDigits) {
 	set<Container>::iterator iter;
-	MultipleDigitsAttribute *pMultipleDigitAttribute;
+    shared_ptr<Comparable> spMultipleDigitAttribute;
 
 	if (pSet == nullptr || cpwcMultipleDigits == nullptr)
 		return nullptr;
 
-	pMultipleDigitAttribute = new MultipleDigitsAttribute(0, cpwcMultipleDigits, nullptr);
+    spMultipleDigitAttribute.reset(new MultipleDigitsAttribute(0, cpwcMultipleDigits, nullptr));
 
-	iter = pSet->find(Container(shared_ptr<Comparable>(pMultipleDigitAttribute)));
+    iter = pSet->find(Container(spMultipleDigitAttribute));
+
+    spMultipleDigitAttribute.reset();
 
 	return (iter == pSet->end()) ? nullptr : iter->getData().get();
 }
 
 Comparable* SearchUtility::find(const set<Container> *pSet, char cDigit, int16_t iPosition) {
 	set<Container>::iterator iter;
-	ConditionDigitAttribute *pConditionDigitAttribute;
+    ConditionDigitAttribute *pConditionDigitAttribute;
+    shared_ptr<Comparable> spConditionDigitAttribute;
 
 	if (pSet == nullptr || iPosition < 0)
 		return nullptr;
 
-	pConditionDigitAttribute = new ConditionDigitAttribute(iPosition, 0, cDigit, nullptr);
+    spConditionDigitAttribute.reset(new ConditionDigitAttribute(iPosition, 0, cDigit, nullptr));
 
-	iter = pSet->find(Container(shared_ptr<Comparable>(pConditionDigitAttribute)));
+    iter = pSet->find(Container(spConditionDigitAttribute));
+
+    spConditionDigitAttribute.reset();
 
 	return (iter == pSet->end() || iter->getData().get() == nullptr || (pConditionDigitAttribute = dynamic_cast<ConditionDigitAttribute *>(iter->getData().get())) == nullptr || pConditionDigitAttribute->getPosition() != iPosition) ? nullptr : iter->getData().get();
 }

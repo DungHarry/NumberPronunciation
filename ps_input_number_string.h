@@ -16,6 +16,8 @@
 #include "ps_choose_lang.h"
 #include "string_utility.h"
 
+class Pipeline;
+
 #define PS_INPUT_NUMBER_STRING_MAX_TRIES_DEFAULT_VALUE (static_cast<int16_t>(3))
 
 class PSInputNumberString : public PipelineState {

@@ -163,10 +163,10 @@ bool ParseHandler::parseLocaleName(const wchar_t *pwcLine, Config *pConfig) {
 }
 
 bool ParseHandler::parseNormalDigitAttribute(const wchar_t *pwcLine, Config *pConfig) {
-	NormalDigitAttribute *pNormalDigitAttribute;
 	int16_t iId;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
+    shared_ptr<Comparable> spNormalDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -179,9 +179,9 @@ bool ParseHandler::parseNormalDigitAttribute(const wchar_t *pwcLine, Config *pCo
 		return false;
 	}
 
-	pNormalDigitAttribute = new NormalDigitAttribute(iId, static_cast<char>(wcDigit), pwcBuffer);
+    spNormalDigitAttribute.reset(new NormalDigitAttribute(iId, static_cast<char>(wcDigit), pwcBuffer));
 
-	pConfig->getAttributes()->push_back(shared_ptr<Attribute>(pNormalDigitAttribute));
+    pConfig->getAttributes()->push_back(Container(spNormalDigitAttribute));
 
 	delete[] pwcBuffer;
 
@@ -189,10 +189,10 @@ bool ParseHandler::parseNormalDigitAttribute(const wchar_t *pwcLine, Config *pCo
 }
 
 bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pConfig) {
-	SpecialDigitAttribute *pSpecialDigitAttribute;
 	int16_t iId;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
+    shared_ptr<Comparable> spSpecialDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -205,9 +205,9 @@ bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pC
 		return false;
 	}
 
-	pSpecialDigitAttribute = new SpecialDigitAttribute(iId, static_cast<char>(wcDigit), pwcBuffer);
+    spSpecialDigitAttribute.reset(new SpecialDigitAttribute(iId, static_cast<char>(wcDigit), pwcBuffer));
 
-	pConfig->getAttributes()->push_back(shared_ptr<Attribute>(pSpecialDigitAttribute));
+    pConfig->getAttributes()->push_back(Container(spSpecialDigitAttribute));
 
 	delete[] pwcBuffer;
 
@@ -215,9 +215,9 @@ bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pC
 }
 
 bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *pConfig) {
-	MultipleDigitsAttribute *pMultipleDigitsAttribute;
-	int16_t iId;
+    int16_t iId;
 	wchar_t *pwcDigitsBuffer, *pwcBuffer;
+    shared_ptr<Comparable> spMultipleDigitsAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -232,9 +232,9 @@ bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *
 		return false;
 	}
 
-	pMultipleDigitsAttribute = new MultipleDigitsAttribute(iId, pwcDigitsBuffer, pwcBuffer);
+    spMultipleDigitsAttribute.reset(new MultipleDigitsAttribute(iId, pwcDigitsBuffer, pwcBuffer));
 
-	pConfig->getAttributes()->push_back(shared_ptr<Attribute>(pMultipleDigitsAttribute));
+    pConfig->getAttributes()->push_back(Container(spMultipleDigitsAttribute));
 
 	delete[] pwcDigitsBuffer;
 	delete[] pwcBuffer;
@@ -243,9 +243,9 @@ bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *
 }
 
 bool ParseHandler::parseConditionAppendAttribute(const wchar_t *pwcLine, Config *pConfig) {
-	ConditionAppendAttribute *pConditionAppendAttribute;
-	int16_t iId, iPosition;
+    int16_t iId, iPosition;
 	wchar_t *pwcBuffer;
+    shared_ptr<Comparable> spConditionAppendAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -258,9 +258,9 @@ bool ParseHandler::parseConditionAppendAttribute(const wchar_t *pwcLine, Config 
 		return false;
 	}
 
-	pConditionAppendAttribute = new ConditionAppendAttribute(iId, iPosition, pwcBuffer);
+    spConditionAppendAttribute.reset(new ConditionAppendAttribute(iId, iPosition, pwcBuffer));
 
-	pConfig->getAttributes()->push_back(shared_ptr<Attribute>(pConditionAppendAttribute));
+    pConfig->getAttributes()->push_back(Container(spConditionAppendAttribute));
 
 	delete[] pwcBuffer;
 
@@ -268,10 +268,10 @@ bool ParseHandler::parseConditionAppendAttribute(const wchar_t *pwcLine, Config 
 }
 
 bool ParseHandler::parseConditionDigitAttribute(const wchar_t *pwcLine, Config *pConfig) {
-	ConditionDigitAttribute *pConditionDigitAttribute;
-	int16_t iId, iPosition;
+    int16_t iId, iPosition;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
+    shared_ptr<Comparable> spConditionDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -284,9 +284,9 @@ bool ParseHandler::parseConditionDigitAttribute(const wchar_t *pwcLine, Config *
 		return false;
 	}
 
-	pConditionDigitAttribute = new ConditionDigitAttribute(iPosition, iId, static_cast<char>(wcDigit), pwcBuffer);
+    spConditionDigitAttribute.reset(new ConditionDigitAttribute(iPosition, iId, static_cast<char>(wcDigit), pwcBuffer));
 
-	pConfig->getAttributes()->push_back(shared_ptr<Attribute>(pConditionDigitAttribute));
+    pConfig->getAttributes()->push_back(Container(spConditionDigitAttribute));
 
 	delete[] pwcBuffer;
 

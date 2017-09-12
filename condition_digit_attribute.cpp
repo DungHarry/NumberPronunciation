@@ -33,3 +33,7 @@ int16_t ConditionDigitAttribute::getPosition() {
 void ConditionDigitAttribute::setPosition(const int16_t iPosition) {
 	this->m_iPosition = iPosition;
 }
+
+bool ConditionDigitAttribute::isValid() {
+    return false;
+}

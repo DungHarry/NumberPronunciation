@@ -16,6 +16,8 @@
 #include "file_handler.h"
 #include "parse_handler.h"
 
+class Pipeline;
+
 class PSParseConfigs : public PipelineState {
 public:
 	PSParseConfigs();

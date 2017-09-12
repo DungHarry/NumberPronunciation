@@ -16,14 +16,8 @@
 #include "handler.h"
 #include "data.h"
 #include "manager.h"
-#include "ps_choose_lang.h"
-#include "ps_handle_number_string.h"
-#include "ps_handle_pronunciation.h"
-#include "ps_help.h"
-#include "ps_input_number_string.h"
-#include "ps_output_pronunciation.h"
-#include "ps_parse_configs.h"
-#include "ps_read_configs.h"
+
+class PipelineState;
 
 class Pipeline : public Handler {
 public:

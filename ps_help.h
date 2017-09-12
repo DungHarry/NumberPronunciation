@@ -18,6 +18,9 @@
 #include "normal_digit_attribute.h"
 #include "special_digit_attribute.h"
 
+class Pipeline;
+class PipelineState;
+
 enum PSHelpType {
 	PS_HELP_TYPE_NONE = 0,
 	PS_HELP_TYPE_LANG,

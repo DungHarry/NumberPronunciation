@@ -7,6 +7,14 @@
 */
 
 #include "pipeline.h"
+#include "ps_choose_lang.h"
+#include "ps_handle_number_string.h"
+#include "ps_handle_pronunciation.h"
+#include "ps_help.h"
+#include "ps_input_number_string.h"
+#include "ps_output_pronunciation.h"
+#include "ps_parse_configs.h"
+#include "ps_read_configs.h"
 
 unique_ptr<Pipeline> Pipeline::m_upInstance (nullptr);
 

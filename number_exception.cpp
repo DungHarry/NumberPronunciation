@@ -22,6 +22,13 @@ NumberException::NumberException(const NumberExceptionReason eReason) :
 	this->autoGenerateMessage();
 }
 
+NumberException::NumberException(const NumberException &e) :
+    Exception(e),
+    m_eReason(e.m_eReason)
+{
+
+}
+
 NumberException::~NumberException() {
 
 }

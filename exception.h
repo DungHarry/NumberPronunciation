@@ -19,6 +19,7 @@ class Exception : public Base, public exception {
 public:
 	Exception();
 	Exception(ExceptionType eType, const char *cpcMessage);
+    Exception(const Exception &e);
 	virtual ~Exception();
 
 	virtual const char* what() const throw();

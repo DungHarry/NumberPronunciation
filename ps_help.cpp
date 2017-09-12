@@ -101,11 +101,11 @@ void PSHelp::displayHelpLang() {
 }
 
 void PSHelp::displayHelpNumberString() {
-	Config *pConfig;
 	PSChooseLanguage *pChooseLangPipelineState;
 	StringData *pLang;
 	Config *pConfig;
 	Container c;
+    shared_ptr<Comparable> spConfig (nullptr);
 	NormalDigitAttribute *pNormalDigitAttribute;
 	SpecialDigitAttribute *pSpecialDigitAttribute;
 	set<Container> *pSet;
@@ -114,7 +114,11 @@ void PSHelp::displayHelpNumberString() {
 	if (this->m_eHelpType != PS_HELP_TYPE_NUMBER_STRING || this->m_spData.get() == nullptr || this->m_spPipeline.get() == nullptr || (pChooseLangPipelineState = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(static_cast<PipelineStateKey>(PIPELINE_STATE_TYPE_CHOOSE_LANG)))) == nullptr || (pLang = dynamic_cast<StringData *>((*(this->m_spData.get()))[pChooseLangPipelineState->getLangKey()].get())) == nullptr || this->m_spPipeline->getManager() == nullptr)
 		return;
 
-	c.setData(shared_ptr<Comparable>(new Config(pLang->getValue(), nullptr)));
+    spConfig.reset(new Config(pLang->getValue(), nullptr));
+
+    c.setData(spConfig);
+
+    spConfig.reset();
 
 	if ((pConfig = dynamic_cast<Config *>(this->m_spPipeline->getManager()->get(c))) == nullptr)
 		return;

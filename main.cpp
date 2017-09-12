@@ -6,10 +6,11 @@
 	Description: this is the main source code file in C++ programming language
 */
 
-
+#include <iostream>
 #include "pipeline.h"
+#include "number_exception.h"
 
-int32_t _tmain(int argc, char** argv)
+int32_t main(int argc, char** argv)
 {
 	try {
 		Pipeline::getInstance()->execute();

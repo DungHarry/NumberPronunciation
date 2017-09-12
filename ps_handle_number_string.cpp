@@ -119,16 +119,17 @@ Config* PSHandleNumberString::getConfig() {
 	Container c;
 	StringData *psLang;
 	Config *pConfig;
+    shared_ptr<Comparable> spConfig (nullptr);
 
 	if (this->m_spPipeline.get() == nullptr || (pChooseLangPipeline = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_CHOOSE_LANG))) == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(pChooseLangPipeline->getLangKey()) == this->m_spData->end() || (psLang = dynamic_cast<StringData *>(this->m_spData->at(pChooseLangPipeline->getLangKey()).get())) == nullptr || this->m_spPipeline->getManager() == nullptr)
 		return nullptr;
 
-	c.setData(shared_ptr<Comparable>(new Config(psLang->getValue(), nullptr)));
+    spConfig.reset(new Config(psLang->getValue(), nullptr));
+
+    c.setData(spConfig);
 
 	if ((pConfig = dynamic_cast<Config *>(this->m_spPipeline->getManager()->get(c))) == nullptr)
 		return nullptr;
-
-	c.getData().reset();
 
 	return pConfig;
 }

@@ -345,7 +345,7 @@ bool NumberHandler::processSpecialDigit(char cSpecialDigit) {
 
 	pSpecialDigit = new SpecialDigit(cSpecialDigit, 0);
 
-	this->m_upNumber->getNumbers()->push_back(unique_ptr<Object>(pSpecialDigit));
+    this->m_upNumber->getNumbers()->push_back(move(unique_ptr<Object>(pSpecialDigit)));
 
 	return true;
 }
@@ -366,7 +366,7 @@ bool NumberHandler::processNumberString(const char *cpcNumberString, int32_t iOf
 	for (i = iStringLength - 1, iLevel =  0, pNumber = nullptr; i >= iOffset; i--, iLevel ++) {
 		if ((j = (iLevel % 3)) == 0) {
 			if (iLevel > 0) {
-				pNumberStack->push(unique_ptr<Object>(pNumber));
+                pNumberStack->push(move(unique_ptr<Object>(pNumber)));
 			}
 
 			pNumber = new Number(iLevel);
@@ -374,14 +374,14 @@ bool NumberHandler::processNumberString(const char *cpcNumberString, int32_t iOf
 
 		pNormalDigit = new NormalDigit(*(cpcNumberString + i), iLevel);
 
-		pNumber->getNumbers()->push_back(unique_ptr<Object>(pNormalDigit));
+        pNumber->getNumbers()->push_back(move(unique_ptr<Object>(pNormalDigit)));
 	}
 
 	if (pNumber != nullptr)
-		pNumberStack->push(unique_ptr<Object>(pNumber));
+        pNumberStack->push(move(unique_ptr<Object>(pNumber)));
 
 	while (pNumberStack->size() > 0) {
-		this->m_upNumber->getNumbers()->push_back(pNumberStack->top());
+        this->m_upNumber->getNumbers()->push_back(move(pNumberStack->top()));
 
 		pNumberStack->pop();
 	}
