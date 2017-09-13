@@ -32,15 +32,17 @@ bool PronunciationHandler::execute() {
 	if (this->m_upConfig.get() == nullptr || this->m_upNumber.get() == nullptr || (pNumbers = this->m_upNumber->getNumbers()) == nullptr)
 		return false;
 
-	this->m_upwsPronunciation.reset();
+    this->m_upwsPronunciation.reset(new wstring());
 
-	for (i = 0; i < pNumbers->size(); i ++)
-		if ((*(pNumbers->data() + i)).get() != nullptr) {
-			eState = this->detectExecutionState((*(pNumbers->data() + i)).get());
+    wcout<<L"Reseting the pronunciation successfully"<<endl;
 
-			this->processState(eState, (*(pNumbers->data() + i)).get(), 0, 0);
+    for (i = 0; i < pNumbers->size(); i ++)
+        if (pNumbers->at(i).get() != nullptr) {
+            wcout<<L"Processing number at "<<i<<L"..."<<endl;
 
-			if (this->processState(eState, (*(pNumbers->data() + i)).get(), 0, 0) == false) 
+            eState = this->detectExecutionState(pNumbers->at(i).get());
+
+            if (this->processState(eState, pNumbers->at(i).get(), 0, 0) == false)
 				return false;
 		}
 
@@ -108,32 +110,52 @@ bool PronunciationHandler::processState(const PronunciationHandlerState eState, 
 		return false;
 
 	if (eState == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
+        wcout<<L"In the case of normal digit"<<endl;
+
 		if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || pNormalDigit->getIgnore() == true)
 			return false;
 
 		if (pNormalDigit->getIgnore() == false && this->pronounceNormalDigit(pNormalDigit->getValue()) == false)
 			return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
-		if ((pSpecialDigit = dynamic_cast<SpecialDigit *>(pObject)) == nullptr || pNormalDigit->getIgnore() == true)
+        wcout<<L"In the case of special digit"<<endl;
+
+        if ((pSpecialDigit = dynamic_cast<SpecialDigit *>(pObject)) == nullptr || pSpecialDigit->getIgnore() == true)
 			return false;
 
-		if (pNormalDigit->getIgnore() == false && this->pronounceSpecialDigit(pSpecialDigit->getValue()) == false)
+        wcout<<L"Pronouncing the special digit "<<(pSpecialDigit->getValue())<<endl;
+
+        if (pSpecialDigit->getIgnore() == false && this->pronounceSpecialDigit(pSpecialDigit->getValue()) == false)
 			return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_NUMBER_UNIT) {
+        wcout<<L"In the case of number unit"<<endl;
+
 		if ((pNumber = dynamic_cast<Number*>(pObject)) == nullptr)
 			return false;
 
+        wcout<<L"Get number unit successfully"<<endl;
+
 		if (this->processNumberUnit(pNumber) == false)
 			return false;
+
+        wcout<<L"Processing number unit successfully"<<endl;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND) {
+        wcout<<L"In the case of condition append"<<endl;
+
 		if (this->pronounceConditionAppend(iUnit) == false)
 			return false;
+
+        wcout<<L"Pronouncing condition append successfully"<<endl;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT) {
+        wcout<<L"In the case of condition digit"<<endl;
+
 		if ((eObjectState = this->detectExecutionState(pObject)) != PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT || (pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
 			return false;
 
 		this->pronounceConditionDigit(pNormalDigit->getValue(), iUnit);
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS) {
+        wcout<<L"In the case of multiple digits"<<endl;
+
 		pcNumber = nullptr;
 
 		if (iLength <= 0 || StringUtility::getInstance() == nullptr || (pNumber = dynamic_cast<Number *>(pObject)) == nullptr || (pcNumber = StringUtility::getInstance()->getSubStringNumber(pNumber, iLength)) == nullptr || this->pronounceMutipleDigits(pcNumber) == false) {
@@ -155,11 +177,24 @@ bool PronunciationHandler::pronounceSpecialDigit(const char cDigit) {
 	SpecialDigitAttribute *pSpecialDigitAttribute;
 	unique_ptr<wstring> upTmpPronunciation;
 
-	if (this->m_upConfig.get() == nullptr || this->m_upConfig->getSpecialDigitAttributes() == nullptr || this->m_upwsPronunciation.get() == nullptr || SearchUtility::getInstance() == nullptr)
-		return false; 
+    wcout<<"this->m_upConfig.get() == nullptr: "<<(this->m_upConfig.get() == nullptr)<<endl;
+    wcout<<"this->m_upConfig->getSpecialDigitAttributes() == nullptr: "<<(this->m_upConfig->getSpecialDigitAttributes() == nullptr)<<endl;
+    wcout<<"this->m_upwsPronunciation.get() == nullptr"<<(this->m_upwsPronunciation.get() == nullptr)<<endl;
+    wcout<<"SearchUtility::getInstance() == nullptr: "<<(SearchUtility::getInstance() == nullptr)<<endl;
 
-	if ((pResult = SearchUtility::getInstance()->find(this->m_upConfig->getSpecialDigitAttributes(), cDigit)) == nullptr || (pSpecialDigitAttribute = dynamic_cast<SpecialDigitAttribute *>(pResult)) == nullptr || pSpecialDigitAttribute->getPronunciation() == nullptr)
-		return false;
+    if (this->m_upConfig.get() == nullptr || this->m_upConfig->getSpecialDigitAttributes() == nullptr || this->m_upwsPronunciation.get() == nullptr || SearchUtility::getInstance() == nullptr) {
+        wcout<<L"Fail here 1"<<endl;
+
+        return false;
+    }
+
+    if ((pResult = SearchUtility::getInstance()->find(this->m_upConfig->getSpecialDigitAttributes(), cDigit)) == nullptr || (pSpecialDigitAttribute = dynamic_cast<SpecialDigitAttribute *>(pResult)) == nullptr || pSpecialDigitAttribute->getPronunciation() == nullptr) {
+        wcout<<L"Fail here 2"<<endl;
+
+        return false;
+    }
+
+    wcout<<L"In the pronounce special digit"<<endl;
 
 	upTmpPronunciation.reset(new wstring(pSpecialDigitAttribute->getPronunciation()));
 
@@ -168,6 +203,8 @@ bool PronunciationHandler::pronounceSpecialDigit(const char cDigit) {
 	this->m_upwsPronunciation->append(upTmpPronunciation->c_str());
 
 	upTmpPronunciation.reset();
+
+    wcout<<L"Pronounce special digit successfully"<<endl;
 
 	return true;
 }
@@ -180,12 +217,18 @@ bool PronunciationHandler::processNumberUnit(Number *pNumber) {
 	if (pNumber == nullptr || pNumber->getNumbers() == nullptr || this->m_upConfig.get() == nullptr || this->m_upwsPronunciation.get() == nullptr)
 		return false;
 
-	for (i = pNumber->getNumbers()->size() - 1; i >= 0; i ++)
-		if ((pObject = ((*(pNumber->getNumbers()->data() + i)).get())) != nullptr && (eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NUMBER_UNIT)
+    wcout<<L"Beginning to process number unit"<<endl;
+
+    for (i = pNumber->getNumbers()->size() - 1; i >= 0; i --)
+        if ((pObject = pNumber->getNumbers()->at(i).get()) != nullptr && (eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NUMBER_UNIT)
 			this->processState(eState, pObject, 0, i);
+
+    wcout<<L"Begnning to handle number unit num digits"<<endl;
 
 	if (this->handleNumberUnitNumDigits(pNumber, pNumber->getNumbers()->size()) == false)
 		return false;
+
+    wcout<<L"Handling number unit num digits successfully"<<endl;
 
 	return this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pNumber, 0, pNumber->getLowestUnit());
 }
@@ -337,11 +380,29 @@ bool PronunciationHandler::pronounceConditionAppend(const int16_t iDigitPosition
 	ConditionAppendAttribute *pConditionAppendAttribute;
 	unique_ptr<wstring> upTmpPronunciation;
 
-	if (iDigitPosition < 0 || this->m_upConfig.get() == nullptr || this->m_upConfig->getConditionAppendAttributes() == nullptr || this->m_upwsPronunciation.get() == nullptr || SearchUtility::getInstance() == nullptr)
-		return false;
+    if (iDigitPosition < 0 || this->m_upConfig.get() == nullptr || this->m_upConfig->getConditionAppendAttributes() == nullptr || this->m_upwsPronunciation.get() == nullptr || SearchUtility::getInstance() == nullptr) {
+        wcout<<L"Fail here 3"<<endl;
 
-	if ((pComparable = SearchUtility::getInstance()->find(this->m_upConfig->getConditionAppendAttributes(), iDigitPosition)) == nullptr || (pConditionAppendAttribute = dynamic_cast<ConditionAppendAttribute *>(pComparable)) == nullptr)
-		return false;
+        return false;
+    }
+
+    wcout<<L"Beginning to pronounce the condition append"<<endl;
+
+    wcout<<L"Digit position: "<<iDigitPosition<<endl;
+
+    if((pComparable = SearchUtility::getInstance()->find(this->m_upConfig->getConditionAppendAttributes(), iDigitPosition)) == nullptr)
+        return true;
+
+    if ((pConditionAppendAttribute = dynamic_cast<ConditionAppendAttribute *>(pComparable)) == nullptr) {
+        wcout<<L"Fail here 4"<<endl;
+
+        wcout<<"pComparable: "<<(pComparable == nullptr)<<endl;
+        wcout<<"pConditionAppendAttribute: "<<(pConditionAppendAttribute == nullptr)<<endl;
+
+        return false;
+    }
+
+    wcout<<L"Starting to append the pronunciation of condition append"<<endl;
 
 	upTmpPronunciation.reset(new wstring(pConditionAppendAttribute->getPronunciation()));
 	upTmpPronunciation->append(L" ");
@@ -349,6 +410,8 @@ bool PronunciationHandler::pronounceConditionAppend(const int16_t iDigitPosition
 	this->m_upwsPronunciation->append(upTmpPronunciation->c_str());
 
 	upTmpPronunciation.reset();
+
+    wcout<<L"Appending the pronunciation of condition append successfully"<<endl;
 
 	return true;
 }

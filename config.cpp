@@ -6,6 +6,7 @@
 	Description: this is the source code file of the Config class in C++ programming language
 */
 
+#include <iostream>
 #include "config.h"
 
 Config::Config() :
@@ -144,15 +145,15 @@ bool Config::classify() {
         if((pAttribute = dynamic_cast<Attribute *>(this->m_upAttributes->at(i).getData().get())) == nullptr)
             continue;
 
-        if (pAttribute->getId() == ATTRIBUTE_TYPE_CONDITION_APPEND)
+        if (pAttribute->getType() == ATTRIBUTE_TYPE_CONDITION_APPEND)
             this->m_upConditionAppendAttributes->insert(this->m_upAttributes->at(i));
-        else if (pAttribute->getId() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
+        else if (pAttribute->getType() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
             this->m_upConditionDigitAttributes->insert(this->m_upAttributes->at(i));
-        else if (pAttribute->getId() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
+        else if (pAttribute->getType() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
             this->m_upMultipleDigitsAttributes->insert(this->m_upAttributes->at(i));
-        else if (pAttribute->getId() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
+        else if (pAttribute->getType() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
             this->m_upNormalDigitAttributes->insert(this->m_upAttributes->at(i));
-        else if (pAttribute->getId() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
+        else if (pAttribute->getType() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
             this->m_upSpecialDigitAttributes->insert(this->m_upAttributes->at(i));
 	}
 

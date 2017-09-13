@@ -14,6 +14,8 @@ PSHelp::PSHelp() :
 	m_eHelpType (PS_HELP_TYPE_NONE)
 {
 	this->m_eStateType = PIPELINE_STATE_TYPE_HELP;
+
+    this->constructPossibleStates();
 }
 
 PSHelp::PSHelp(PSHelpType eHelpType, shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, shared_ptr<Base>>> data) :
@@ -21,7 +23,7 @@ PSHelp::PSHelp(PSHelpType eHelpType, shared_ptr<Pipeline> pipeline, shared_ptr<m
 	m_eNextState (PIPELINE_STATE_TYPE_FINISH),
 	m_eHelpType (eHelpType < PS_HELP_TYPE_NONE || eHelpType >= PS_HELP_TYPE_COUNT ? PS_HELP_TYPE_NONE : eHelpType)
 {
-
+    this->constructPossibleStates();
 }
 
 PSHelp::~PSHelp() {
@@ -92,9 +94,9 @@ void PSHelp::displayHelpLang() {
 	for (iter = pSetConfigs->begin(); iter != pSetConfigs->end(); ++ iter)
 		if ((pConfig = dynamic_cast<Config *>(iter->getData().get())) != nullptr) {
 			if (iter != pSetConfigs->begin())
-				cout << ", " << endl;
+                wcout << L", ";
 
-			cout << pConfig->getLang()->getName() << " ";
+            wcout << pConfig->getLang()->getName();
 		}
 
 	wcout << endl;
@@ -123,22 +125,22 @@ void PSHelp::displayHelpNumberString() {
 	if ((pConfig = dynamic_cast<Config *>(this->m_spPipeline->getManager()->get(c))) == nullptr)
 		return;
 
-	cout << "The valid characters: " << endl << endl;
-	cout << "Normal digits: ";
+    wcout << L"The valid characters: " << endl << endl;
+    wcout << L"Normal digits: ";
 
 	if ((pSet = pConfig->getNormalDigitAttributes()) != nullptr) {
 		for (iter = pSet->begin(); iter != pSet->end(); ++iter) {
 			if ((pNormalDigitAttribute = dynamic_cast<NormalDigitAttribute *>(iter->getData().get())) != nullptr)
-				cout << (pNormalDigitAttribute->getDigit());
+                wcout << (pNormalDigitAttribute->getDigit());
 		}
 	}
 
-	cout << endl << "Special digits: ";
+    wcout << endl << L"Special digits: ";
 
 	if ((pSet = pConfig->getSpecialDigitAttributes()) != nullptr) {
 		for (iter = pSet->begin(); iter != pSet->end(); ++iter) {
 			if ((pSpecialDigitAttribute = dynamic_cast<SpecialDigitAttribute *>(iter->getData().get())) != nullptr)
-				cout << (pSpecialDigitAttribute->getDigit());
+                wcout << (pSpecialDigitAttribute->getDigit());
 		}
 	}
 

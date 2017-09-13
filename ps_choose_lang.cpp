@@ -45,12 +45,17 @@ bool PSChooseLanguage::execute() {
 	Config *pConfig;
 	
 	if (StandardIOUtility::getInstance() == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(this->m_kLangKey) == this->m_spData->end() || this->m_iTryCount >= this->m_iMaxTries) {
-		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
+        if(this->m_iTryCount >= this->m_iMaxTries)
+            throw InputException(INPUT_EXCEPTION_REASON_EXCEED_TRY_COUNT);
+
+        this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 
 		return false;
 	}
 
 	pcBuffer = new char[PS_CHOOSE_LANG_BUFFER_SIZE];
+
+    wcout<<L"Enter the language: ";
 
 	if (StandardIOUtility::getInstance()->readLine(pcBuffer, PS_CHOOSE_LANG_BUFFER_SIZE) == false) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
@@ -68,7 +73,7 @@ bool PSChooseLanguage::execute() {
 
 		delete[] pcBuffer;
 
-		return false;
+        return true;
 	}
 
 	this->m_spData->at(m_kLangKey).reset(new StringData(pcBuffer));
@@ -77,7 +82,7 @@ bool PSChooseLanguage::execute() {
 		LocaleHandler::getInstance()->setLocaleName(pConfig->getLang()->getLocaleName());
 		LocaleHandler::getInstance()->setScope(LOCALE_HANDLER_SCOPE_ALL);
 
-		LocaleHandler::getInstance()->execute();
+        wcout<<L"Setting the locale result: "<<(LocaleHandler::getInstance()->execute() ? L"true" : L"false")<<endl;
 	}
 
 	this->m_eNextState = PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING;
@@ -91,8 +96,8 @@ bool PSChooseLanguage::execute() {
 PipelineStateType PSChooseLanguage::determineNextStateType() const {
 	PSHelp *pHelpPipeline;
 
-	if (this->m_eNextState == PIPELINE_STATE_TYPE_HELP && this->m_spPipeline.get() != nullptr && (pHelpPipeline = dynamic_cast<PSHelp *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_HELP))) != nullptr)
-		pHelpPipeline->setHelpType(PS_HELP_TYPE_LANG);
+    if (this->m_eNextState == PIPELINE_STATE_TYPE_HELP && this->m_spPipeline.get() != nullptr && (pHelpPipeline = dynamic_cast<PSHelp *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_HELP))) != nullptr)
+        pHelpPipeline->setHelpType(PS_HELP_TYPE_LANG);
 
 	return this->m_eNextState;
 }

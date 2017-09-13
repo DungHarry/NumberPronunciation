@@ -16,7 +16,7 @@ DigitAttribute::DigitAttribute() :
 }
 
 DigitAttribute::DigitAttribute(AttributeType eType, int16_t iId, char cDigit, const wchar_t *cpcPronunciation) :
-	Attribute(iId, eType <= ATTRIBUTE_TYPE_NONE && eType > ATTRIBUTE_TYPE_CONDITION_DIGIT ? ATTRIBUTE_TYPE_NORMAL_DIGIT : eType),
+    Attribute(iId, eType <= ATTRIBUTE_TYPE_NONE && eType > ATTRIBUTE_TYPE_COUNT ? ATTRIBUTE_TYPE_NORMAL_DIGIT : eType),
     m_upCouple(new pair<char, unique_ptr<wstring>>(cDigit, unique_ptr<wstring>(cpcPronunciation == nullptr ? nullptr : new wstring(cpcPronunciation))))
 {
 

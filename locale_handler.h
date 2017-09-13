@@ -25,7 +25,7 @@ enum LocaleHandlerScope {
     LOCALE_HANDLER_SCOPE_COUNT
 };
 
-#define LOCALE_HANDLER_LOCALE_NAME_DEFAULT_VALUE ("en_US")
+#define LOCALE_HANDLER_LOCALE_NAME_DEFAULT_VALUE ("en_US.UTF-8")
 
 class LocaleHandler : public Handler {
 public:

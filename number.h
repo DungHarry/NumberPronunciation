@@ -33,7 +33,9 @@ protected:
 	unique_ptr<vector<unique_ptr<Object>>> m_upNumbers;
 
 private:
-	bool verifyIgnoreToNumberUnit(Number *pNumber, bool &bNonZeroGlobal, int32_t &iLevel, int32_t &iNumberUnitOffset);
+    bool verifyIgnoreToFloatingPointPart(Number *pNumber);
+    bool verifyIgnoreToFloatingPointPart(Object *pObject, bool &bNonZero);
+    bool verifyIgnoreToNumberUnit(Number *pNumber, bool &bNonZeroGlobal, int32_t iLevel, int32_t &iNumberUnitOffset);
 	bool verifyIgnoreToObject(Object *pObject, bool &bNonZeroGlobal, bool &bNonZeroLocal, int32_t &iNumberUnitOffset);
 	
 	bool verifyIgnoreToNumberUnitAgain(Number *pNumber);

@@ -16,6 +16,7 @@
 #include "string_data.h"
 #include "config.h"
 #include "ps_help.h"
+#include "input_exception.h"
 
 class Pipeline;
 

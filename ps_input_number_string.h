@@ -15,6 +15,7 @@
 #include "standard_io_utility.h"
 #include "ps_choose_lang.h"
 #include "string_utility.h"
+#include "input_exception.h"
 
 class Pipeline;
 

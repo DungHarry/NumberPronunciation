@@ -51,12 +51,17 @@ bool PSInputNumberString::execute() {
     shared_ptr<Comparable> spConfig;
 
 	if (StandardIOUtility::getInstance() == nullptr || StringUtility::getInstance() == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(this->m_kNumberStringKey) == this->m_spData->end() || this->m_spPipeline.get() == nullptr || this->m_spPipeline->getManager() == nullptr || (pChooseLangPipeline = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_CHOOSE_LANG))) == nullptr || this->m_iTryCount >= this->m_iMaxTries) {
-		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
+        if(this->m_iTryCount >= this->m_iMaxTries)
+            throw InputException(INPUT_EXCEPTION_REASON_EXCEED_TRY_COUNT);
+
+        this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
 	}
 
 	pcNumberStringBuffer = new char[PS_INPUT_NUMBER_STRING_BUFFER_SIZE];
+
+    wcout<<L"Input number string: ";
 
 	if (StandardIOUtility::getInstance()->readLine(pcNumberStringBuffer, PS_INPUT_NUMBER_STRING_BUFFER_SIZE) == false) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
@@ -67,7 +72,7 @@ bool PSInputNumberString::execute() {
 		return false;
 	}
 
-	if (this->m_spData->find(pChooseLangPipeline->getLangKey()) == this->m_spData->end() || (pLang = dynamic_cast<StringData *>((*(this->m_spData.get()))[pChooseLangPipeline->getLangKey()].get())) == nullptr) {
+    if (this->m_spData->find(pChooseLangPipeline->getLangKey()) == this->m_spData->end() || (pLang = dynamic_cast<StringData *>((*(this->m_spData.get()))[pChooseLangPipeline->getLangKey()].get())) == nullptr) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		this->m_iTryCount = 0;
 
@@ -90,15 +95,17 @@ bool PSInputNumberString::execute() {
 
 		return false;
 	}
-		
+
 	if (StringUtility::getInstance()->isAllDigitsValid(pcNumberStringBuffer, pConfig) == false) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_HELP;
 		this->m_iTryCount++;
 
 		delete[] pcNumberStringBuffer;
 
-		return false;
+        return true;
 	}
+
+    wcout<<L"Tất cả các ký tự là hợp lệ"<<endl;
 
 	this->m_spData->at(this->m_kNumberStringKey).reset(new StringData(pcNumberStringBuffer));
 
@@ -113,7 +120,7 @@ bool PSInputNumberString::execute() {
 PipelineStateType PSInputNumberString::determineNextStateType() const {
 	PSHelp *pHelpPipeline;
 
-	if (this->m_eNextState == PIPELINE_STATE_TYPE_HELP || this->m_spPipeline.get() != nullptr || (pHelpPipeline = dynamic_cast<PSHelp *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_HELP))) != nullptr)
+    if (this->m_eNextState == PIPELINE_STATE_TYPE_HELP && this->m_spPipeline.get() != nullptr && (pHelpPipeline = dynamic_cast<PSHelp *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_HELP))) != nullptr)
 		pHelpPipeline->setHelpType(PS_HELP_TYPE_NUMBER_STRING);
 
 	return this->m_eNextState;

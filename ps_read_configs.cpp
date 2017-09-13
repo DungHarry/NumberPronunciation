@@ -39,7 +39,7 @@ bool PSReadConfigs::execute() {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
-	}
+    }
 
 	FileHandler::getInstance()->setFileName(pFileNameData->getValue());
 	FileHandler::getInstance()->setType(FILE_HANDLER_TYPE_READ);
@@ -48,7 +48,7 @@ bool PSReadConfigs::execute() {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
-	}
+    }
 
 	ConfigNameParser::getInstance()->setBuffer(FileHandler::getInstance()->getBufferContent());
 	
@@ -56,7 +56,7 @@ bool PSReadConfigs::execute() {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
-	}
+    }
 
 	for (i = 0; i < pConfigNames->size(); i ++)
 		if (*(pConfigNames->data() + i) != nullptr)

@@ -44,6 +44,8 @@ bool PSHandlePronunciation::execute() {
 		return false;
 	}
 
+    wcout<<L"Getting the Config and Number successfully"<<endl;
+
 	PronunciationHandler::getInstance()->setConfig(pConfig);
 	PronunciationHandler::getInstance()->setNumber(pNumber);
 
@@ -52,6 +54,8 @@ bool PSHandlePronunciation::execute() {
 
 		return false;
 	}
+
+    wcout<<L"Executing successfully"<<endl;
 
 	(*(this->m_spData.get()))[this->m_kPronunciationKey].reset(new WStringData(pwsPronunciation->c_str()));
 

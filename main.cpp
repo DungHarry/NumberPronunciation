@@ -9,12 +9,20 @@
 #include <iostream>
 #include "pipeline.h"
 #include "number_exception.h"
+#include "input_exception.h"
+#include "locale_handler.h"
+
+bool ensureLocale();
 
 int32_t main(int argc, char** argv)
-{
+{   
 	try {
+        ensureLocale();
+
 		Pipeline::getInstance()->execute();
-	} catch (NumberException &e) {
+    } catch(InputException &e) {
+        wcout << e.what() << endl;
+    } catch (NumberException &e) {
 		wcout << e.what() << endl;
 	} catch (Exception &e) {
 		wcout << e.what() << endl;
@@ -25,3 +33,13 @@ int32_t main(int argc, char** argv)
 	return 0;
 }
 
+bool ensureLocale() {
+    if(LocaleHandler::getInstance() == nullptr)
+        return false;
+
+    LocaleHandler::getInstance()->setScope(LOCALE_HANDLER_SCOPE_ALL);
+
+    LocaleHandler::getInstance()->execute();
+
+    return true;
+}

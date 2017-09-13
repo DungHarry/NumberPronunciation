@@ -64,6 +64,7 @@ enum UtilityType {
 enum ExceptionType {
 	EXCEPTION_TYPE_NONE = 0,
 	EXCEPTION_TYPE_NUMBER,
+    EXCEPTION_TYPE_INPUT,
 	EXCEPTION_TYPE_COUNT
 };
 

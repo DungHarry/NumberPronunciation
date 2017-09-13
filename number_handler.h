@@ -40,7 +40,7 @@ public:
 
     bool isNumberStringValid();
 
-    bool isNumberStringNegative();
+    bool isNumberStringSign();
 
     bool isNumberStringFloat();
 

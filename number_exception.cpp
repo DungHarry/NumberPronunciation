@@ -12,7 +12,7 @@ NumberException::NumberException() :
 	Exception (EXCEPTION_TYPE_NUMBER, "Number exception common"),
 	m_eReason (NUMBER_EXCEPTION_REASON_NONE)
 {
-
+    this->autoGenerateMessage();
 }
 
 NumberException::NumberException(const NumberExceptionReason eReason) :
@@ -26,7 +26,7 @@ NumberException::NumberException(const NumberException &e) :
     Exception(e),
     m_eReason(e.m_eReason)
 {
-
+    this->autoGenerateMessage();
 }
 
 NumberException::~NumberException() {

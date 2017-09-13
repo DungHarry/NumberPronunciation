@@ -63,14 +63,14 @@ wchar_t StreamUtility::readCharacter() {
 }
 
 bool StreamUtility::isEndOfStream() {
-    return (this->m_upStream.get() == nullptr) ? false : this->m_upStream->eof();
+    return (this->m_upStream.get() == nullptr) ? true : this->m_upStream->eof();
 }
 
 bool StreamUtility::setContent(const wchar_t *pwcContent) {
-    if(this->m_upStream.get() == nullptr || pwcContent == nullptr)
+    if(pwcContent == nullptr)
         return false;
 
-    this->m_upStream->str(wstring(pwcContent));
+    this->m_upStream.reset(new wstringstream(wstring(pwcContent)));
 
     return true;
 }
@@ -79,7 +79,7 @@ bool StreamUtility::clearContent() {
     if(this->m_upStream.get() == nullptr)
         return false;
 
-    this->m_upStream->str(wstring(L""));
+    this->m_upStream.reset(new wstringstream(wstring(L"")));
 
     return true;
 }

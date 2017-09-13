@@ -7,6 +7,7 @@
 */
 
 #include "parse_handler.h"
+#include "locale_handler.h"
 
 #define PARSE_HANDLER_MULTIPLE_DIGITS_BUFFER_SIZE (static_cast<int32_t>(1 << 8))
 #define PARSE_HANDLER_DEFAULT_BUFFER_SIZE (static_cast<int32_t>(1 << 12))
@@ -76,8 +77,6 @@ bool ParseHandler::execute() {
 
             continue;
 		}
-
-        this->m_upConfig.reset(new Config());
 
         if((wcFirstCharacter = *(pwcCleanLine + 0)) == static_cast<wchar_t>('l')) {
             if ((wcSecondCharacter = *(pwcCleanLine + 1)) == static_cast<wchar_t>('a'))

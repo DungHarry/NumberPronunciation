@@ -26,10 +26,12 @@ public:
 
 	NumberExceptionReason getReason();
 	void setReason(const NumberExceptionReason eReason);
-private:
-	bool autoGenerateMessage();
 
+protected:
 	NumberExceptionReason m_eReason;
+
+private:
+    bool autoGenerateMessage();
 };
 
 #endif

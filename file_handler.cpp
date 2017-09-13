@@ -64,7 +64,7 @@ bool FileHandler::read() {
 
     apfFile->read(pcTmpBuffer, iFileSize);
 
-    this->m_upsBuffer->assign(pcTmpBuffer);
+    this->m_upsBuffer.reset(new wstring(pcTmpBuffer));
 
     apfFile->close();
 
