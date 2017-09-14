@@ -36,4 +36,9 @@ protected:
 	unique_ptr<set<Container>> m_upObjects;
 };
 
+class ManagerDeleter {
+public:
+	void operator() (Manager *pManager);
+};
+
 #endif

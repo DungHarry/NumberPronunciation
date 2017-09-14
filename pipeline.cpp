@@ -24,7 +24,7 @@ Pipeline::Pipeline() :
 	m_eCurrentState (PIPELINE_STATE_TYPE_NONE),
 	m_upStates(new map<int32_t, unique_ptr<PipelineState>>()),
     m_spData (new map<int32_t, shared_ptr<Base>>()),
-    m_upManager (new Manager())
+    m_upManager (new Manager(), ManagerDeleter())
 {
 	this->contructStates();
 }
@@ -35,7 +35,7 @@ Pipeline::Pipeline(const PipelineStateType eCurrentState) :
 	m_eCurrentState (eCurrentState <= PIPELINE_STATE_TYPE_NONE || eCurrentState >= PIPELINE_STATE_TYPE_COUNT ? PIPELINE_STATE_TYPE_NONE : eCurrentState),
 	m_upStates(new map<int32_t, unique_ptr<PipelineState>>()),
     m_spData(new map<Key, shared_ptr<Base>>()),
-    m_upManager (new Manager())
+	m_upManager(new Manager(), ManagerDeleter())
 {
 	this->contructStates();
 }

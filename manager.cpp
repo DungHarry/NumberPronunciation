@@ -53,3 +53,10 @@ Manager::reverse_iterator Manager::rbegin() {
 Manager::reverse_iterator Manager::rend() {
     return this->m_upObjects->rend();
 }
+
+void ManagerDeleter::operator() (Manager *pManager) {
+	if (pManager == nullptr)
+		return;
+
+	delete pManager;
+}

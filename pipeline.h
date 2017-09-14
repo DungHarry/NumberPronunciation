@@ -49,7 +49,7 @@ protected:
 	PipelineStateType m_eCurrentState;
 	unique_ptr<map<PipelineStateKey, unique_ptr<PipelineState>>> m_upStates;
 	shared_ptr< map< Key, shared_ptr< Base > > > m_spData;
-    unique_ptr<Manager> m_upManager;
+    unique_ptr<Manager, ManagerDeleter> m_upManager;
 private:
 	virtual bool determineNextState();
 
