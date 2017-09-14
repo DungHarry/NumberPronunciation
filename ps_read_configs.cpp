@@ -7,6 +7,7 @@
 */
 
 #include "ps_read_configs.h"
+#include "pipeline.h"
 
 PSReadConfigs::PSReadConfigs() :
     PipelineState (),
@@ -41,8 +42,12 @@ bool PSReadConfigs::execute() {
 		return false;
     }
 
+	wcout << L"Starting to read configs file" << endl;
+
 	FileHandler::getInstance()->setFileName(pFileNameData->getValue());
 	FileHandler::getInstance()->setType(FILE_HANDLER_TYPE_READ);
+
+	wcout << L"Setting up the FileHandler successfully" << endl;
 
 	if (FileHandler::getInstance()->execute() == false || FileHandler::getInstance()->getBufferContent() == nullptr) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
@@ -50,13 +55,19 @@ bool PSReadConfigs::execute() {
 		return false;
     }
 
+	wcout << L"Reading the " << (pFileNameData->getValue())<<L" successfully" << endl;
+
 	ConfigNameParser::getInstance()->setBuffer(FileHandler::getInstance()->getBufferContent());
 	
+	wcout << L"Setting up ConfigNameParser successfully" << endl;
+
 	if (ConfigNameParser::getInstance()->execute() == false || (pConfigNames = ConfigNameParser::getInstance()->releaseConfigNames()) == nullptr) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
 		
 		return false;
     }
+
+	wcout << L"Parsing the configs name successfully" << endl;
 
 	for (i = 0; i < pConfigNames->size(); i ++)
 		if (*(pConfigNames->data() + i) != nullptr)
@@ -64,6 +75,8 @@ bool PSReadConfigs::execute() {
 
 	pConfigNames->clear();
 	delete pConfigNames;
+
+	wcout << L"Reading config file names successfully" << endl;
 
 	this->m_eNextState = PIPELINE_STATE_TYPE_PARSE_CONFIGS;
 
@@ -93,6 +106,8 @@ bool PSReadConfigs::cleanup() {
 	for (k = 1; k < LANGUAGE_MAX_VALUE && this->m_spData->find(k) != this->m_spData->end(); k ++)
 		if (this->m_spData->at(k).get() != nullptr)
 			this->m_spData->at(k).reset();
+
+	return true;
 }
 
 bool PSReadConfigs::constructPossibleStates() {

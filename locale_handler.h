@@ -9,10 +9,10 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_LOCALE_HANDLER_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_LOCALE_HANDLER_H_
 
-#include "handler.h"
 #include <locale>
 #include <memory>
 #include <fstream>
+#include "handler.h"
 
 using namespace std;
 

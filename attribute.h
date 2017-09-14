@@ -11,12 +11,12 @@
 
 #include "global.h"
 #include "base.h"
-#include "comparable.h"
+#include "comparable_impl.h"
 #include <memory>
 
 #define ATTRIBUTE_ID_INVALID_VALUE (static_cast<int16_t>(-1))
 
-class Attribute : public Base, public Comparable {
+class Attribute : public ComparableImpl {
 public:
 	Attribute();
 	Attribute(int16_t iId, AttributeType eType);

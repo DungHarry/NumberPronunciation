@@ -20,7 +20,7 @@ SearchUtility::~SearchUtility() {
 
 }
 
-Comparable* SearchUtility::find(const set<Container> *pSet, const Container &con) {
+ComparableImpl* SearchUtility::find(const set<Container> *pSet, const Container &con) {
 	set<Container>::iterator iter;
 
 	if (pSet == nullptr)
@@ -31,9 +31,9 @@ Comparable* SearchUtility::find(const set<Container> *pSet, const Container &con
 	return (iter == pSet->end()) ? nullptr : iter->getData().get();
 }
 
-Comparable* SearchUtility::find(const set<Container> *pSet, int16_t iPosition) {
+ComparableImpl* SearchUtility::find(const set<Container> *pSet, int16_t iPosition) {
 	set<Container>::iterator iter;
-    shared_ptr<Comparable> spConditionAppendAttribute (nullptr);
+    shared_ptr<ComparableImpl> spConditionAppendAttribute (nullptr);
 
 	if (pSet == nullptr)
 		return nullptr;
@@ -47,9 +47,9 @@ Comparable* SearchUtility::find(const set<Container> *pSet, int16_t iPosition) {
 	return (iter == pSet->end()) ? nullptr : iter->getData().get();
 }
 
-Comparable* SearchUtility::find(const set<Container> *pSet, char cDigit) {
+ComparableImpl* SearchUtility::find(const set<Container> *pSet, char cDigit) {
 	set<Container>::iterator iter;
-    shared_ptr<Comparable> spDigitAttribute (nullptr);
+    shared_ptr<ComparableImpl> spDigitAttribute (nullptr);
 
 	if (pSet == nullptr)
 		return nullptr;
@@ -63,9 +63,9 @@ Comparable* SearchUtility::find(const set<Container> *pSet, char cDigit) {
 	return (iter == pSet->end()) ? nullptr : iter->getData().get();
 }
 
-Comparable* SearchUtility::find(const set<Container> *pSet, const wchar_t *cpwcMultipleDigits) {
+ComparableImpl* SearchUtility::find(const set<Container> *pSet, const wchar_t *cpwcMultipleDigits) {
 	set<Container>::iterator iter;
-    shared_ptr<Comparable> spMultipleDigitAttribute;
+    shared_ptr<ComparableImpl> spMultipleDigitAttribute;
 
 	if (pSet == nullptr || cpwcMultipleDigits == nullptr)
 		return nullptr;
@@ -79,10 +79,10 @@ Comparable* SearchUtility::find(const set<Container> *pSet, const wchar_t *cpwcM
 	return (iter == pSet->end()) ? nullptr : iter->getData().get();
 }
 
-Comparable* SearchUtility::find(const set<Container> *pSet, char cDigit, int16_t iPosition) {
+ComparableImpl* SearchUtility::find(const set<Container> *pSet, char cDigit, int16_t iPosition) {
 	set<Container>::iterator iter;
     ConditionDigitAttribute *pConditionDigitAttribute;
-    shared_ptr<Comparable> spConditionDigitAttribute;
+    shared_ptr<ComparableImpl> spConditionDigitAttribute;
 
 	if (pSet == nullptr || iPosition < 0)
 		return nullptr;

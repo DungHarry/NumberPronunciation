@@ -196,7 +196,7 @@ bool StringUtility::isAllDigitsValid(const char *cpcString, Config *pConfig) {
 	set<Container> *pNormalDigitAttributeSet = nullptr, *pSpecialDigitAttributeSet = nullptr;
 	int32_t i, iStringLength;
 	Container c;
-    shared_ptr<Comparable> spDigitAttribute (nullptr);
+    shared_ptr<ComparableImpl> spDigitAttribute (nullptr);
 
     if (cpcString == nullptr || pConfig == nullptr || (pNormalDigitAttributeSet = pConfig->getNormalDigitAttributes()) == nullptr || (pSpecialDigitAttributeSet = pConfig->getSpecialDigitAttributes()) == nullptr)
 		return false;
@@ -217,7 +217,7 @@ bool StringUtility::isAllDigitsValid(const char *cpcString, Config *pConfig) {
 
         spDigitAttribute.reset();
 
-        if (pSpecialDigitAttributeSet != nullptr && pSpecialDigitAttributeSet->find(c) != pNormalDigitAttributeSet->end())
+        if (pSpecialDigitAttributeSet != nullptr && pSpecialDigitAttributeSet->find(c) != pSpecialDigitAttributeSet->end())
 			continue;
 
         break;

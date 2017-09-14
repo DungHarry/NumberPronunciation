@@ -24,6 +24,17 @@ PronunciationHandler::PronunciationHandler(Config *pConfig, Number *pNumber) :
 
 }
 
+PronunciationHandler::~PronunciationHandler() {
+	if (this->m_upConfig.get() != nullptr)
+		this->m_upConfig.release();
+
+	if (this->m_upNumber.get() != nullptr)
+		this->m_upConfig.release();
+
+	if (this->m_upwsPronunciation.get() != nullptr)
+		this->m_upwsPronunciation.release();
+}
+
 bool PronunciationHandler::execute() {
 	int32_t i;
 	vector<unique_ptr<Object>> *pNumbers;

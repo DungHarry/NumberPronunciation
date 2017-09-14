@@ -7,6 +7,7 @@
 */
 
 #include "container.h"
+#include "config.h"
 
 Container::Container() :
 	m_spData(nullptr)
@@ -14,7 +15,7 @@ Container::Container() :
 
 }
 
-Container::Container(shared_ptr<Comparable> &data) :
+Container::Container(shared_ptr<ComparableImpl> &data) :
 	m_spData(data)
 {
 
@@ -38,10 +39,10 @@ bool operator== (const Container &con1, const Container &con2) {
 	return (con1.m_spData.get() == nullptr || con2.m_spData.get() == nullptr) ? false : con1.m_spData->equal(*(con2.m_spData.get()));
 }
 
-shared_ptr<Comparable> Container::getData() const {
+shared_ptr<ComparableImpl> Container::getData() const {
 	return m_spData;
 }
 
-void Container::setData(shared_ptr<Comparable> &data) {
+void Container::setData(shared_ptr<ComparableImpl> &data) {
 	this->m_spData = data;
 }

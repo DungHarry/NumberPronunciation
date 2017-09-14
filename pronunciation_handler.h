@@ -39,6 +39,7 @@ class PronunciationHandler : public Handler {
 public:
 	PronunciationHandler();
 	PronunciationHandler(Config *pConfig, Number *pNumber);
+	virtual ~PronunciationHandler();
 
 	virtual bool execute();
 

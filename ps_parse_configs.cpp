@@ -7,6 +7,7 @@
 */
 
 #include "ps_parse_configs.h"
+#include "pipeline.h"
 
 PSParseConfigs::PSParseConfigs() :
 	PipelineState()
@@ -130,7 +131,7 @@ Config* PSParseConfigs::parseConfigFile() {
 }
 
 bool PSParseConfigs::addConfig(Manager *pManager, Config **pConfig) {
-    shared_ptr<Comparable> spConfig (nullptr);
+    shared_ptr<ComparableImpl> spConfig (nullptr);
 
 	if (pManager == nullptr || pManager->getObjects() == nullptr || pConfig == nullptr || *pConfig == nullptr)
 		return false;

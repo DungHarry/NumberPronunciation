@@ -7,6 +7,7 @@
 */
 
 #include "ps_help.h"
+#include "pipeline.h"
 
 PSHelp::PSHelp() :
 	PipelineState (),
@@ -56,7 +57,7 @@ PipelineStateType PSHelp::determineNextStateType() const {
 }
 
 bool PSHelp::cleanup() {
-
+	return true;
 }
 
 PSHelpType PSHelp::getHelpType() {
@@ -107,7 +108,7 @@ void PSHelp::displayHelpNumberString() {
 	StringData *pLang;
 	Config *pConfig;
 	Container c;
-    shared_ptr<Comparable> spConfig (nullptr);
+    shared_ptr<ComparableImpl> spConfig (nullptr);
 	NormalDigitAttribute *pNormalDigitAttribute;
 	SpecialDigitAttribute *pSpecialDigitAttribute;
 	set<Container> *pSet;

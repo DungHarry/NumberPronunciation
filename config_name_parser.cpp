@@ -50,6 +50,8 @@ bool ConfigNameParser::execute() {
     if(this->m_upwsBuffer.get() == nullptr)
         return false;
 
+	wcout << L"Starting ConfigNameParser" << endl;
+
     if(this->m_upConfigNames.get() != nullptr) {
         for(i = 0; i < this->m_upConfigNames->size(); i ++)
             if(*(this->m_upConfigNames->data() + i) != nullptr)
@@ -116,7 +118,7 @@ ConfigNameParser* ConfigNameParser::getInstance() {
 
 bool ConfigNameParser::parseLine(const wchar_t *cpwcLine) {
     wchar_t *pwcBuffer;
-    int16_t iId;
+    int32_t iId;
 
     if(cpwcLine == nullptr || this->m_upConfigNames.get() == nullptr)
         return false;
@@ -129,7 +131,10 @@ bool ConfigNameParser::parseLine(const wchar_t *cpwcLine) {
         return false;
     }
 
-    this->m_upConfigNames->push_back(new ConfigName<wchar_t>(iId, pwcBuffer));
+	wcout << L"Id: " << endl;
+	wcout << L"Buffer: " << pwcBuffer << endl;
+
+    this->m_upConfigNames->push_back(new ConfigName<wchar_t>(static_cast<int16_t>(iId), pwcBuffer));
 
     delete[] pwcBuffer;
 

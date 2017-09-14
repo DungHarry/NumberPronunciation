@@ -7,6 +7,7 @@
 */
 
 #include "ps_handle_pronunciation.h"
+#include "pipeline.h"
 
 PSHandlePronunciation::PSHandlePronunciation() :
 	PipelineState (),
@@ -30,7 +31,7 @@ PSHandlePronunciation::PSHandlePronunciation(shared_ptr<Pipeline> pipeline, shar
 }
 
 PSHandlePronunciation::~PSHandlePronunciation() {
-	this->cleanup();
+
 }
 
 bool PSHandlePronunciation::execute() {
@@ -110,9 +111,9 @@ bool PSHandlePronunciation::determinePronunciationKey() {
 Config* PSHandlePronunciation::getConfig() {
 	PSChooseLanguage *pChooseLangPipeline;
 	Container c;
-	StringData *psLang;
+	StringData *psLang = nullptr;
 	Config *pConfig;
-    shared_ptr<Comparable> spConfig (nullptr);
+    shared_ptr<ComparableImpl> spConfig (nullptr);
 
 	if (this->m_spPipeline.get() == nullptr || (pChooseLangPipeline = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_CHOOSE_LANG))) == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(pChooseLangPipeline->getLangKey()) == this->m_spData->end() || (psLang = dynamic_cast<StringData *>(this->m_spData->at(pChooseLangPipeline->getLangKey()).get())) == nullptr || this->m_spPipeline->getManager() == nullptr)
 		return nullptr;
@@ -129,7 +130,7 @@ Config* PSHandlePronunciation::getConfig() {
 
 Number* PSHandlePronunciation::getNumber() {
 	PSHandleNumberString *pHandleNumberStringPipeline;
-	Number *pNumber;
+	Number *pNumber = nullptr;
 
 	if (this->m_spPipeline.get() == nullptr || (pHandleNumberStringPipeline = dynamic_cast<PSHandleNumberString *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING))) == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(pHandleNumberStringPipeline->getNumberKey()) == this->m_spData->end() || (pNumber = dynamic_cast<Number *>(this->m_spData->at(pHandleNumberStringPipeline->getNumberKey()).get())) == nullptr)
 		return nullptr;

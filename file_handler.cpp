@@ -6,6 +6,7 @@
     Description: this is the source code file of the FileHandler class in C++ programming language
 */
 
+#include <iostream>
 #include "file_handler.h"
 
 unique_ptr<FileHandler> FileHandler::m_upInstance(nullptr);
@@ -46,13 +47,21 @@ bool FileHandler::read() {
     if(this->m_eType != FILE_HANDLER_TYPE_READ || this->m_upsFileName.get() == nullptr)
         return false;
 
+	wcout << L"Starting to read file" << endl;
+
     apfFile.reset(new wifstream(this->m_upsFileName->c_str()));
 
     if(apfFile.get() == nullptr || apfFile->is_open() == false)
         return false;
 
+	wcout << L"Openning the file sucessfully" << endl;
+
+	wcout << L"Setting the locale of stream with value " << (LocaleHandler::getInstance()->getLocaleName()) << endl;
+
     LocaleHandler::getInstance()->setStreamLocale<wifstream>(apfFile.get());
     iFileSize = this->getFileSize(apfFile.get());
+
+	wcout << L"Setting the LocaleHandler succesfully" << endl;
 
     if(iFileSize <= 0) {
         apfFile->close();
@@ -69,6 +78,8 @@ bool FileHandler::read() {
     apfFile->close();
 
     delete[] pcTmpBuffer;
+
+	wcout << L"Completing to read the file" << endl;
 
     return true;
 }
@@ -102,12 +113,12 @@ int32_t FileHandler::getFileSize(wifstream *pInputFileStream) {
     if(pInputFileStream == nullptr || pInputFileStream->is_open() == false)
         return -1;
 
-    iCurrentPosition = pInputFileStream->tellg();
+    iCurrentPosition = static_cast<int32_t>(pInputFileStream->tellg());
 
     pInputFileStream->clear();
     pInputFileStream->seekg(0, pInputFileStream->end);
 
-    iFileSize = pInputFileStream->tellg();
+    iFileSize = static_cast<int32_t>(pInputFileStream->tellg());
 
     pInputFileStream->clear();
     pInputFileStream->seekg(iCurrentPosition, pInputFileStream->beg);

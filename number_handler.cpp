@@ -147,7 +147,7 @@ void NumberHandler::setNumberString(const char *cpcNumberString) {
 }
 
 bool NumberHandler::isNumberStringValid() {
-    bool bResult, bIsSign;
+    bool bResult, bIsSign = false;
     map<char, int32_t> mSpecialDigitStatistic;
     string::iterator iterChar;
     DigitAttribute *pAttribute;

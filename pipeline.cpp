@@ -41,7 +41,7 @@ Pipeline::Pipeline(const PipelineStateType eCurrentState) :
 }
 
 Pipeline::~Pipeline() {
-	if (this->m_upStates.get() != nullptr) {
+	/*if (this->m_upStates.get() != nullptr) {
 		this->m_upStates->clear();
 
 		this->m_upStates.reset();
@@ -51,11 +51,11 @@ Pipeline::~Pipeline() {
 		this->m_spData->clear();
 
 		this->m_spData.reset();
-	}
+	}*/
 }
 
 bool Pipeline::execute() {
-	PipelineState *pPipelineState;
+	PipelineState *pPipelineState = nullptr;
 	
 	if (this->m_eCurrentState <= PIPELINE_STATE_TYPE_NONE || this->m_eCurrentState >= PIPELINE_STATE_TYPE_COUNT || this->m_upStates.get() == nullptr || this->m_upStates->size() <= 0)
 		return false;

@@ -7,6 +7,7 @@
 */
 
 #include "ps_input_number_string.h"
+#include "pipeline.h"
 
 #define PS_INPUT_NUMBER_STRING_BUFFER_SIZE (static_cast<int32_t>(1 << 12))
 
@@ -39,16 +40,16 @@ PSInputNumberString::PSInputNumberString(shared_ptr<Pipeline> pipeline, shared_p
 }
 
 PSInputNumberString::~PSInputNumberString() {
-	this->cleanup();
+
 }
 
 bool PSInputNumberString::execute() {
 	char *pcNumberStringBuffer;
-	PSChooseLanguage *pChooseLangPipeline;
-	StringData *pLang;
+	PSChooseLanguage *pChooseLangPipeline = nullptr;
+	StringData *pLang = nullptr;
 	Config *pConfig;
 	Container c;
-    shared_ptr<Comparable> spConfig;
+    shared_ptr<ComparableImpl> spConfig;
 
 	if (StandardIOUtility::getInstance() == nullptr || StringUtility::getInstance() == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(this->m_kNumberStringKey) == this->m_spData->end() || this->m_spPipeline.get() == nullptr || this->m_spPipeline->getManager() == nullptr || (pChooseLangPipeline = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_CHOOSE_LANG))) == nullptr || this->m_iTryCount >= this->m_iMaxTries) {
         if(this->m_iTryCount >= this->m_iMaxTries)
@@ -105,7 +106,7 @@ bool PSInputNumberString::execute() {
         return true;
 	}
 
-    wcout<<L"Tất cả các ký tự là hợp lệ"<<endl;
+    wcout<<L"All the digits is valid"<<endl;
 
 	this->m_spData->at(this->m_kNumberStringKey).reset(new StringData(pcNumberStringBuffer));
 
@@ -113,6 +114,8 @@ bool PSInputNumberString::execute() {
 	this->m_eNextState = PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING;
 
 	delete[] pcNumberStringBuffer;
+
+	wcout << L"Ending to parse number string" << endl;
 
 	return true;
 }

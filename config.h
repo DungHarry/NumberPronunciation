@@ -16,7 +16,7 @@
 #include <vector>
 #include <utility>
 
-class Config : public Base, public Comparable {
+class Config : public ComparableImpl {
 public:
 	Config();
 	Config(const char *cpcLangName, const char *cpcLocaleName);

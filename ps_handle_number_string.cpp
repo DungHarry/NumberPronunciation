@@ -6,6 +6,7 @@
 	Description: this is the source code file of the PSHandleNumberString class in C++ programming language
 */
 
+#include "pipeline.h"
 #include "ps_handle_number_string.h"
 
 PSHandleNumberString::PSHandleNumberString() :
@@ -33,13 +34,13 @@ PSHandleNumberString::PSHandleNumberString(shared_ptr<Pipeline> pipeline, shared
 }
 
 PSHandleNumberString::~PSHandleNumberString() {
-	this->cleanup();
+	
 }
 
 bool PSHandleNumberString::execute() {
-	const char *cpcNumberString;
+	const char *cpcNumberString = nullptr;
 	Number *pNumber;
-	Config *pConfig;
+	Config *pConfig = nullptr;
 
 	if (NumberHandler::getInstance() == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(this->m_kNumberKey) == this->m_spData->end() || (cpcNumberString = this->getNumberString()) == nullptr || (pConfig = this->getConfig()) == nullptr) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
@@ -106,7 +107,7 @@ bool PSHandleNumberString::determineNumberKey() {
 
 const char* PSHandleNumberString::getNumberString() {
 	PSInputNumberString *pInputNumberString;
-	StringData *pNumberStringData;
+	StringData *pNumberStringData = nullptr;
 
 	if (this->m_spPipeline.get() == nullptr || (pInputNumberString = dynamic_cast<PSInputNumberString *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING))) == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(pInputNumberString->getNumberStringKey()) == this->m_spData->end() || (pNumberStringData = dynamic_cast<StringData *>(this->m_spData->at(pInputNumberString->getNumberStringKey()).get())) == nullptr)
 		return nullptr;
@@ -117,9 +118,9 @@ const char* PSHandleNumberString::getNumberString() {
 Config* PSHandleNumberString::getConfig() {
 	PSChooseLanguage *pChooseLangPipeline;
 	Container c;
-	StringData *psLang;
+	StringData *psLang = nullptr;
 	Config *pConfig;
-    shared_ptr<Comparable> spConfig (nullptr);
+    shared_ptr<ComparableImpl> spConfig (nullptr);
 
 	if (this->m_spPipeline.get() == nullptr || (pChooseLangPipeline = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_CHOOSE_LANG))) == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(pChooseLangPipeline->getLangKey()) == this->m_spData->end() || (psLang = dynamic_cast<StringData *>(this->m_spData->at(pChooseLangPipeline->getLangKey()).get())) == nullptr || this->m_spPipeline->getManager() == nullptr)
 		return nullptr;

@@ -9,7 +9,6 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_PS_PARSE_CONFIGS_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_PS_PARSE_CONFIGS_H_
 
-#include "pipeline.h"
 #include "pipeline_state.h"
 #include "config_name.h"
 #include "string_utility.h"

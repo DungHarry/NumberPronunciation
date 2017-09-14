@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <string>
+#include <cinttypes>
 #include "stream_utility.h"
 #include "string_utility.h"
 #include "config.h"

@@ -7,6 +7,7 @@
 */
 
 #include "ps_output_pronunciation.h"
+#include "pipeline.h"
 
 PSOutputPronunciation::PSOutputPronunciation() :
 	PipelineState (),
@@ -25,7 +26,7 @@ PSOutputPronunciation::PSOutputPronunciation(shared_ptr<Pipeline> pipeline, shar
 }
 
 PSOutputPronunciation::~PSOutputPronunciation() {
-	this->cleanup();
+
 }
 
 bool PSOutputPronunciation::execute() {

@@ -6,6 +6,7 @@
 	Description: this is the source code file of the PSChooseLang class in C++ programming language
 */
 
+#include "pipeline.h"
 #include "ps_choose_lang.h"
 
 #define PS_CHOOSE_LANG_BUFFER_SIZE (static_cast<int32_t>(1 << 10))
@@ -37,7 +38,7 @@ PSChooseLanguage::PSChooseLanguage(shared_ptr<Pipeline> pipeline, shared_ptr< ma
 }
 
 PSChooseLanguage::~PSChooseLanguage() {
-	this->cleanup();
+
 }
 
 bool PSChooseLanguage::execute() {
@@ -177,7 +178,7 @@ bool PSChooseLanguage::determineLangKey() {
 Config* PSChooseLanguage::isLangAvailable(const char *cpcLang) {
 	Manager *pManager;
 	Container c;
-    shared_ptr<Comparable> spConfig (nullptr);
+    shared_ptr<ComparableImpl> spConfig (nullptr);
 
 	if (cpcLang == nullptr || this->m_spPipeline.get() == nullptr || (pManager = this->m_spPipeline->getManager()) == nullptr)
         return nullptr;

@@ -9,7 +9,6 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_PS_READ_CONFIGS_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_PS_READ_CONFIGS_H_
 
-#include "pipeline.h"
 #include "string_data.h"
 #include "wstring_data.h"
 #include "pipeline_state.h"

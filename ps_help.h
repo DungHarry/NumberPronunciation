@@ -10,7 +10,6 @@
 #define _COC_COC_NUMBER_PRONUNCIATION_PS_HELP_H_
 
 #include <iostream>
-#include "pipeline.h"
 #include "pipeline_state.h"
 #include "ps_choose_lang.h"
 #include "config.h"
@@ -19,7 +18,6 @@
 #include "special_digit_attribute.h"
 
 class Pipeline;
-class PipelineState;
 
 enum PSHelpType {
 	PS_HELP_TYPE_NONE = 0,

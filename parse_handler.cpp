@@ -165,14 +165,14 @@ bool ParseHandler::parseNormalDigitAttribute(const wchar_t *pwcLine, Config *pCo
 	int16_t iId;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
-    shared_ptr<Comparable> spNormalDigitAttribute (nullptr);
+    shared_ptr<ComparableImpl> spNormalDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if(swscanf(pwcLine, L"0 %d %lc %ls", &iId, &wcDigit, pwcBuffer) != 3) {
+	if (swscanf(pwcLine, L"0 %hd %lc %ls", &iId, &wcDigit, pwcBuffer) != 3) {
 		delete[] pwcBuffer;
 
 		return false;
@@ -191,14 +191,14 @@ bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pC
 	int16_t iId;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
-    shared_ptr<Comparable> spSpecialDigitAttribute (nullptr);
+    shared_ptr<ComparableImpl> spSpecialDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if(swscanf(pwcLine, L"1 %d %lc %ls", &iId, &wcDigit, pwcBuffer) != 3) {
+	if (swscanf(pwcLine, L"1 %hd %lc %ls", &iId, &wcDigit, pwcBuffer) != 3) {
 		delete[] pwcBuffer;
 
 		return false;
@@ -216,7 +216,7 @@ bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pC
 bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *pConfig) {
     int16_t iId;
 	wchar_t *pwcDigitsBuffer, *pwcBuffer;
-    shared_ptr<Comparable> spMultipleDigitsAttribute (nullptr);
+    shared_ptr<ComparableImpl> spMultipleDigitsAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -224,7 +224,7 @@ bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *
 	pwcDigitsBuffer = new wchar_t[PARSE_HANDLER_MULTIPLE_DIGITS_BUFFER_SIZE];
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"2 %d %ls %ls", &iId, pwcDigitsBuffer, pwcBuffer) != 3) {
+	if (swscanf(pwcLine, L"2 %hd %ls %ls", &iId, pwcDigitsBuffer, pwcBuffer) != 3) {
 		delete[] pwcDigitsBuffer;
 		delete[] pwcBuffer;
 
@@ -244,14 +244,14 @@ bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *
 bool ParseHandler::parseConditionAppendAttribute(const wchar_t *pwcLine, Config *pConfig) {
     int16_t iId, iPosition;
 	wchar_t *pwcBuffer;
-    shared_ptr<Comparable> spConditionAppendAttribute (nullptr);
+    shared_ptr<ComparableImpl> spConditionAppendAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"3 %d %d %ls", &iId, &iPosition, pwcBuffer) != 3) {
+	if (swscanf(pwcLine, L"3 %hd %hd %ls", &iId, &iPosition, pwcBuffer) != 3) {
 		delete[] pwcBuffer;
 
 		return false;
@@ -270,14 +270,14 @@ bool ParseHandler::parseConditionDigitAttribute(const wchar_t *pwcLine, Config *
     int16_t iId, iPosition;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
-    shared_ptr<Comparable> spConditionDigitAttribute (nullptr);
+    shared_ptr<ComparableImpl> spConditionDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"4 %d %lc %d %ls", &iId, &wcDigit, &iPosition, pwcBuffer) != 4) {
+	if (swscanf(pwcLine, L"4 %hd %lc %hd %ls", &iId, &wcDigit, &iPosition, pwcBuffer) != 4) {
 		delete[] pwcBuffer;
 
 		return false;
