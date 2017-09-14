@@ -39,6 +39,8 @@ private:
 	bool verifyIgnoreToObject(Object *pObject, bool &bNonZeroGlobal, bool &bNonZeroLocal, int32_t &iNumberUnitOffset);
 	
 	bool verifyIgnoreToNumberUnitAgain(Number *pNumber);
+
+    bool isAllThreeZeroDigits(Number *pNumber);
 };
 
 #endif

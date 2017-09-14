@@ -117,13 +117,29 @@ bool Number::verifyIgnoreToNumberUnit(Number *pNumber, bool &bNonZeroGlobal, int
     Number *pTmpNumber;
     bool bNonZeroLocal = false;
 	Object *pObject;
+    NormalDigit *pNormalDigit;
 	int32_t i;
 	
 	if (pNumber == nullptr || pNumber->getNumbers() == nullptr || pNumber->getNumbers()->size() <= 0)
 		return false;
 
-	iLevel ++;
+
 	iNumberUnitOffset ++;
+
+    if(this->isAllThreeZeroDigits(pNumber) == true && pNumber->getNumbers() != nullptr && pNumber->getNumbers()->size() == 3) {
+        wcout<<"Inside three zero digit"<<endl;
+
+        for(i = 0; i < pNumber->getNumbers()->size(); i ++)
+            if((pNormalDigit = dynamic_cast<NormalDigit *>(pNumber->getNumbers()->at(i).get())) != nullptr && pNormalDigit->getValue() == '0')
+                pNormalDigit->setIgnore(true);
+            else
+                break;
+
+        if(i >= pNumber->getNumbers()->size())
+            return true;
+    }
+
+    iLevel ++;
 
     wcout<<L"Size of the numbers: "<<(pNumber->getNumbers()->size())<<endl;
 
@@ -206,4 +222,10 @@ bool Number::verifyIgnoreToNumberUnitAgain(Number *pNumber) {
 		}
 
 	return true;
+}
+
+bool Number::isAllThreeZeroDigits(Number *pNumber) {
+    NormalDigit *pNormalDigit;
+
+    return (pNumber != nullptr && pNumber->getNumbers() != nullptr && pNumber->getNumbers()->size() == 3 && pNumber->getNumbers()->at(0).get() != nullptr && pNumber->getNumbers()->at(0)->getType() == OBJECT_TYPE_NORMAL_DIGIT && (pNormalDigit = dynamic_cast<NormalDigit *>(pNumber->getNumbers()->at(0).get())) != nullptr && pNormalDigit->getValue() == '0' && pNumber->getNumbers()->at(1).get() != nullptr && pNumber->getNumbers()->at(1)->getType() == OBJECT_TYPE_NORMAL_DIGIT && (pNormalDigit = dynamic_cast<NormalDigit *>(pNumber->getNumbers()->at(1).get())) != nullptr && pNormalDigit->getValue() == '0' && pNumber->getNumbers()->at(2).get() != nullptr && pNumber->getNumbers()->at(2)->getType() == OBJECT_TYPE_NORMAL_DIGIT && (pNormalDigit = dynamic_cast<NormalDigit *>(pNumber->getNumbers()->at(2).get())) != nullptr && pNormalDigit->getValue() == '0');
 }

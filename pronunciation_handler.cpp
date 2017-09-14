@@ -81,7 +81,7 @@ wstring* PronunciationHandler::getPronunciation() {
 }
 
 wstring* PronunciationHandler::releasePronunciation() {
-	return this->m_upwsPronunciation.release();
+    return this->m_upwsPronunciation.release();
 }
 
 PronunciationHandler* PronunciationHandler::getInstance() {
@@ -123,11 +123,14 @@ bool PronunciationHandler::processState(const PronunciationHandlerState eState, 
 	if (eState == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
         wcout<<L"In the case of normal digit"<<endl;
 
-		if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || pNormalDigit->getIgnore() == true)
-			return false;
+        if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
+            return false;
 
-		if (pNormalDigit->getIgnore() == false && this->pronounceNormalDigit(pNormalDigit->getValue()) == false)
-			return false;
+        if(pNormalDigit->getIgnore() == true)
+            return true;
+
+        if(this->pronounceNormalDigit(pNormalDigit->getValue()) == false)
+            return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
         wcout<<L"In the case of special digit"<<endl;
 
@@ -160,10 +163,8 @@ bool PronunciationHandler::processState(const PronunciationHandlerState eState, 
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT) {
         wcout<<L"In the case of condition digit"<<endl;
 
-		if ((eObjectState = this->detectExecutionState(pObject)) != PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT || (pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
+        if ((eObjectState = this->detectExecutionState(pObject)) != PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT || (pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || pNormalDigit->getIgnore() == false || this->pronounceConditionDigit(pNormalDigit->getValue(), iUnit) == false)
 			return false;
-
-		this->pronounceConditionDigit(pNormalDigit->getValue(), iUnit);
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS) {
         wcout<<L"In the case of multiple digits"<<endl;
 
@@ -251,23 +252,40 @@ bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iN
 	int32_t i;
 	vector<unique_ptr<Object>> *pNumberObjects;
 	Config *pConfig;
+    NormalDigit *pNormalDigit;
 
 	if (pNumber == nullptr || (pNumberObjects = pNumber->getNumbers()) == nullptr || (pConfig = this->m_upConfig.get()) == nullptr || this->m_upwsPronunciation.get() == nullptr)
 		return false;
 
+    wcout<<L"Starting to handle number unit num digits"<<endl;
+
+    wcout<<L"In the case of handling number unit with "<<iNumDigits<<" digits"<<endl;
+
 	if (iNumDigits == 3) {
 		if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 3, 2) == false) {
-			if ((pObject = (*(pNumberObjects->data() + 2)).get()) == nullptr)
-				return false;
+            if ((pObject = (*(pNumberObjects->data() + 2)).get()) == nullptr) {
+                wcout<<L"Object at position 2 is nullptr"<<endl;
+
+                return false;
+            }
+
+            wcout<<L"Object at position 2 is not nullptr"<<endl;
 
 			if ((eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
-				if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 3, 2) == false) {
-					if (this->processState(eState, pObject, 3, 2) == false)
+                wcout<<L"Object is normal digit"<<endl;
+
+                if((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
+                    return false;
+
+                if (pNormalDigit->getIgnore() == false && this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 3, 2) == false) {
+                    if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || this->processState(eState, pObject, 3, 2) == false)
 						return false;
 
-					this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 3, 2);
+                    this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 3, 2);
 				}
 			} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
+                wcout<<L"Object is special digit"<<endl;
+
 				if (this->processState(eState, pObject, 3, 2) == false)
 					return false;
 			}
@@ -276,17 +294,29 @@ bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iN
 		this->handleNumberUnitNumDigits(pNumber, 2);
 	} else if (iNumDigits == 2) {
 		if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 2, 1) == false) {
-			if ((pObject = (*(pNumberObjects->data() + 1)).get()) == nullptr)
-				return false;
+            if ((pObject = (*(pNumberObjects->data() + 1)).get()) == nullptr) {
+                wcout<<L"Object at position 1 is nullptr"<<endl;
+
+                return false;
+            }
+
+            wcout<<L"Object at position 1 is not nullptr"<<endl;
 
 			if ((eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
-				if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 2, 1) == false) {
-					if (this->processState(eState, pObject, 2, 1) == false)
+                wcout<<L"Object is normal digit"<<endl;
+
+                if((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
+                    return false;
+
+                if (pNormalDigit->getIgnore() == false && this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 2, 1) == false) {
+                    if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || this->processState(eState, pObject, 2, 1) == false)
 						return false;
 
-					this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 2, 1);
+                    this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 2, 1);
 				}
 			} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
+                wcout<<L"Object is special digit"<<endl;
+
 				if (this->processState(eState, pObject, 2, 1) == false)
 					return false;
 			}
@@ -294,21 +324,35 @@ bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iN
 
 		this->handleNumberUnitNumDigits(pNumber, 1);
 	} else if (iNumDigits == 1) {
-		if ((pObject = (*(pNumberObjects->data() + 0)).get()) == nullptr)
-			return false;
+        if ((pObject = (*(pNumberObjects->data() + 0)).get()) == nullptr) {
+            wcout<<L"Object at position 0 is nullptr"<<endl;
+
+            return false;
+        }
+
+        wcout<<L"Object at position 0 is not nullptr"<<endl;
 
 		if ((eState = this->detectExecutionState(pObject)) == PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT) {
-			if (this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 1, 0) == false) {
-				if (this->processState(eState, pObject, 1, 0) == false)
+            wcout<<L"Object is normal digit"<<endl;
+
+            if((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
+                return false;
+
+            if (pNormalDigit->getIgnore() == false && this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT, pObject, 1, 0) == false) {
+                if (this->processState(eState, pObject, 1, 0) == false)
 					return false;
 
-				this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 1, 0);
+                    this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 1, 0);
 			}
 		} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
+            wcout<<L"Object is special digit"<<endl;
+
 			if (this->processState(eState, pObject, 1, 0) == false)
 				return false;
 		}
 	}
+
+    wcout<<L"Handling number unit num digits successfully"<<endl;
 
 	return true;
 }
@@ -322,11 +366,13 @@ bool PronunciationHandler::pronounceMutipleDigits(const char *cpcMultipleDigits)
 	if (cpcMultipleDigits == nullptr || this->m_upConfig.get() == nullptr || this->m_upConfig->getMultipleDigitsAttributes() == nullptr || StringUtility::getInstance() == nullptr || SearchUtility::getInstance() == nullptr || this->m_upwsPronunciation.get() == nullptr)
 		return false;
 
+    wcout<<"Pronounce multiple digits with "<<cpcMultipleDigits<<endl;
+
 	if ((pwcMultipleDigits = StringUtility::getInstance()->convertToWChar(cpcMultipleDigits)) == nullptr)
 		return false;
 
-	if ((pComparable = SearchUtility::getInstance()->find(this->m_upConfig->getMultipleDigitsAttributes(), pwcMultipleDigits)) == nullptr || (pMultipleDigitsAttribute = dynamic_cast<MultipleDigitsAttribute *>(pComparable)) || pMultipleDigitsAttribute->getPronunciation() == nullptr) {
-		delete[] pwcMultipleDigits;
+    if ((pComparable = SearchUtility::getInstance()->find(this->m_upConfig->getMultipleDigitsAttributes(), pwcMultipleDigits)) == nullptr || (pMultipleDigitsAttribute = dynamic_cast<MultipleDigitsAttribute *>(pComparable)) == nullptr || pMultipleDigitsAttribute->getPronunciation() == nullptr) {
+        delete[] pwcMultipleDigits;
 		
 		return false;
 	}

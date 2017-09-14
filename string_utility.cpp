@@ -185,7 +185,7 @@ char* StringUtility::getSubStringNumber(Number *pNumber, int32_t iLength) {
 	pcResult = new char[iLength + 1];
 
 	for (i = 0; i < iLength; i++)
-		*(pcResult + i) = ((*(pNumber->getNumbers()->data() + i)).get() == nullptr || (pNormalDigit = dynamic_cast<NormalDigit *>((*(pNumber->getNumbers()->data() + i)).get())) == nullptr) ? '0' : pNormalDigit->getValue();
+        *(pcResult + i) = ((*(pNumber->getNumbers()->data() + iLength - 1 - i)).get() == nullptr || (pNormalDigit = dynamic_cast<NormalDigit *>((*(pNumber->getNumbers()->data() + iLength - 1 -i)).get())) == nullptr) ? '0' : pNormalDigit->getValue();
 
 	*(pcResult + iLength) = '\0';
 
