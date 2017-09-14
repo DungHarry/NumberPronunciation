@@ -72,7 +72,7 @@ bool LocaleHandler::setStreamLocale(T *pStream) {
     if(pStream == nullptr || this->m_upsLocaleName.get() == nullptr)
         return false;
 
-    //pStream->imbue(locale(this->m_upsLocaleName->c_str()));
+    pStream->imbue(locale(this->m_upsLocaleName->c_str()));
 
     return true;
 }

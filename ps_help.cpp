@@ -108,7 +108,7 @@ void PSHelp::displayHelpNumberString() {
 	StringData *pLang;
 	Config *pConfig;
 	Container c;
-    shared_ptr<ComparableImpl> spConfig (nullptr);
+    shared_ptr<Comparable> spConfig (nullptr);
 	NormalDigitAttribute *pNormalDigitAttribute;
 	SpecialDigitAttribute *pSpecialDigitAttribute;
 	set<Container> *pSet;

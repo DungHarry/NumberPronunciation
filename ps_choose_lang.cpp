@@ -178,7 +178,7 @@ bool PSChooseLanguage::determineLangKey() {
 Config* PSChooseLanguage::isLangAvailable(const char *cpcLang) {
 	Manager *pManager;
 	Container c;
-    shared_ptr<ComparableImpl> spConfig (nullptr);
+    shared_ptr<Comparable> spConfig (nullptr);
 
 	if (cpcLang == nullptr || this->m_spPipeline.get() == nullptr || (pManager = this->m_spPipeline->getManager()) == nullptr)
         return nullptr;

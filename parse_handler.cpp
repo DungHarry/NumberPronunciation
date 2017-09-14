@@ -165,7 +165,7 @@ bool ParseHandler::parseNormalDigitAttribute(const wchar_t *pwcLine, Config *pCo
 	int16_t iId;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
-    shared_ptr<ComparableImpl> spNormalDigitAttribute (nullptr);
+    shared_ptr<Comparable> spNormalDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -191,7 +191,7 @@ bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pC
 	int16_t iId;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
-    shared_ptr<ComparableImpl> spSpecialDigitAttribute (nullptr);
+    shared_ptr<Comparable> spSpecialDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -216,7 +216,7 @@ bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pC
 bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *pConfig) {
     int16_t iId;
 	wchar_t *pwcDigitsBuffer, *pwcBuffer;
-    shared_ptr<ComparableImpl> spMultipleDigitsAttribute (nullptr);
+    shared_ptr<Comparable> spMultipleDigitsAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -244,7 +244,7 @@ bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *
 bool ParseHandler::parseConditionAppendAttribute(const wchar_t *pwcLine, Config *pConfig) {
     int16_t iId, iPosition;
 	wchar_t *pwcBuffer;
-    shared_ptr<ComparableImpl> spConditionAppendAttribute (nullptr);
+    shared_ptr<Comparable> spConditionAppendAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;
@@ -270,7 +270,7 @@ bool ParseHandler::parseConditionDigitAttribute(const wchar_t *pwcLine, Config *
     int16_t iId, iPosition;
 	wchar_t wcDigit;
 	wchar_t *pwcBuffer;
-    shared_ptr<ComparableImpl> spConditionDigitAttribute (nullptr);
+    shared_ptr<Comparable> spConditionDigitAttribute (nullptr);
 
     if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
         return false;

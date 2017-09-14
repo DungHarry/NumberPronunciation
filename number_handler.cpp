@@ -303,6 +303,8 @@ bool NumberHandler::preprocessStringNumber() {
 
     *(pcBuffer + iEndIndex - iStartIndex + 1 + iOffset) = '\0';
 
+    wcout<<L"The buffer after preprocessing: "<<(pcBuffer)<<endl;
+
     this->m_upNumberString.reset(new string(pcBuffer));
 
     delete[] pcBuffer;

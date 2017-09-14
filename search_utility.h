@@ -23,11 +23,11 @@ public:
 	SearchUtility();
 	virtual ~SearchUtility();
 
-	ComparableImpl* find(const set<Container> *pSet, const Container &con);
-	ComparableImpl* find(const set<Container> *pSet, int16_t iPosition);
-	ComparableImpl* find(const set<Container> *pSet, char cDigit);
-	ComparableImpl* find(const set<Container> *pSet, const wchar_t *cpwcMultipleDigits);
-	ComparableImpl* find(const set<Container> *pSet, char cDigit, int16_t iPosition);
+    Comparable* find(const set<Container> *pSet, const Container &con);
+    Comparable* find(const set<Container> *pSet, int16_t iPosition);
+    Comparable* find(const set<Container> *pSet, char cDigit);
+    Comparable* find(const set<Container> *pSet, const wchar_t *cpwcMultipleDigits);
+    Comparable* find(const set<Container> *pSet, char cDigit, int16_t iPosition);
 
 	static SearchUtility* getInstance();
 private:

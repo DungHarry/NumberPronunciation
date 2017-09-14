@@ -49,7 +49,7 @@ bool PSInputNumberString::execute() {
 	StringData *pLang = nullptr;
 	Config *pConfig;
 	Container c;
-    shared_ptr<ComparableImpl> spConfig;
+    shared_ptr<Comparable> spConfig;
 
 	if (StandardIOUtility::getInstance() == nullptr || StringUtility::getInstance() == nullptr || this->m_spData.get() == nullptr || this->m_spData->find(this->m_kNumberStringKey) == this->m_spData->end() || this->m_spPipeline.get() == nullptr || this->m_spPipeline->getManager() == nullptr || (pChooseLangPipeline = dynamic_cast<PSChooseLanguage *>(this->m_spPipeline->getStateByKey(PIPELINE_STATE_TYPE_CHOOSE_LANG))) == nullptr || this->m_iTryCount >= this->m_iMaxTries) {
         if(this->m_iTryCount >= this->m_iMaxTries)

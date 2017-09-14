@@ -10,25 +10,25 @@
 #define _COC_COC_NUMBER_PRONUNCIATION_CONTAINER_H_
 
 #include <memory>
-#include "comparable_impl.h"
+#include "comparable.h"
 
 using namespace std;
 
 class Container {
 public:
 	Container();
-	Container(shared_ptr<ComparableImpl> &data);
+    Container(shared_ptr<Comparable> &data);
 	Container(const Container &con);
 	virtual ~Container();
 
 	friend bool operator< (const Container &con1, const Container &con2);
 	friend bool operator== (const Container &con1, const Container &con2);
 
-	shared_ptr<ComparableImpl> getData() const;
+    shared_ptr<Comparable> getData() const;
 
-	void setData(shared_ptr<ComparableImpl> &data);
+    void setData(shared_ptr<Comparable> &data);
 private:
-	shared_ptr<ComparableImpl> m_spData;
+    shared_ptr<Comparable> m_spData;
 };
 
 #endif
