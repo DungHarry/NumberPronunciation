@@ -146,7 +146,7 @@ bool Number::verifyIgnoreToNumberUnit(Number *pNumber, bool &bNonZeroGlobal, int
 		}
 	}
 
-	if (iLevel == 2 && iNumberUnitOffset >= 3 && bNonZeroGlobal == true && bNonZeroLocal == true) 
+    if (iLevel == 2 && iNumberUnitOffset >= 2 && bNonZeroGlobal == true && bNonZeroLocal == true)
 		this->verifyIgnoreToNumberUnitAgain(pNumber);
 
 	iLevel --;

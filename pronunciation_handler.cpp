@@ -129,7 +129,10 @@ bool PronunciationHandler::processState(const PronunciationHandlerState eState, 
         if ((pSpecialDigit = dynamic_cast<SpecialDigit *>(pObject)) == nullptr || pSpecialDigit->getIgnore() == true)
 			return false;
 
-        if (pSpecialDigit->getIgnore() == false && this->pronounceSpecialDigit(pSpecialDigit->getValue()) == false)
+        if(pSpecialDigit->getIgnore() == true)
+            return true;
+
+        if (this->pronounceSpecialDigit(pSpecialDigit->getValue()) == false)
 			return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_NUMBER_UNIT) {
 		if ((pNumber = dynamic_cast<Number*>(pObject)) == nullptr)
@@ -141,8 +144,14 @@ bool PronunciationHandler::processState(const PronunciationHandlerState eState, 
 		if (this->pronounceConditionAppend(iUnit) == false)
 			return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT) {
-        if ((eObjectState = this->detectExecutionState(pObject)) != PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT || (pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || pNormalDigit->getIgnore() == false || this->pronounceConditionDigit(pNormalDigit->getValue(), iUnit) == false)
+        if ((eObjectState = this->detectExecutionState(pObject)) != PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT || (pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
 			return false;
+
+        if(pNormalDigit->getIgnore() == true)
+            return true;
+
+        if(this->pronounceConditionDigit(pNormalDigit->getValue(), iUnit) == false)
+            return false;
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS) {
 		pcNumber = nullptr;
 
