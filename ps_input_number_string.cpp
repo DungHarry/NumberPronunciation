@@ -106,16 +106,12 @@ bool PSInputNumberString::execute() {
         return true;
 	}
 
-    wcout<<L"All the digits is valid"<<endl;
-
 	this->m_spData->at(this->m_kNumberStringKey).reset(new StringData(pcNumberStringBuffer));
 
 	this->m_iTryCount = 0;
 	this->m_eNextState = PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING;
 
 	delete[] pcNumberStringBuffer;
-
-	wcout << L"Ending to parse number string" << endl;
 
 	return true;
 }

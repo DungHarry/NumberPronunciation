@@ -55,46 +55,29 @@ bool NumberHandler::execute() {
 
     this->preprocessStringNumber();
 
-    wcout<<L"PreprocessingString successfully"<<endl;
-    wcout<<L"The number string after preprocessing: "<<(this->m_upNumberString->c_str())<<endl;
-
     bIsSign = this->isNumberStringSign();
     bIsFloat = this->isNumberStringFloat();
 
     pcNumericalPart = this->getNumberStringNumericalPart();
 
-    wcout<<L"Getting the numerical part successfully"<<endl;
-
     pcFloatPart = this->getNumberStringFloatingPointPart();
-
-    wcout<<L"Getting the floating point part successfully"<<endl;
 
     iNumericalPartLength = 0;
     iFloatPartLength = 0;
 
-    if(pcNumericalPart != nullptr) {
+    if(pcNumericalPart != nullptr)
         iNumericalPartLength = strlen(pcNumericalPart);
 
-        wcout<<L"Numerical part: "<<pcNumericalPart<<endl;
-    }
-
-    if(pcFloatPart != nullptr) {
+    if(pcFloatPart != nullptr)
         iFloatPartLength = strlen(pcFloatPart);
-
-        wcout<<L"Float part: "<<pcFloatPart<<endl;
-    }
 
     iOffset = 0;
 
     if(bIsSign == true && pcNumericalPart != nullptr)
         this->processSpecialDigit(this->m_upNumberString->at(0));
 
-    wcout<<L"Process special sign digit successfully"<<endl;
-
 	if (pcNumericalPart != nullptr)
 		this->processNumberString(pcNumericalPart, iOffset);
-
-    wcout<<L"Process positive numerical string successfully"<<endl;
 
 	if (bIsFloat == true && pcFloatPart != nullptr) {
 		this->processSpecialDigit('.');
@@ -102,19 +85,13 @@ bool NumberHandler::execute() {
 		this->processNumberString(pcFloatPart, 0);
 	}
 
-    wcout<<L"Process negative numerical string successfully"<<endl;
-
 	this->m_upNumber->verifyIgnoreToDigits();
-
-    wcout<<L"Verifying to ignore digits successfully"<<endl;
 
 	if (pcNumericalPart != nullptr) 
 		delete[] pcNumericalPart;
 	
 	if (pcFloatPart != nullptr)
 		delete[] pcFloatPart;
-
-    wcout<<L"Releasing the bound resources to the system successfully"<<endl;
 
     return true;
 }
@@ -302,8 +279,6 @@ bool NumberHandler::preprocessStringNumber() {
         *(pcBuffer + i - iStartIndex + iOffset) = this->m_upNumberString->at(i);
 
     *(pcBuffer + iEndIndex - iStartIndex + 1 + iOffset) = '\0';
-
-    wcout<<L"The buffer after preprocessing: "<<(pcBuffer)<<endl;
 
     this->m_upNumberString.reset(new string(pcBuffer));
 

@@ -30,7 +30,7 @@ PipelineState::PipelineState(shared_ptr<Pipeline> pipeline, shared_ptr<map<Key, 
 }
 
 PipelineState::~PipelineState() {
-    /*map<Key, unique_ptr<Data>>::iterator iter;
+    map<Key, unique_ptr<Data>>::iterator iter;
 
     if(this->m_spData.get() != nullptr)
 		this->m_spData.reset();
@@ -48,7 +48,7 @@ PipelineState::~PipelineState() {
 
         this->m_upInternalData->clear();
         this->m_upInternalData.reset();
-    }*/
+    }
 }
 
 bool PipelineState::execute() {

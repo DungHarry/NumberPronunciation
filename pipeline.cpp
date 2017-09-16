@@ -41,7 +41,7 @@ Pipeline::Pipeline(const PipelineStateType eCurrentState) :
 }
 
 Pipeline::~Pipeline() {
-	/*if (this->m_upStates.get() != nullptr) {
+    if (this->m_upStates.get() != nullptr) {
 		this->m_upStates->clear();
 
 		this->m_upStates.reset();
@@ -51,7 +51,7 @@ Pipeline::~Pipeline() {
 		this->m_spData->clear();
 
 		this->m_spData.reset();
-	}*/
+    }
 }
 
 bool Pipeline::execute() {
@@ -61,34 +61,11 @@ bool Pipeline::execute() {
 		return false;
 
 	while (this->m_eCurrentState != PIPELINE_STATE_TYPE_FINISH) {
-        if(this->m_eCurrentState == PIPELINE_STATE_TYPE_CHOOSE_LANG)
-            wcout<<L"State choose language"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_FINISH)
-            wcout<<L"State finish"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_HANDLE_NUMBER_STRING)
-            wcout<<L"State handle number string"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_HANDLE_PRONUNCIATION)
-            wcout<<L"State handle pronunciatioin"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_HELP)
-            wcout<<L"State help"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING)
-            wcout<<L"State type input number string"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_NONE)
-            wcout<<L"State type none"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_OUTPUT_PRONUNCIATION)
-            wcout<<L"State type output pronunciation"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_PARSE_CONFIGS)
-            wcout<<L"State type parse configs"<<endl;
-        else if(this->m_eCurrentState == PIPELINE_STATE_TYPE_READ_CONFIGS)
-            wcout<<L"State type read configs"<<endl;
-
 		if (this->m_upStates->find(static_cast<PipelineStateKey>(this->m_eCurrentState)) == this->m_upStates->end() || (pPipelineState = this->m_upStates->at(static_cast<PipelineStateKey>(this->m_eCurrentState)).get()) == nullptr) {
 			this->m_eCurrentState = PIPELINE_STATE_TYPE_NONE;
 
 			return false;
 		}
-
-        wcout<<L"Getting the state successfully"<<endl;
 
 		if (pPipelineState->execute() == false) {
 			this->m_eCurrentState = PIPELINE_STATE_TYPE_NONE;
@@ -96,15 +73,11 @@ bool Pipeline::execute() {
 			return false;
 		}
 
-        wcout<<L"Executing the state successfully"<<endl;
-
 		if (this->determineNextState() == false) {
 			this->m_eCurrentState = PIPELINE_STATE_TYPE_NONE;
 
 			return false;
 		}
-
-        wcout<<L"Determing the next state successfully"<<endl;
 	}
 
 	return true;

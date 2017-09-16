@@ -29,6 +29,7 @@ enum PronunciationHandlerState {
 	PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT,
 	PRONUNCIATION_HANDLER_STATE_NUMBER_UNIT,
 	PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS,
+    PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS_WITH_ZERO_APPENDED,
 	PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT,
 	PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT,
 	PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND,
@@ -67,6 +68,7 @@ private:
 
 	bool pronounceSpecialDigit(const char cDigit);
 	bool pronounceMutipleDigits(const char *cpcMultipleDigits);
+    bool pronounceMutipleDigitsWithZeroAppended(char cDigit, int32_t iUnit);
 	bool pronounceConditionDigit(const char cDigit, const int16_t iDigitPosition);
 	bool pronounceNormalDigit(const char cDigit);
 	bool pronounceConditionAppend(const int16_t iDigitPosition);

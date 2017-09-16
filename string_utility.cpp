@@ -192,6 +192,56 @@ char* StringUtility::getSubStringNumber(Number *pNumber, int32_t iLength) {
 	return pcResult;
 }
 
+char StringUtility::getCharacterNumber(Number *pNumber, int32_t iPosition) {
+    Digit *pDigit;
+
+    if(pNumber == nullptr || pNumber->getNumbers() == nullptr || pNumber->getNumbers()->size() <= 0 || iPosition < 0 || iPosition >= pNumber->getNumbers()->size())
+        return '\0';
+
+    if((pDigit = dynamic_cast<Digit *>(pNumber->getNumbers()->at(iPosition).get())) == nullptr)
+        return '\0';
+
+    return pDigit->getValue();
+}
+
+char* StringUtility::appendZero(const char cDigit, int32_t iCount) {
+    char *pcResult;
+    int32_t i;
+
+    if(iCount <= 0)
+        return nullptr;
+
+    pcResult = new char[2 + iCount];
+
+    *(pcResult + 0) = cDigit;
+
+    for(i = 0; i < iCount; i ++)
+        *(pcResult + 1 + i) = '0';
+
+    *(pcResult + 1 + i) = '\0';
+
+    return pcResult;
+}
+
+wchar_t* StringUtility::appendZero(const wchar_t wcDigit, int32_t iCount) {
+    wchar_t *pwcResult;
+    int32_t i;
+
+    if(iCount <= 0)
+        return nullptr;
+
+    pwcResult = new wchar_t[2 + iCount];
+
+    *(pwcResult + 0) = wcDigit;
+
+    for(i = 0; i < iCount; i ++)
+        *(pwcResult + 1 + i) = L'0';
+
+    *(pwcResult + 1 + i) = L'\0';
+
+    return pwcResult;
+}
+
 bool StringUtility::isAllDigitsValid(const char *cpcString, Config *pConfig) {
 	set<Container> *pNormalDigitAttributeSet = nullptr, *pSpecialDigitAttributeSet = nullptr;
 	int32_t i, iStringLength;

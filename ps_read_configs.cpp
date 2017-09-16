@@ -42,12 +42,8 @@ bool PSReadConfigs::execute() {
 		return false;
     }
 
-	wcout << L"Starting to read configs file" << endl;
-
 	FileHandler::getInstance()->setFileName(pFileNameData->getValue());
 	FileHandler::getInstance()->setType(FILE_HANDLER_TYPE_READ);
-
-	wcout << L"Setting up the FileHandler successfully" << endl;
 
 	if (FileHandler::getInstance()->execute() == false || FileHandler::getInstance()->getBufferContent() == nullptr) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
@@ -55,11 +51,7 @@ bool PSReadConfigs::execute() {
 		return false;
     }
 
-	wcout << L"Reading the " << (pFileNameData->getValue())<<L" successfully" << endl;
-
 	ConfigNameParser::getInstance()->setBuffer(FileHandler::getInstance()->getBufferContent());
-	
-	wcout << L"Setting up ConfigNameParser successfully" << endl;
 
 	if (ConfigNameParser::getInstance()->execute() == false || (pConfigNames = ConfigNameParser::getInstance()->releaseConfigNames()) == nullptr) {
 		this->m_eNextState = PIPELINE_STATE_TYPE_FINISH;
@@ -67,16 +59,12 @@ bool PSReadConfigs::execute() {
 		return false;
     }
 
-	wcout << L"Parsing the configs name successfully" << endl;
-
 	for (i = 0; i < pConfigNames->size(); i ++)
 		if (*(pConfigNames->data() + i) != nullptr)
 			(*(this->m_spData.get()))[(*(pConfigNames->data() + i))->getId()] = shared_ptr<Base>(*(pConfigNames->data() + i));
 
 	pConfigNames->clear();
 	delete pConfigNames;
-
-	wcout << L"Reading config file names successfully" << endl;
 
 	this->m_eNextState = PIPELINE_STATE_TYPE_PARSE_CONFIGS;
 

@@ -6,7 +6,6 @@
 	Description: this is the source code file of the Number class in C++ programming language
 */
 
-#include <iostream>
 #include "number.h"
 
 Number::Number() : 
@@ -55,12 +54,8 @@ bool Number::verifyIgnoreToDigits() {
 	if (this->m_eType != OBJECT_TYPE_NUMBER || this->m_upNumbers.get() == nullptr || this->m_upNumbers->size() <= 0)
 		return false;
 
-    wcout<<L"Inside the verifying to ignore the digits"<<endl;
-
     bResult = this->verifyIgnoreToNumberUnit(this, bNonZeroGlobal, iLevel, iNumberUnitOffset);
     bResult &= this->verifyIgnoreToFloatingPointPart(this);
-
-    wcout<<L"Completing the verify process to ignore the digits"<<endl;
 
     return bResult;
 }
@@ -123,12 +118,9 @@ bool Number::verifyIgnoreToNumberUnit(Number *pNumber, bool &bNonZeroGlobal, int
 	if (pNumber == nullptr || pNumber->getNumbers() == nullptr || pNumber->getNumbers()->size() <= 0)
 		return false;
 
-
 	iNumberUnitOffset ++;
 
     if(this->isAllThreeZeroDigits(pNumber) == true && pNumber->getNumbers() != nullptr && pNumber->getNumbers()->size() == 3) {
-        wcout<<"Inside three zero digit"<<endl;
-
         for(i = 0; i < pNumber->getNumbers()->size(); i ++)
             if((pNormalDigit = dynamic_cast<NormalDigit *>(pNumber->getNumbers()->at(i).get())) != nullptr && pNormalDigit->getValue() == '0')
                 pNormalDigit->setIgnore(true);
@@ -141,23 +133,13 @@ bool Number::verifyIgnoreToNumberUnit(Number *pNumber, bool &bNonZeroGlobal, int
 
     iLevel ++;
 
-    wcout<<L"Size of the numbers: "<<(pNumber->getNumbers()->size())<<endl;
-
 	for (i = pNumber->getNumbers()->size() - 1; i >= 0; i--) {
-        wcout<<L"Executing "<<i<<L"..."<<endl;
-
         if ((pObject = pNumber->getNumbers()->at(i).get()) != nullptr) {
-			if (pObject->getType() == OBJECT_TYPE_NORMAL_DIGIT) {
-                wcout<<L"Case of normal digit"<<endl;
-
+            if (pObject->getType() == OBJECT_TYPE_NORMAL_DIGIT)
 				this->verifyIgnoreToObject(pObject, bNonZeroGlobal, bNonZeroLocal, iNumberUnitOffset);
-			} else if (pObject->getType() == OBJECT_TYPE_SPECIAL_DIGIT) {
-                wcout<<L"Case of special digit"<<endl;
-
+            else if (pObject->getType() == OBJECT_TYPE_SPECIAL_DIGIT)
                 this->verifyIgnoreToObject(pObject, bNonZeroGlobal, bNonZeroLocal, iNumberUnitOffset);
-			} else if (pObject->getType() == OBJECT_TYPE_NUMBER) {
-                wcout<<L"Case of number"<<endl;
-
+            else if (pObject->getType() == OBJECT_TYPE_NUMBER) {
                 if ((pTmpNumber = dynamic_cast<Number *>(pObject)) != nullptr)
                     this->verifyIgnoreToNumberUnit(pTmpNumber, bNonZeroGlobal, iLevel, iNumberUnitOffset);
 			}
@@ -203,8 +185,6 @@ bool Number::verifyIgnoreToNumberUnitAgain(Number *pNumber) {
 
 	if (pNumber == NULL || pNumber->getNumbers() == NULL || pNumber->getNumbers()->size() <= 0)
 		return false;
-
-    wcout<<L"Inside verifying to number again"<<endl;
 
 	for (i = 0; i < pNumber->getNumbers()->size(); i ++) 
         if ((pObject = pNumber->getNumbers()->at(i).get()) != NULL && (pDigit = dynamic_cast<Digit *>(pObject)) != NULL && pDigit->getType() == OBJECT_TYPE_NORMAL_DIGIT) {

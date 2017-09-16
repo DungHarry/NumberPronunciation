@@ -82,8 +82,6 @@ bool PSChooseLanguage::execute() {
 	if (pConfig->getLang() != nullptr && pConfig->getLang()->getLocaleName() != nullptr) {
 		LocaleHandler::getInstance()->setLocaleName(pConfig->getLang()->getLocaleName());
 		LocaleHandler::getInstance()->setScope(LOCALE_HANDLER_SCOPE_ALL);
-
-        wcout<<L"Setting the locale result: "<<(LocaleHandler::getInstance()->execute() ? L"true" : L"false")<<endl;
 	}
 
 	this->m_eNextState = PIPELINE_STATE_TYPE_INPUT_NUMBER_STRING;

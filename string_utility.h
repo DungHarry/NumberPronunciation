@@ -41,6 +41,11 @@ public:
 
 	char* getSubStringNumber(Number *pNumber, int32_t iLength);
 
+    char getCharacterNumber(Number *pNumber, int32_t iPosition);
+
+    char* appendZero(const char cDigit, int32_t iCount);
+    wchar_t* appendZero(const wchar_t wcDigit, int32_t iCount);
+
 	bool isAllDigitsValid(const char *cpcString, Config *pConfig);
 
     static StringUtility* getInstance();

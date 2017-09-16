@@ -46,22 +46,13 @@ bool FileHandler::read() {
 
     if(this->m_eType != FILE_HANDLER_TYPE_READ || this->m_upsFileName.get() == nullptr)
         return false;
-
-	wcout << L"Starting to read file" << endl;
-
     apfFile.reset(new wifstream(this->m_upsFileName->c_str()));
 
     if(apfFile.get() == nullptr || apfFile->is_open() == false)
         return false;
 
-	wcout << L"Openning the file sucessfully" << endl;
-
-	wcout << L"Setting the locale of stream with value " << (LocaleHandler::getInstance()->getLocaleName()) << endl;
-
     LocaleHandler::getInstance()->setStreamLocale<wifstream>(apfFile.get());
     iFileSize = this->getFileSize(apfFile.get());
-
-	wcout << L"Setting the LocaleHandler succesfully" << endl;
 
     if(iFileSize <= 0) {
         apfFile->close();
@@ -78,8 +69,6 @@ bool FileHandler::read() {
     apfFile->close();
 
     delete[] pcTmpBuffer;
-
-	wcout << L"Completing to read the file" << endl;
 
     return true;
 }
