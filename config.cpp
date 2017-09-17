@@ -6,7 +6,6 @@
 	Description: this is the source code file of the Config class in C++ programming language
 */
 
-#include <iostream>
 #include "config.h"
 
 Config::Config() :
@@ -16,7 +15,8 @@ Config::Config() :
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
 	m_upConditionAppendAttributes(new set<Container>()),
-	m_upConditionDigitAttributes(new set<Container>())
+    m_upConditionDigitAttributes(new set<Container>()),
+    m_iMaxUnits (0)
 {
 
 }
@@ -28,7 +28,8 @@ Config::Config(const char *cpcLangName, const char *cpcLocaleName) :
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
 	m_upConditionAppendAttributes(new set<Container>()),
-	m_upConditionDigitAttributes(new set<Container>())
+    m_upConditionDigitAttributes(new set<Container>()),
+    m_iMaxUnits (0)
 {
 
 }
@@ -40,7 +41,8 @@ Config::Config(const Config &conf) :
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
 	m_upConditionAppendAttributes(new set<Container>()),
-	m_upConditionDigitAttributes(new set<Container>())
+    m_upConditionDigitAttributes(new set<Container>()),
+    m_iMaxUnits (conf.m_iMaxUnits)
 {
 	if (conf.m_upAttributes.get() != nullptr) {
         for (vector<Container>::iterator iter = conf.m_upAttributes->begin(); iter != conf.m_upAttributes->end(); ++iter)
@@ -129,9 +131,15 @@ set<Container>* Config::getMultipleDigitsAttributes() {
 	return this->m_upMultipleDigitsAttributes.get();
 }
 
+int16_t Config::getMaxUnits() {
+    return this->m_iMaxUnits;
+}
+
 bool Config::classify() {
     int32_t i;
     Attribute *pAttribute;
+    ConditionAppendAttribute *pConditionAppendAttribute;
+    set<Container>::iterator iter;
 
 	if (this->m_upAttributes.get() == nullptr || this->m_upAttributes->size() <= 0 || this->m_upConditionAppendAttributes.get() == nullptr || this->m_upConditionDigitAttributes.get() == nullptr || this->m_upNormalDigitAttributes.get() == nullptr || this->m_upSpecialDigitAttributes.get() == nullptr)
 		return false;
@@ -156,6 +164,10 @@ bool Config::classify() {
         else if (pAttribute->getType() == ATTRIBUTE_TYPE_SPECIAL_DIGIT)
             this->m_upSpecialDigitAttributes->insert(this->m_upAttributes->at(i));
 	}
+
+    for(this->m_iMaxUnits = 0, iter = this->m_upConditionAppendAttributes->begin(); iter != this->m_upConditionAppendAttributes->end(); ++ iter)
+        if((pConditionAppendAttribute = dynamic_cast<ConditionAppendAttribute *>(iter->getData().get())) != nullptr && this->m_iMaxUnits < pConditionAppendAttribute->getUnits())
+            this->m_iMaxUnits = pConditionAppendAttribute->getUnits();
 
 	return true;
 }

@@ -16,6 +16,8 @@
 #include "handler.h"
 #include "data.h"
 #include "manager.h"
+#include "null_deleter.h"
+#include "normal_deleter.h"
 
 class PipelineState;
 

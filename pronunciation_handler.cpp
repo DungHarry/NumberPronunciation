@@ -29,7 +29,7 @@ PronunciationHandler::~PronunciationHandler() {
 		this->m_upConfig.release();
 
 	if (this->m_upNumber.get() != nullptr)
-		this->m_upConfig.release();
+        this->m_upNumber.release();
 
 	if (this->m_upwsPronunciation.get() != nullptr)
 		this->m_upwsPronunciation.release();
@@ -209,14 +209,13 @@ bool PronunciationHandler::processNumberUnit(Number *pNumber) {
 	if (this->handleNumberUnitNumDigits(pNumber, pNumber->getNumbers()->size()) == false)
 		return false;
 
-	return this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pNumber, 0, pNumber->getLowestUnit());
+    return ((this->isAllThreeZeroDigits(pNumber) == true && (pNumber->getLowestUnit() % this->m_upConfig->getMaxUnits()) != 0) || this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pNumber, 0, pNumber->getLowestUnit()));
 }
 
 bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iNumDigits) {
 	PronunciationHandlerState eState;
 	Object *pObject;
 	unique_ptr<string> upBuffer;
-	int32_t i;
 	vector<unique_ptr<Object>> *pNumberObjects;
 	Config *pConfig;
     NormalDigit *pNormalDigit;
@@ -406,10 +405,10 @@ bool PronunciationHandler::pronounceConditionAppend(const int16_t iDigitPosition
 	ConditionAppendAttribute *pConditionAppendAttribute;
 	unique_ptr<wstring> upTmpPronunciation;
 
-    if (iDigitPosition < 0 || this->m_upConfig.get() == nullptr || this->m_upConfig->getConditionAppendAttributes() == nullptr || this->m_upwsPronunciation.get() == nullptr || SearchUtility::getInstance() == nullptr)
+    if (iDigitPosition < 0 || this->m_upConfig.get() == nullptr || this->m_upConfig->getMaxUnits() <= 0 || this->m_upConfig->getConditionAppendAttributes() == nullptr || this->m_upwsPronunciation.get() == nullptr || SearchUtility::getInstance() == nullptr)
         return false;
 
-    if((pComparable = SearchUtility::getInstance()->find(this->m_upConfig->getConditionAppendAttributes(), iDigitPosition)) == nullptr)
+    if((pComparable = SearchUtility::getInstance()->find(this->m_upConfig->getConditionAppendAttributes(), static_cast<int16_t>(((iDigitPosition % this->m_upConfig->getMaxUnits()) == 0) && (iDigitPosition > 0) ? this->m_upConfig->getMaxUnits() : iDigitPosition % this->m_upConfig->getMaxUnits()))) == nullptr)
         return true;
 
     if ((pConditionAppendAttribute = dynamic_cast<ConditionAppendAttribute *>(pComparable)) == nullptr)
@@ -423,4 +422,10 @@ bool PronunciationHandler::pronounceConditionAppend(const int16_t iDigitPosition
 	upTmpPronunciation.reset();
 
 	return true;
+}
+
+bool PronunciationHandler::isAllThreeZeroDigits(Number *pNumber) {
+    NormalDigit *pNormalDigit;
+
+    return (pNumber != nullptr && pNumber->getNumbers() != nullptr && pNumber->getNumbers()->size() == 3 && pNumber->getNumbers()->at(0).get() != nullptr && pNumber->getNumbers()->at(0)->getType() == OBJECT_TYPE_NORMAL_DIGIT && (pNormalDigit = dynamic_cast<NormalDigit *>(pNumber->getNumbers()->at(0).get())) != nullptr && pNormalDigit->getValue() == '0' && pNumber->getNumbers()->at(1).get() != nullptr && pNumber->getNumbers()->at(1)->getType() == OBJECT_TYPE_NORMAL_DIGIT && (pNormalDigit = dynamic_cast<NormalDigit *>(pNumber->getNumbers()->at(1).get())) != nullptr && pNormalDigit->getValue() == '0' && pNumber->getNumbers()->at(2).get() != nullptr && pNumber->getNumbers()->at(2)->getType() == OBJECT_TYPE_NORMAL_DIGIT && (pNormalDigit = dynamic_cast<NormalDigit *>(pNumber->getNumbers()->at(2).get())) != nullptr && pNormalDigit->getValue() == '0');
 }

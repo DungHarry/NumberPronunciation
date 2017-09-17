@@ -12,6 +12,10 @@ Base::Base() {
 
 }
 
+#include <iostream>
+
+using namespace std;
+
 Base::~Base() {
 
 }

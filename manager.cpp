@@ -58,5 +58,6 @@ void ManagerDeleter::operator() (Manager *pManager) {
 	if (pManager == nullptr)
 		return;
 
-	delete pManager;
+    delete pManager;
+    pManager = nullptr;
 }

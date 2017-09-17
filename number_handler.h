@@ -21,6 +21,7 @@
 #include "number.h"
 #include "config.h"
 #include "number_exception.h"
+#include "null_deleter.h"
 
 class NumberHandler : public Handler {
 public:

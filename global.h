@@ -90,4 +90,11 @@ enum PipelineStateType {
 	PIPELINE_STATE_TYPE_COUNT
 };
 
+enum DeleterType {
+    DELETER_TYPE_NONE = 0,
+    DELETER_TYPE_NORMAL,
+    DELETER_TYPE_NULL,
+    DELETER_TYPE_COUNT
+};
+
 #endif

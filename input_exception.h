@@ -22,6 +22,7 @@ public:
     InputException();
     InputException(InputExceptionReason eReason);
     InputException(const InputException &e);
+    virtual ~InputException();
 
     InputExceptionReason getReason();
     void setReason(const InputExceptionReason eReason);

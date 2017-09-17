@@ -29,6 +29,10 @@ InputException::InputException(const InputException &e) :
     this->autoGenerateMessage();
 }
 
+InputException::~InputException() {
+
+}
+
 InputExceptionReason InputException::getReason() {
     return this->m_eReason;
 }

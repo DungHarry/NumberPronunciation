@@ -6,7 +6,6 @@
     Description: this is the source code file of the NumberHandler class in C++ programming language
 */
 
-#include <iostream>
 #include "number_handler.h"
 
 unique_ptr<NumberHandler> NumberHandler::m_upInstance (nullptr);
@@ -22,7 +21,7 @@ NumberHandler::NumberHandler() :
 
 NumberHandler::NumberHandler(Config *pConfig, const char *cpcNumberString) :
     Handler (HANDLER_TYPE_NUMBER),
-    m_spConfig (pConfig),
+    m_spConfig (pConfig, NullDeleter<Config>()),
     m_upNumber (new Number()),
     m_upNumberString (cpcNumberString == nullptr ? nullptr : new string(cpcNumberString))
 {
@@ -112,7 +111,7 @@ Config* NumberHandler::getConfig() {
 }
 
 void NumberHandler::setConfig(Config *pConfig) {
-    this->m_spConfig.reset(pConfig);
+    this->m_spConfig.reset(pConfig, NullDeleter<Config>());
 }
 
 string* NumberHandler::getNumberString() {

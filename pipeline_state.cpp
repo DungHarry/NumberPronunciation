@@ -10,7 +10,7 @@
 #include "pipeline.h"
 
 PipelineState::PipelineState() :
-    m_spPipeline (nullptr),
+    m_spPipeline (nullptr, NullDeleter<Pipeline>()),
 	m_eStateType (PIPELINE_STATE_TYPE_NONE),
 	m_upPossibleStates (new set<PipelineStateType>()),
     m_upInternalData (new map<Key, unique_ptr<Data>>()),

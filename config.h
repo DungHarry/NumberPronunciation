@@ -9,12 +9,12 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_CONFIG_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_CONFIG_H_
 
-#include "container.h"
-#include "attribute.h"
-#include "language.h"
 #include <set>
 #include <vector>
 #include <utility>
+#include "container.h"
+#include "language.h"
+#include "condition_append_attribute.h"
 
 class Config : public Base, public Comparable {
 public:
@@ -38,6 +38,8 @@ public:
 
 	set<Container>* getMultipleDigitsAttributes();
 
+    int16_t getMaxUnits();
+
 	bool classify();
 
 	virtual bool less(const Comparable &config);
@@ -51,6 +53,8 @@ private:
 	unique_ptr<set<Container>> m_upMultipleDigitsAttributes;
 	unique_ptr<set<Container>> m_upConditionAppendAttributes;
 	unique_ptr<set<Container>> m_upConditionDigitAttributes;
+
+    int16_t m_iMaxUnits;
 };
 
 #endif

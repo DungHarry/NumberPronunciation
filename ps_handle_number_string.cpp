@@ -34,7 +34,7 @@ PSHandleNumberString::PSHandleNumberString(shared_ptr<Pipeline> pipeline, shared
 }
 
 PSHandleNumberString::~PSHandleNumberString() {
-	
+
 }
 
 bool PSHandleNumberString::execute() {

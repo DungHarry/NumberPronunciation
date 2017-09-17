@@ -73,6 +73,8 @@ private:
 	bool pronounceNormalDigit(const char cDigit);
 	bool pronounceConditionAppend(const int16_t iDigitPosition);
 
+    bool isAllThreeZeroDigits(Number *pNumber);
+
 	static unique_ptr<PronunciationHandler> m_upInstance;
 };
 
