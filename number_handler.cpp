@@ -232,7 +232,7 @@ bool NumberHandler::preprocessStringNumber() {
 
     iStartIndex = bIsSign == true ? 1 : 0;
 
-    for(; this->m_upNumberString->at(iStartIndex) == '0' && iStartIndex < this->m_upNumberString->size(); ++ iStartIndex);
+    for(; iStartIndex < this->m_upNumberString->size() && this->m_upNumberString->at(iStartIndex) == '0'; ++ iStartIndex);
 
     if(iStartIndex >= this->m_upNumberString->size()) {
         this->m_upNumberString.reset(new string("0"));

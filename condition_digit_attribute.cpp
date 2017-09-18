@@ -34,6 +34,18 @@ void ConditionDigitAttribute::setPosition(const int16_t iPosition) {
 	this->m_iPosition = iPosition;
 }
 
+bool ConditionDigitAttribute::less(const Comparable &attr) {
+    const ConditionDigitAttribute *pConditionDigitAttribute = dynamic_cast<const ConditionDigitAttribute *>(&attr);
+
+    return (pConditionDigitAttribute == nullptr || pConditionDigitAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? false : ((this->m_upCouple->first < pConditionDigitAttribute->m_upCouple->first) || (this->m_iPosition < pConditionDigitAttribute->m_iPosition));
+}
+
+bool ConditionDigitAttribute::equal(const Comparable &attr) {
+    const ConditionDigitAttribute *pConditionDigitAttribute = dynamic_cast<const ConditionDigitAttribute *>(&attr);
+
+    return (pConditionDigitAttribute == nullptr || pConditionDigitAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? false : ((this->m_upCouple->first == pConditionDigitAttribute->m_upCouple->first) && (this->m_iPosition == pConditionDigitAttribute->m_iPosition));
+}
+
 bool ConditionDigitAttribute::isValid() {
     return false;
 }

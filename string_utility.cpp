@@ -276,6 +276,62 @@ bool StringUtility::isAllDigitsValid(const char *cpcString, Config *pConfig) {
 	return (i < iStringLength) ? false : true;
 }
 
+bool StringUtility::checkSpecialCaseAndReplace(char **pcString, const char *pcSpecialString, const char *pcReplaceString) {
+    if(pcString == nullptr || *pcString == nullptr || pcSpecialString == nullptr || strcmp(*pcString, pcSpecialString) != 0)
+        return false;
+
+    if(pcReplaceString != nullptr) {
+        free(*pcString);
+
+        *pcString = (char *) malloc(sizeof(char) * (strlen(pcReplaceString) + 1));
+
+        strcpy(*pcString, pcReplaceString);
+    }
+
+    return true;
+}
+
+bool StringUtility::checkSpecialCaseAndReplace(wchar_t **pwcString, const wchar_t *pwcSpecialString, const wchar_t *pwcReplaceString) {
+    if(pwcString == nullptr || *pwcString == nullptr || pwcSpecialString == nullptr || wcscmp(*pwcString, pwcSpecialString) != 0)
+        return false;
+
+    if(pwcReplaceString != nullptr) {
+        free(*pwcString);
+
+        *pwcString = (wchar_t *) malloc(sizeof(wchar_t) * (wcslen(pwcReplaceString) + 1));
+
+        wcscpy(*pwcString, pwcReplaceString);
+    }
+
+    return true;
+}
+
+bool StringUtility::replaceCharacter(char *pcString, char cSource, char cTarget) {
+    int32_t i, iStringLength;
+
+    if(pcString == nullptr || cSource == '\0' || cTarget == '\0')
+        return false;
+
+    for(i = 0, iStringLength = strlen(pcString); i < iStringLength; ++ i)
+        if(*(pcString + i) == cSource)
+            *(pcString + i) = cTarget;
+
+    return true;
+}
+
+bool StringUtility::replaceCharacter(wchar_t *pwcString, wchar_t wcSource, wchar_t wcTarget) {
+    int32_t i, iStringLength;
+
+    if(pwcString == nullptr || wcSource == L'\0' || wcTarget == L'\0')
+        return false;
+
+    for(i = 0, iStringLength = wcslen(pwcString); i < iStringLength; ++ i)
+        if(*(pwcString + i) == wcSource)
+            *(pwcString + i) = wcTarget;
+
+    return true;
+}
+
 StringUtility* StringUtility::getInstance() {
     if(m_upInstance.get() == nullptr)
         m_upInstance.reset(new StringUtility());

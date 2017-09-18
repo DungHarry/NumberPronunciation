@@ -22,6 +22,9 @@ public:
 	virtual int16_t getPosition();
 	virtual void setPosition(const int16_t iPosition);
 
+    virtual bool less(const Comparable &attr);
+    virtual bool equal(const Comparable &attr);
+
 	virtual bool isValid();
 private:
 	int16_t m_iPosition;

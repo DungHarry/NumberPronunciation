@@ -48,6 +48,12 @@ public:
 
 	bool isAllDigitsValid(const char *cpcString, Config *pConfig);
 
+    bool checkSpecialCaseAndReplace(char **pcString, const char *pcSpecialString, const char *pcReplaceString);
+    bool checkSpecialCaseAndReplace(wchar_t **pwcString, const wchar_t *pwcSpecialString, const wchar_t *pwcReplaceString);
+
+    bool replaceCharacter(char *pcString, char cSource, char cTarget);
+    bool replaceCharacter(wchar_t *pwcString, wchar_t wcSource, wchar_t wcTarget);
+
     static StringUtility* getInstance();
 private:
     static unique_ptr<StringUtility> m_upInstance;

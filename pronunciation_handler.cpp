@@ -316,7 +316,8 @@ bool PronunciationHandler::pronounceMutipleDigits(const char *cpcMultipleDigits)
 
 	upTmpPronunciation.reset(new wstring(pMultipleDigitsAttribute->getPronunciation()));
 
-	upTmpPronunciation->append(L" ");
+    if(wcscmp(upTmpPronunciation->c_str(), L"") != 0)
+        upTmpPronunciation->append(L" ");
 
 	this->m_upwsPronunciation->append(upTmpPronunciation->c_str());
 
@@ -347,7 +348,8 @@ bool PronunciationHandler::pronounceMutipleDigitsWithZeroAppended(char cDigit, i
 
     upTmpPronunciation.reset(new wstring(pMultipleDigitsAttribute->getPronunciation()));
 
-    upTmpPronunciation->append(L" ");
+    if(wcscmp(upTmpPronunciation->c_str(), L"") != 0)
+        upTmpPronunciation->append(L" ");
 
     this->m_upwsPronunciation->append(upTmpPronunciation->c_str());
 
@@ -362,15 +364,19 @@ bool PronunciationHandler::pronounceConditionDigit(const char cDigit, const int1
 	Comparable *pComparable;
 	ConditionDigitAttribute *pConditionDigitAttribute;
 	unique_ptr<wstring> upTmpPronunciation;
+    set<Container>::iterator iter;
 
 	if (iDigitPosition < 0 || this->m_upConfig.get() == nullptr || this->m_upConfig->getConditionDigitAttributes() == nullptr || this->m_upwsPronunciation.get() == nullptr || SearchUtility::getInstance() == nullptr)
 		return false;
+
 
 	if ((pComparable = SearchUtility::getInstance()->find(this->m_upConfig->getConditionDigitAttributes(), cDigit, iDigitPosition)) == nullptr || (pConditionDigitAttribute = dynamic_cast<ConditionDigitAttribute*>(pComparable)) == nullptr)
 		return false;
 
 	upTmpPronunciation.reset(new wstring(pConditionDigitAttribute->getPronunciation()));
-	upTmpPronunciation->append(L" ");
+
+    if(wcscmp(upTmpPronunciation->c_str(), L"") != 0)
+        upTmpPronunciation->append(L" ");
 
 	this->m_upwsPronunciation->append(upTmpPronunciation->c_str());
 
@@ -391,7 +397,9 @@ bool PronunciationHandler::pronounceNormalDigit(const char cDigit) {
 		return false;
 
 	upTmpPronunciation.reset(new wstring(pNormalDigitAttribute->getPronunciation()));
-	upTmpPronunciation->append(L" ");
+
+    if(wcscmp(upTmpPronunciation->c_str(), L"") != 0)
+        upTmpPronunciation->append(L" ");
 
 	this->m_upwsPronunciation->append(upTmpPronunciation->c_str());
 
@@ -415,7 +423,9 @@ bool PronunciationHandler::pronounceConditionAppend(const int16_t iDigitPosition
         return false;
 
 	upTmpPronunciation.reset(new wstring(pConditionAppendAttribute->getPronunciation()));
-	upTmpPronunciation->append(L" ");
+
+    if(wcscmp(upTmpPronunciation->c_str(), L"") != 0)
+        upTmpPronunciation->append(L" ");
 
 	this->m_upwsPronunciation->append(upTmpPronunciation->c_str());
 

@@ -124,11 +124,14 @@ bool ParseHandler::parseLanguage(const wchar_t *pwcLine, Config *pConfig) {
 
 	pwcBuffer = new wchar_t[1 << 10];
 
-	if (swscanf(pwcLine, L"lang %ls", pwcBuffer) != 1 || (pcLanguage = StringUtility::getInstance()->convertToChar(pwcBuffer)) == nullptr) {
+    if (swscanf(pwcLine, L"lang %ls", pwcBuffer) != 1 || (pcLanguage = StringUtility::getInstance()->convertToChar(pwcBuffer)) == nullptr) {
 		delete[] pwcBuffer;
 		
 		return false;
 	}
+
+    StringUtility::getInstance()->replaceCharacter(pwcBuffer, L'_', L' ');
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcBuffer, L"null", L"");
 
 	pConfig->getLang()->setName(pcLanguage); 
 
@@ -147,11 +150,14 @@ bool ParseHandler::parseLocaleName(const wchar_t *pwcLine, Config *pConfig) {
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"locale %ls", pwcBuffer) != 1 || (pcLocale = StringUtility::getInstance()->convertToChar(pwcBuffer)) == nullptr) {
+    if (swscanf(pwcLine, L"locale %ls", pwcBuffer) != 1 || (pcLocale = StringUtility::getInstance()->convertToChar(pwcBuffer)) == nullptr) {
 		delete[] pwcBuffer;
 
 		return false;
 	}
+
+    StringUtility::getInstance()->replaceCharacter(pwcBuffer, L'_', L' ');
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcBuffer, L"null", L"");
 
 	pConfig->getLang()->setLocaleName(pcLocale);
 
@@ -172,11 +178,14 @@ bool ParseHandler::parseNormalDigitAttribute(const wchar_t *pwcLine, Config *pCo
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"0 %hd %lc %ls", &iId, &wcDigit, pwcBuffer) != 3) {
+    if (swscanf(pwcLine, L"0 %hd %lc %ls", &iId, &wcDigit, pwcBuffer) != 3) {
 		delete[] pwcBuffer;
 
 		return false;
 	}
+
+    StringUtility::getInstance()->replaceCharacter(pwcBuffer, L'_', L' ');
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcBuffer, L"null", L"");
 
     spNormalDigitAttribute.reset(new NormalDigitAttribute(iId, static_cast<char>(wcDigit), pwcBuffer));
 
@@ -198,11 +207,14 @@ bool ParseHandler::parseSpecialDigitAttribute(const wchar_t *pwcLine, Config *pC
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"1 %hd %lc %ls", &iId, &wcDigit, pwcBuffer) != 3) {
+    if (swscanf(pwcLine, L"1 %hd %lc %ls", &iId, &wcDigit, pwcBuffer) != 3) {
 		delete[] pwcBuffer;
 
 		return false;
 	}
+
+    StringUtility::getInstance()->replaceCharacter(pwcBuffer, L'_', L' ');
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcBuffer, L"null", L"");
 
     spSpecialDigitAttribute.reset(new SpecialDigitAttribute(iId, static_cast<char>(wcDigit), pwcBuffer));
 
@@ -224,12 +236,18 @@ bool ParseHandler::parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *
 	pwcDigitsBuffer = new wchar_t[PARSE_HANDLER_MULTIPLE_DIGITS_BUFFER_SIZE];
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"2 %hd %ls %ls", &iId, pwcDigitsBuffer, pwcBuffer) != 3) {
+    if (swscanf(pwcLine, L"2 %hd %ls %ls", &iId, pwcDigitsBuffer, pwcBuffer) != 3) {
 		delete[] pwcDigitsBuffer;
 		delete[] pwcBuffer;
 
 		return false;
 	}
+
+    StringUtility::getInstance()->replaceCharacter(pwcBuffer, L'_', L' ');
+    StringUtility::getInstance()->replaceCharacter(pwcDigitsBuffer, L'_', L' ');
+
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcBuffer, L"null", L"");
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcDigitsBuffer, L"null", L"");
 
     spMultipleDigitsAttribute.reset(new MultipleDigitsAttribute(iId, pwcDigitsBuffer, pwcBuffer));
 
@@ -251,11 +269,14 @@ bool ParseHandler::parseConditionAppendAttribute(const wchar_t *pwcLine, Config 
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"3 %hd %hd %ls", &iId, &iPosition, pwcBuffer) != 3) {
+    if (swscanf(pwcLine, L"3 %hd %hd %ls", &iId, &iPosition, pwcBuffer) != 3) {
 		delete[] pwcBuffer;
 
 		return false;
 	}
+
+    StringUtility::getInstance()->replaceCharacter(pwcBuffer, L'_', L' ');
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcBuffer, L"null", L"");
 
     spConditionAppendAttribute.reset(new ConditionAppendAttribute(iId, iPosition, pwcBuffer));
 
@@ -277,11 +298,14 @@ bool ParseHandler::parseConditionDigitAttribute(const wchar_t *pwcLine, Config *
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-	if (swscanf(pwcLine, L"4 %hd %lc %hd %ls", &iId, &wcDigit, &iPosition, pwcBuffer) != 4) {
+    if (swscanf(pwcLine, L"4 %hd %lc %hd %ls", &iId, &wcDigit, &iPosition, pwcBuffer) != 4) {
 		delete[] pwcBuffer;
 
 		return false;
 	}
+
+    StringUtility::getInstance()->replaceCharacter(pwcBuffer, L'_', L' ');
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcBuffer, L"null", L"");
 
     spConditionDigitAttribute.reset(new ConditionDigitAttribute(iPosition, iId, static_cast<char>(wcDigit), pwcBuffer));
 
