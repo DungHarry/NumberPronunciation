@@ -314,7 +314,7 @@ char* NumberHandler::getNumberStringNumericalPart() {
     for(i = j; i <= iEndIndex; i ++)
         *(pcResult + i - j) = this->m_upNumberString->at(i);
 
-    *(pcResult + iEndIndex + 1) = '\0';
+    *(pcResult + iEndIndex + 1 - j) = '\0';
 
     return pcResult;
 }
