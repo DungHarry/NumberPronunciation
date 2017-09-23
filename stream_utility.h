@@ -1,5 +1,5 @@
 /*
-    Author: Dung Ly Viet
+    Author: Dung Harry
     Date created: August 23th, 2017
     Compiler: Visual C++ Compiler 2013
 
@@ -9,11 +9,11 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_STREAM_UTILITY_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_STREAM_UTILITY_H_
 
-#include "utility.h"
 #include <string>
 #include <memory>
 #include <sstream>
 #include <vector>
+#include "utility.h"
 
 class StreamUtility : public Utility {
 public:

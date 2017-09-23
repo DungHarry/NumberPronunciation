@@ -1,5 +1,5 @@
 /*
-    Author: Dung Ly Viet
+    Author: Dung Harry
     Date created: August 22th, 2017
     Compiler: Visual C++ Compiler 2013
 
@@ -40,6 +40,7 @@ public:
     bool existChar(const char *cpcString, const char cCharacter);
 
 	char* getSubStringNumber(Number *pNumber, int32_t iLength);
+    char* getSubStringNumber(Number *pNumber, int32_t iStartPosition, int32_t iLength);
 
     char getCharacterNumber(Number *pNumber, int32_t iPosition);
 
@@ -53,6 +54,9 @@ public:
 
     bool replaceCharacter(char *pcString, char cSource, char cTarget);
     bool replaceCharacter(wchar_t *pwcString, wchar_t wcSource, wchar_t wcTarget);
+
+    bool eraseCharacterAtPosition(char **pcString, int32_t iPosition);
+    bool eraseCharacterAtPosition(wchar_t **pwcString, int32_t iPosition);
 
     static StringUtility* getInstance();
 private:

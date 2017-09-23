@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 29th, 2017
 	Compiler: Visual C++ Compiler 2013
 
@@ -21,6 +21,7 @@
 #include "multiple_digits_attribute.h"
 #include "condition_append_attribute.h"
 #include "condition_digit_attribute.h"
+#include "condition_append_digits_end_attribute.h"
 #include "string_utility.h"
 #include "search_utility.h"
 
@@ -33,6 +34,7 @@ enum PronunciationHandlerState {
 	PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT,
 	PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT,
 	PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND,
+    PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND_END_DIGTS,
 	PRONUNCIATION_HANDLER_STATE_COUNT
 };
 
@@ -72,6 +74,7 @@ private:
 	bool pronounceConditionDigit(const char cDigit, const int16_t iDigitPosition);
 	bool pronounceNormalDigit(const char cDigit);
 	bool pronounceConditionAppend(const int16_t iDigitPosition);
+    bool pronounceConditionAppendEndDigits(const int16_t iDigitPosition, const char *cpcEndDigits);
 
     bool isAllThreeZeroDigits(Number *pNumber);
 

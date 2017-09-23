@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 29th, 2017
 	Compiler: Visual C++ Compiler 2013
 
@@ -143,7 +143,19 @@ bool PronunciationHandler::processState(const PronunciationHandlerState eState, 
 	} else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND) {
 		if (this->pronounceConditionAppend(iUnit) == false)
 			return false;
-	} else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT) {
+    } else if(eState == PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND_END_DIGTS) {
+        pcNumber = nullptr;
+
+        if(iLength <= 0 || StringUtility::getInstance() == nullptr || (pNumber = dynamic_cast<Number *>(pObject)) == nullptr || (pcNumber = StringUtility::getInstance()->getSubStringNumber(pNumber, 3 - iUnit, iUnit)) == nullptr || this->pronounceConditionAppendEndDigits(iUnit, pcNumber) == false) {
+            if(pcNumber != nullptr)
+                delete[] pcNumber;
+
+            return false;
+        }
+
+        if(pcNumber != nullptr)
+            delete[] pcNumber;
+    } else if (eState == PRONUNCIATION_HANDLER_STATE_CONDITION_DIGIT) {
         if ((eObjectState = this->detectExecutionState(pObject)) != PRONUNCIATION_HANDLER_STATE_NORMAL_DIGIT || (pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr)
 			return false;
 
@@ -224,8 +236,8 @@ bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iN
 		return false;
 
 	if (iNumDigits == 3) {
-        if(this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS_WITH_ZERO_APPENDED, pNumber, 3, 2) == false) {
-            if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 3, 2) == false) {
+        if(this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 3, 2) == false) {
+            if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS_WITH_ZERO_APPENDED, pNumber, 3, 2) == false) {
                 if ((pObject = (*(pNumberObjects->data() + 2)).get()) == nullptr)
                     return false;
 
@@ -237,20 +249,20 @@ bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iN
                         if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || this->processState(eState, pObject, 3, 2) == false)
                             return false;
 
-                        this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 3, 2);
+                        if(this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND_END_DIGTS, pNumber, 3, 2) == false)
+                            this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 3, 2);
                     }
                 } else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
                     if (this->processState(eState, pObject, 3, 2) == false)
                         return false;
                 }
-
-                this->handleNumberUnitNumDigits(pNumber, 2);
             }
-        } else
+
             this->handleNumberUnitNumDigits(pNumber, 2);
+        }
 	} else if (iNumDigits == 2) {
-        if(this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS_WITH_ZERO_APPENDED, pNumber, 2, 1) == false) {
-            if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 2, 1) == false) {
+        if(this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS, pNumber, 2, 1) == false) {
+            if (this->processState(PRONUNCIATION_HANDLER_STATE_MULTIPLE_DIGITS_WITH_ZERO_APPENDED, pNumber, 2, 1) == false) {
                 if ((pObject = (*(pNumberObjects->data() + 1)).get()) == nullptr)
                     return false;
 
@@ -262,17 +274,17 @@ bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iN
                         if ((pNormalDigit = dynamic_cast<NormalDigit *>(pObject)) == nullptr || this->processState(eState, pObject, 2, 1) == false)
                             return false;
 
-                        this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 2, 1);
+                        if(this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND_END_DIGTS, pNumber, 2, 1) == false)
+                            this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 2, 1);
                     }
                 } else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
                     if (this->processState(eState, pObject, 2, 1) == false)
                         return false;
                 }
-
-                this->handleNumberUnitNumDigits(pNumber, 1);
             }
-        } else
+
             this->handleNumberUnitNumDigits(pNumber, 1);
+        }
 	} else if (iNumDigits == 1) {
         if ((pObject = (*(pNumberObjects->data() + 0)).get()) == nullptr)
             return false;
@@ -285,6 +297,7 @@ bool PronunciationHandler::handleNumberUnitNumDigits(Number *pNumber, int32_t iN
                 if (this->processState(eState, pObject, 1, 0) == false)
 					return false;
 
+                if(this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND_END_DIGTS, pNumber, 1, 0) == false)
                     this->processState(PRONUNCIATION_HANDLER_STATE_CONDITION_APPEND, pObject, 1, 0);
 			}
 		} else if (eState == PRONUNCIATION_HANDLER_STATE_SPECIAL_DIGIT) {
@@ -432,6 +445,38 @@ bool PronunciationHandler::pronounceConditionAppend(const int16_t iDigitPosition
 	upTmpPronunciation.reset();
 
 	return true;
+}
+
+bool PronunciationHandler::pronounceConditionAppendEndDigits(const int16_t iDigitPosition, const char *cpcEndDigits) {
+    Comparable *pComparable;
+    ConditionAppendDigitsEndAttribute *pConditionDigitsEndAttribute;
+    wchar_t *pwcEndDigits;
+    unique_ptr<wstring> upTmpPronunciation;
+
+    if (iDigitPosition < 0 || cpcEndDigits == nullptr || this->m_upConfig.get() == nullptr || this->m_upConfig->getConditionAppendDigitsEndAttributes() == nullptr || StringUtility::getInstance() == nullptr || SearchUtility::getInstance() == nullptr || this->m_upwsPronunciation.get() == nullptr)
+        return false;
+
+    if ((pwcEndDigits = StringUtility::getInstance()->convertToWChar(cpcEndDigits)) == nullptr)
+        return false;
+
+    if ((pComparable = SearchUtility::getInstance()->find(this->m_upConfig->getConditionAppendDigitsEndAttributes(), iDigitPosition, pwcEndDigits)) == nullptr || (pConditionDigitsEndAttribute = dynamic_cast<ConditionAppendDigitsEndAttribute *>(pComparable)) == nullptr || pConditionDigitsEndAttribute->getPronunciation() == nullptr) {
+        delete[] pwcEndDigits;
+
+        return false;
+    }
+
+    upTmpPronunciation.reset(new wstring(pConditionDigitsEndAttribute->getPronunciation()));
+
+    if(wcscmp(upTmpPronunciation->c_str(), L"") != 0)
+        upTmpPronunciation->append(L" ");
+
+    this->m_upwsPronunciation->append(upTmpPronunciation->c_str());
+
+    upTmpPronunciation.reset();
+
+    delete[] pwcEndDigits;
+
+    return true;
 }
 
 bool PronunciationHandler::isAllThreeZeroDigits(Number *pNumber) {

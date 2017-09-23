@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author:Dung Harry
 	Date created: August 17th, 2017
 	Compiler: Visual C++ Compiler 2013
 
@@ -38,6 +38,8 @@ public:
 
 	set<Container>* getMultipleDigitsAttributes();
 
+    set<Container>* getConditionAppendDigitsEndAttributes();
+
     int16_t getMaxUnits();
 
 	bool classify();
@@ -52,6 +54,7 @@ private:
 	unique_ptr<set<Container>> m_upNormalDigitAttributes;
 	unique_ptr<set<Container>> m_upMultipleDigitsAttributes;
 	unique_ptr<set<Container>> m_upConditionAppendAttributes;
+    unique_ptr<set<Container>> m_upConditionAppendDigitsEndAttributes;
 	unique_ptr<set<Container>> m_upConditionDigitAttributes;
 
     int16_t m_iMaxUnits;

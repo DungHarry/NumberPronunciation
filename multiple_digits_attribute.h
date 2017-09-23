@@ -1,5 +1,5 @@
 /*
-    Author: Dung Ly Viet
+    Author: Dung Harry
     Date created: August 21th, 2017
     Compiler: Visual C++ Compiler 2013
 
@@ -9,10 +9,10 @@
 #ifndef _COC_COC_NUMBER_PRONUNCIATION_MULTIPLE_DIGITS_ATTRIBUTE_H_
 #define _COC_COC_NUMBER_PRONUNCIATION_MULTIPLE_DIGITS_ATTRIBUTE_H_
 
-#include "attribute.h"
 #include <utility>
 #include <memory>
 #include <string>
+#include "attribute.h"
 
 class MultipleDigitsAttribute : public Attribute {
 public:

@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 17th, 2017
 	Compiler: Visual C++ Compiler 2013
 
@@ -15,6 +15,7 @@ Config::Config() :
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
 	m_upConditionAppendAttributes(new set<Container>()),
+    m_upConditionAppendDigitsEndAttributes(new set<Container>()),
     m_upConditionDigitAttributes(new set<Container>()),
     m_iMaxUnits (0)
 {
@@ -28,6 +29,7 @@ Config::Config(const char *cpcLangName, const char *cpcLocaleName) :
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
 	m_upConditionAppendAttributes(new set<Container>()),
+    m_upConditionAppendDigitsEndAttributes(new set<Container>()),
     m_upConditionDigitAttributes(new set<Container>()),
     m_iMaxUnits (0)
 {
@@ -41,32 +43,56 @@ Config::Config(const Config &conf) :
 	m_upMultipleDigitsAttributes(new set<Container>()),
 	m_upNormalDigitAttributes(new set<Container>()),
 	m_upConditionAppendAttributes(new set<Container>()),
+    m_upConditionAppendDigitsEndAttributes(new set<Container>()),
     m_upConditionDigitAttributes(new set<Container>()),
     m_iMaxUnits (conf.m_iMaxUnits)
 {
+    vector<Container>::iterator vecIter;
+    set<Container>::iterator setIter;
+
 	if (conf.m_upAttributes.get() != nullptr) {
-        for (vector<Container>::iterator iter = conf.m_upAttributes->begin(); iter != conf.m_upAttributes->end(); ++iter)
-			this->m_upAttributes->push_back(*iter);
+        for (vecIter = conf.m_upAttributes->begin(); vecIter != conf.m_upAttributes->end(); ++ vecIter)
+            this->m_upAttributes->push_back(*vecIter);
 	}
 
 	if (conf.m_upSpecialDigitAttributes.get() != nullptr) {
-		for (set<Container>::iterator iter = conf.m_upSpecialDigitAttributes->begin(); iter != conf.m_upSpecialDigitAttributes->end(); ++iter)
-			this->m_upSpecialDigitAttributes->insert(*iter);
+        for (setIter = conf.m_upSpecialDigitAttributes->begin(); setIter != conf.m_upSpecialDigitAttributes->end(); ++ setIter)
+            this->m_upSpecialDigitAttributes->insert(*setIter);
 	}
 
 	if (conf.m_upNormalDigitAttributes.get() != nullptr) {
-		for (set<Container>::iterator iter = conf.m_upNormalDigitAttributes->begin(); iter != conf.m_upSpecialDigitAttributes->end(); ++iter)
-			this->m_upNormalDigitAttributes->insert(*iter);
+        for (setIter = conf.m_upNormalDigitAttributes->begin(); setIter != conf.m_upSpecialDigitAttributes->end(); ++ setIter)
+            this->m_upNormalDigitAttributes->insert(*setIter);
 	}
 
 	if (conf.m_upMultipleDigitsAttributes.get() != nullptr) {
-		for (set<Container>::iterator iter = conf.m_upMultipleDigitsAttributes->begin(); iter != conf.m_upMultipleDigitsAttributes->end(); ++iter)
-			this->m_upMultipleDigitsAttributes->insert(*iter);
+        for (setIter = conf.m_upMultipleDigitsAttributes->begin(); setIter != conf.m_upMultipleDigitsAttributes->end(); ++ setIter)
+            this->m_upMultipleDigitsAttributes->insert(*setIter);
 	}
+
+    if(conf.m_upConditionAppendAttributes.get() != nullptr) {
+        for(setIter = conf.m_upConditionAppendAttributes->begin(); setIter != conf.m_upConditionAppendAttributes->end(); ++ setIter)
+            this->m_upConditionAppendAttributes->insert(*setIter);
+    }
+
+    if(conf.m_upConditionAppendDigitsEndAttributes.get() != nullptr) {
+        for(setIter = conf.m_upConditionAppendDigitsEndAttributes->begin(); setIter != conf.m_upConditionAppendDigitsEndAttributes->end(); ++ setIter)
+            this->m_upConditionAppendDigitsEndAttributes->insert(*setIter);
+    }
+
+    if(conf.m_upConditionDigitAttributes.get() != nullptr) {
+        for(setIter = conf.m_upConditionDigitAttributes->begin(); setIter != conf.m_upConditionDigitAttributes->end(); ++ setIter)
+            this->m_upConditionDigitAttributes->insert(*setIter);
+    }
 }
 
 Config::~Config() {
 	this->m_upLang.reset();
+
+    if(this->m_upConditionAppendDigitsEndAttributes.get() != nullptr) {
+        this->m_upConditionAppendDigitsEndAttributes->clear();
+        this->m_upConditionAppendDigitsEndAttributes.reset();
+    }
 
 	if (this->m_upSpecialDigitAttributes.get() != nullptr) {
 		this->m_upSpecialDigitAttributes->clear();
@@ -131,6 +157,10 @@ set<Container>* Config::getMultipleDigitsAttributes() {
 	return this->m_upMultipleDigitsAttributes.get();
 }
 
+set<Container>* Config::getConditionAppendDigitsEndAttributes() {
+    return this->m_upConditionAppendDigitsEndAttributes.get();
+}
+
 int16_t Config::getMaxUnits() {
     return this->m_iMaxUnits;
 }
@@ -157,6 +187,8 @@ bool Config::classify() {
             this->m_upConditionAppendAttributes->insert(this->m_upAttributes->at(i));
         else if (pAttribute->getType() == ATTRIBUTE_TYPE_CONDITION_DIGIT)
             this->m_upConditionDigitAttributes->insert(this->m_upAttributes->at(i));
+        else if(pAttribute->getType() == ATTRIBUTE_TYPE_CONDITION_APPEND_DIGITS_END)
+            this->m_upConditionAppendDigitsEndAttributes->insert(this->m_upAttributes->at(i));
         else if (pAttribute->getType() == ATTRIBUTE_TYPE_MULTIPLE_DIGITS)
             this->m_upMultipleDigitsAttributes->insert(this->m_upAttributes->at(i));
         else if (pAttribute->getType() == ATTRIBUTE_TYPE_NORMAL_DIGIT)
@@ -175,7 +207,7 @@ bool Config::classify() {
 bool Config::less(const Comparable &config) {
 	const Config *pConfig = dynamic_cast<const Config *>(&config);
 
-	return (pConfig == nullptr || pConfig->m_upLang.get() == nullptr || this->m_upLang.get() == nullptr) ? false : this->m_upLang->less(*(pConfig->m_upLang));
+    return (pConfig == nullptr || pConfig->m_upLang.get() == nullptr || this->m_upLang.get() == nullptr) ? true : this->m_upLang->less(*(pConfig->m_upLang));
 }
 
 bool Config::equal(const Comparable &config) {

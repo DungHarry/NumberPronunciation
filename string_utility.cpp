@@ -1,5 +1,5 @@
 /*
-    Author: Dung Ly Viet
+    Author: Dung Harry
     Date created: August 22th, 2017
     Compiler: Visual C++ Compiler 2013
 
@@ -192,6 +192,24 @@ char* StringUtility::getSubStringNumber(Number *pNumber, int32_t iLength) {
 	return pcResult;
 }
 
+char* StringUtility::getSubStringNumber(Number *pNumber, int32_t iStartPosition, int32_t iLength) {
+    char *pcResult;
+    NormalDigit *pNormalDigit;
+    int32_t i;
+
+    if (iLength <= 0 || pNumber == nullptr || pNumber->getNumbers() == nullptr || iStartPosition < 0 || pNumber->getNumbers()->size() - iStartPosition < iLength)
+        return nullptr;
+
+    pcResult = new char[iLength + 1];
+
+    for (i = 0; i < iLength; i++)
+        *(pcResult + i) = ((*(pNumber->getNumbers()->data() + pNumber->getNumbers()->size() - 1 - i - iStartPosition)).get() == nullptr || (pNormalDigit = dynamic_cast<NormalDigit *>((*(pNumber->getNumbers()->data() + pNumber->getNumbers()->size() - 1 - i - iStartPosition)).get())) == nullptr) ? '0' : pNormalDigit->getValue();
+
+    *(pcResult + iLength) = '\0';
+
+    return pcResult;
+}
+
 char StringUtility::getCharacterNumber(Number *pNumber, int32_t iPosition) {
     Digit *pDigit;
 
@@ -328,6 +346,52 @@ bool StringUtility::replaceCharacter(wchar_t *pwcString, wchar_t wcSource, wchar
     for(i = 0, iStringLength = wcslen(pwcString); i < iStringLength; ++ i)
         if(*(pwcString + i) == wcSource)
             *(pwcString + i) = wcTarget;
+
+    return true;
+}
+
+bool StringUtility::eraseCharacterAtPosition(char **pcString, int32_t iPosition) {
+    int32_t iStringLength, i;
+    char *pcReplaceString;
+
+    if(pcString == nullptr || *pcString == nullptr || iPosition < 0 || iPosition >= (iStringLength = strlen(*pcString)))
+        return false;
+
+    pcReplaceString = new char[iStringLength];
+
+    for(i = 0; i < iPosition; i ++)
+        *(pcReplaceString + i) = *((*pcString) + i);
+
+    for(; i < iStringLength - 1; i ++)
+        *(pcReplaceString + i) = *((*pcString) + i + 1);
+
+    *(pcReplaceString + i) = '\0';
+
+    delete[] *pcString;
+    *pcString = pcReplaceString;
+
+    return true;
+}
+
+bool StringUtility::eraseCharacterAtPosition(wchar_t **pwcString, int32_t iPosition) {
+    int32_t iStringLength, i;
+    wchar_t *pwcReplaceString;
+
+    if(pwcString == nullptr || *pwcString == nullptr || iPosition < 0 || iPosition >= (iStringLength = wcslen(*pwcString)))
+        return false;
+
+    pwcReplaceString = new wchar_t[iStringLength];
+
+    for(i = 0; i < iPosition; i ++)
+        *(pwcReplaceString + i) = *((*pwcString) + i);
+
+    for(; i < iStringLength - 1; i ++)
+        *(pwcReplaceString + i) = *((*pwcString) + i + 1);
+
+    *(pwcReplaceString + i) = L'\0';
+
+    delete[] *pwcString;
+    *pwcString = pwcReplaceString;
 
     return true;
 }

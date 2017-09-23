@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 17th, 2017
 	Compiler: Visual C++ Compiler 2013
 
@@ -58,11 +58,11 @@ void DigitAttribute::setPronunciation(const wchar_t *cpcPronunciation) {
 bool DigitAttribute::less(const Comparable &attr) {
 	const DigitAttribute *pDigitAttribute = dynamic_cast<const DigitAttribute *>(&attr);
 
-	return (pDigitAttribute == nullptr || pDigitAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? false : (this->m_upCouple->first < pDigitAttribute->m_upCouple->first); 
+    return (pDigitAttribute == nullptr || pDigitAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? true : (this->m_upCouple->first < pDigitAttribute->m_upCouple->first);
 }
 
 bool DigitAttribute::equal(const Comparable &attr) {
 	const DigitAttribute *pDigitAttribute = dynamic_cast<const DigitAttribute *>(&attr);
 
-	return (pDigitAttribute == nullptr || pDigitAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? false : (this->m_upCouple->first == pDigitAttribute->m_upCouple->first);
+    return (pDigitAttribute == nullptr || pDigitAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? false : (this->m_upCouple->first == pDigitAttribute->m_upCouple->first);
 }

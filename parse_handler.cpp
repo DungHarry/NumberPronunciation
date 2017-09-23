@@ -1,5 +1,5 @@
 /*
-    Author: Dung Ly Viet
+    Author: Dung Harry
     Date created: August 17th, 2017
     Compiler: Visual C++ Compiler 2013
 
@@ -10,6 +10,7 @@
 #include "locale_handler.h"
 
 #define PARSE_HANDLER_MULTIPLE_DIGITS_BUFFER_SIZE (static_cast<int32_t>(1 << 8))
+#define PARSE_HANDLER_CONDITION_APPEND_END_DIGITS_BUFFER_SIZE (static_cast<int32_t>(1 << 8))
 #define PARSE_HANDLER_DEFAULT_BUFFER_SIZE (static_cast<int32_t>(1 << 12))
 
 unique_ptr<ParseHandler> ParseHandler::m_upInstance (nullptr);
@@ -92,6 +93,8 @@ bool ParseHandler::execute() {
         else if(wcFirstCharacter == static_cast<wchar_t>('3'))
             this->parseConditionAppendAttribute(pwcCleanLine, this->m_upConfig.get());
         else if(wcFirstCharacter == static_cast<wchar_t>('4'))
+            this->parseConditionAppendDigitsEndAttribute(pwcCleanLine, this->m_upConfig.get());
+        else if(wcFirstCharacter == static_cast<wchar_t>('5'))
             this->parseConditionDigitAttribute(pwcCleanLine, this->m_upConfig.get());
 
         delete[] pwcCleanLine;
@@ -287,6 +290,40 @@ bool ParseHandler::parseConditionAppendAttribute(const wchar_t *pwcLine, Config 
     return true;
 }
 
+bool ParseHandler::parseConditionAppendDigitsEndAttribute(const wchar_t *pwcLine, Config *pConfig) {
+    int16_t iId, iPosition;
+    wchar_t *pwcEndDigitsBuffer, *pwcBuffer;
+    shared_ptr<Comparable> spConditionAppendDigitsEndAttribute (nullptr);
+
+    if(pwcLine == nullptr || pConfig == nullptr || pConfig->getAttributes() == nullptr)
+        return false;
+
+    pwcEndDigitsBuffer = new wchar_t[PARSE_HANDLER_CONDITION_APPEND_END_DIGITS_BUFFER_SIZE];
+    pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
+
+    if(swscanf(pwcLine, L"4 %hd %hd %ls %ls", &iId, &iPosition, pwcEndDigitsBuffer, pwcBuffer) != 4) {
+        delete[] pwcEndDigitsBuffer;
+        delete[] pwcBuffer;
+
+        return false;
+    }
+
+    StringUtility::getInstance()->replaceCharacter(pwcEndDigitsBuffer, L'_', L' ');
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcEndDigitsBuffer, L"null", L"");
+
+    StringUtility::getInstance()->replaceCharacter(pwcBuffer, L'_', L' ');
+    StringUtility::getInstance()->checkSpecialCaseAndReplace(&pwcBuffer, L"null", L"");
+
+    spConditionAppendDigitsEndAttribute.reset(new ConditionAppendDigitsEndAttribute(iId, iPosition, pwcEndDigitsBuffer, pwcBuffer));
+
+    pConfig->getAttributes()->push_back(Container(spConditionAppendDigitsEndAttribute));
+
+    delete[] pwcEndDigitsBuffer;
+    delete[] pwcBuffer;
+
+    return true;
+}
+
 bool ParseHandler::parseConditionDigitAttribute(const wchar_t *pwcLine, Config *pConfig) {
     int16_t iId, iPosition;
 	wchar_t wcDigit;
@@ -298,7 +335,7 @@ bool ParseHandler::parseConditionDigitAttribute(const wchar_t *pwcLine, Config *
 
 	pwcBuffer = new wchar_t[PARSE_HANDLER_DEFAULT_BUFFER_SIZE];
 
-    if (swscanf(pwcLine, L"4 %hd %lc %hd %ls", &iId, &wcDigit, &iPosition, pwcBuffer) != 4) {
+    if (swscanf(pwcLine, L"5 %hd %lc %hd %ls", &iId, &wcDigit, &iPosition, pwcBuffer) != 4) {
 		delete[] pwcBuffer;
 
 		return false;

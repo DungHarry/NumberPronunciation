@@ -1,5 +1,5 @@
 /*
-    Author: Dung Ly Viet
+    Author: Dung Harry
     Date created: August 17th, 2017
     Compiler: Visual C++ Compiler 2013
 
@@ -21,6 +21,7 @@
 #include "multiple_digits_attribute.h"
 #include "condition_append_attribute.h"
 #include "condition_digit_attribute.h"
+#include "condition_append_digits_end_attribute.h"
 
 using namespace std;
 
@@ -49,6 +50,7 @@ private:
     bool parseMultipleDigitsAttribute(const wchar_t *pwcLine, Config *pConfig);
     bool parseConditionAppendAttribute(const wchar_t *pwcLine, Config *pConfig);
     bool parseConditionDigitAttribute(const wchar_t *pwcLine, Config *pConfig);
+    bool parseConditionAppendDigitsEndAttribute(const wchar_t *pwcLine, Config *pConfig);
 
     static unique_ptr<ParseHandler> m_upInstance;
 };

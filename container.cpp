@@ -1,12 +1,11 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 17th, 2017
 	Compiler: Visual C++ Compiler 2013
 
 	Description: this is the header file of the Container class in C++ programming language
 */
 
-#include <iostream>
 #include "container.h"
 #include "config.h"
 

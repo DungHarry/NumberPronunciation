@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 30th, 2017
 	Compiler: Visual C++ Compiler 2013
 
@@ -94,6 +94,22 @@ Comparable* SearchUtility::find(const set<Container> *pSet, char cDigit, int16_t
     spConditionDigitAttribute.reset();
 
 	return (iter == pSet->end() || iter->getData().get() == nullptr || (pConditionDigitAttribute = dynamic_cast<ConditionDigitAttribute *>(iter->getData().get())) == nullptr || pConditionDigitAttribute->getPosition() != iPosition) ? nullptr : iter->getData().get();
+}
+
+Comparable* SearchUtility::find(const set<Container> *pSet, int16_t iPosition, const wchar_t *cpwcEndDigits) {
+    set<Container>::iterator iter;
+    shared_ptr<Comparable> spConditionAppendDigitsEndAttribute;
+
+    if(pSet == nullptr || iPosition < 0 || cpwcEndDigits == nullptr)
+        return nullptr;
+
+    spConditionAppendDigitsEndAttribute.reset(new ConditionAppendDigitsEndAttribute(0, iPosition, cpwcEndDigits, nullptr));
+
+    iter = pSet->find(Container(spConditionAppendDigitsEndAttribute));
+
+    spConditionAppendDigitsEndAttribute.reset();
+
+    return (iter == pSet->end()) ? nullptr : iter->getData().get();
 }
 
 SearchUtility* SearchUtility::getInstance() {

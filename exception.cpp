@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 30th, 2017
 	Compiler: Visual C++ Compiler 2013
 

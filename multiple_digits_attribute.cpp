@@ -1,5 +1,5 @@
 /*
-    Author: Dung Ly Viet
+    Author: Dung Harry
     Date created: August 21th, 2017
     Compiler: Visual C++ Compiler 2013
 
@@ -66,7 +66,7 @@ void MultipleDigitsAttribute::setPronunciation(const wchar_t *cpcPronunciation) 
 bool MultipleDigitsAttribute::less(const Comparable &attr) {
 	const MultipleDigitsAttribute *pMultipleDigitsAttribute = dynamic_cast<const MultipleDigitsAttribute *>(&attr);
 
-	return (pMultipleDigitsAttribute == nullptr || pMultipleDigitsAttribute->m_upCouple.get() == nullptr || pMultipleDigitsAttribute->m_upCouple->first.get() == nullptr || this->m_upCouple.get() == nullptr || this->m_upCouple->first.get() == nullptr) ? false : (wcscmp(this->m_upCouple->first->c_str(), pMultipleDigitsAttribute->m_upCouple->first->c_str()) < 0);
+    return (pMultipleDigitsAttribute == nullptr || pMultipleDigitsAttribute->m_upCouple.get() == nullptr || pMultipleDigitsAttribute->m_upCouple->first.get() == nullptr || this->m_upCouple.get() == nullptr || this->m_upCouple->first.get() == nullptr) ? true : (wcscmp(this->m_upCouple->first->c_str(), pMultipleDigitsAttribute->m_upCouple->first->c_str()) < 0);
 }
 
 bool MultipleDigitsAttribute::equal(const Comparable &attr) {

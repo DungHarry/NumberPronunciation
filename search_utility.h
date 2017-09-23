@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 30th, 2017
 	Compiler: Visual C++ Compiler 2013
 
@@ -17,6 +17,7 @@
 #include "condition_digit_attribute.h"
 #include "multiple_digits_attribute.h"
 #include "digit_attribute.h"
+#include "condition_append_digits_end_attribute.h"
 
 class SearchUtility : public Utility {
 public:
@@ -28,6 +29,7 @@ public:
     Comparable* find(const set<Container> *pSet, char cDigit);
     Comparable* find(const set<Container> *pSet, const wchar_t *cpwcMultipleDigits);
     Comparable* find(const set<Container> *pSet, char cDigit, int16_t iPosition);
+    Comparable* find(const set<Container> *pSet, int16_t iPosition, const wchar_t *cpwcEndDigits);
 
 	static SearchUtility* getInstance();
 private:

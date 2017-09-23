@@ -1,5 +1,5 @@
 /*
-	Author: Dung Ly Viet
+    Author: Dung Harry
 	Date created: August 17th, 2017
 	Compiler: Visual C++ Compiler 2013
 
@@ -66,7 +66,7 @@ void ConditionAppendAttribute::setPronunciation(const wchar_t *cpcPronunciation)
 bool ConditionAppendAttribute::less(const Comparable &attr) {
 	const ConditionAppendAttribute *pConditionAppendAttribute = dynamic_cast<const ConditionAppendAttribute *>(&attr);
 
-	return (pConditionAppendAttribute == nullptr || pConditionAppendAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? false : (this->m_upCouple->first < pConditionAppendAttribute->m_upCouple->first);
+    return (pConditionAppendAttribute == nullptr || pConditionAppendAttribute->m_upCouple.get() == nullptr || this->m_upCouple.get() == nullptr) ? true : (this->m_upCouple->first < pConditionAppendAttribute->m_upCouple->first);
 }
 
 bool ConditionAppendAttribute::equal(const Comparable &attr) {
