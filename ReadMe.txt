@@ -1,6 +1,6 @@
 This is NumberPronunciation project in C++ programming language
 
-Compiler: Visual Studio C++ Compiler - Visual Studio 2013 / Gnu Compiler Connection(GCC) for C++
+Compiler: Visual Studio C++ Compiler - Visual Studio 2013 / Gnu Compiler Collection(GCC) for C++
 
 * Building
 - GCC for C++:
